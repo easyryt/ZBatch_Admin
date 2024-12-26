@@ -62,6 +62,8 @@ const ClassList = () => {
   const [deletedClassName, setDeletedClassName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
+  const [batchModalOpen, setBatchModalOpen] = useState(false);
+  const [currentBatchClass, setCurrentBatchClass] = useState(null);
 
   // Open/close modal
   const handleOpenModal = () => {
@@ -122,6 +124,18 @@ const ClassList = () => {
   // Handle Snackbar close
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
+  };
+
+  // Open batch creation modal
+  const handleOpenBatchModal = (cls) => {
+    setCurrentBatchClass(cls);
+    setBatchModalOpen(true);
+  };
+
+  // Close batch creation modal
+  const handleCloseBatchModal = () => {
+    setBatchModalOpen(false);
+    setCurrentBatchClass(null);
   };
 
   // Pagination logic
@@ -195,6 +209,14 @@ const ClassList = () => {
                     >
                       <Delete />
                     </IconButton>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() => handleOpenBatchModal(cls)}
+                    >
+                      Create Batch
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -237,6 +259,29 @@ const ClassList = () => {
           </Button>
           <Button onClick={handleDelete} color="secondary">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Batch Creation Modal */}
+      <Dialog
+        open={batchModalOpen}
+        onClose={handleCloseBatchModal}
+        aria-labelledby="batch-dialog-title"
+      >
+        <DialogTitle id="batch-dialog-title">Create Batch</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Creating batch for <b>{currentBatchClass?.clsName}</b>
+          </Typography>
+          {/* Add your batch creation form here */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseBatchModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleCloseBatchModal} color="secondary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
