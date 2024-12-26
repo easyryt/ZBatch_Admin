@@ -18,8 +18,20 @@ import CreateClassModal from "./CreateClassModal";
 const ClassList = () => {
   const classes = [
     {
-      clsName: "9th Class",
-      clsNum: 9,
+      clsName: "6th Class",
+      clsNum: 6,
+      section: "E",
+      totalStudents: 20,
+    },
+    {
+      clsName: "7th Class",
+      clsNum: 7,
+      section: "C",
+      totalStudents: 60,
+    },
+    {
+      clsName: "8th Class",
+      clsNum: 8,
       section: "A",
       totalStudents: 40,
     },
