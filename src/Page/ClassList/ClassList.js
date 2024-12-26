@@ -27,6 +27,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import UpdateClassModal from "./UpdateClassModal";
 
 const ClassList = () => {
   const [classes, setClasses] = useState([]);
@@ -43,6 +44,8 @@ const ClassList = () => {
   const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
   const [currentBatchClass, setCurrentBatchClass] = useState(null);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   // Fetch data from the API
   useEffect(() => {
@@ -185,6 +188,17 @@ const ClassList = () => {
     setCurrentBatchClass(null);
   };
 
+  // Open/close Update Class modal
+  const handleOpenUpdateModal = (cls) => {
+    setSelectedClass(cls);
+    setIsUpdateModalOpen(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setSelectedClass(null);
+  };
+
   // Pagination logic
   const paginatedClasses = filteredClasses?.slice(
     (page - 1) * rowsPerPage,
@@ -198,7 +212,14 @@ const ClassList = () => {
         Class List
       </Typography>
 
+      {/* Update  Class  */}
+      <UpdateClassModal
+        open={isUpdateModalOpen}
+        handleClose={handleCloseUpdateModal}
+        classData={selectedClass}
+      />
       {/* Add New Class Button */}
+
       <div>
         <Button variant="contained" color="primary" onClick={handleOpenModal}>
           Add New Class
@@ -249,7 +270,10 @@ const ClassList = () => {
                   <TableCell align="center">{cls.clsNum}</TableCell>
                   <TableCell align="center">
                     {" "}
-                    <IconButton color="primary">
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleOpenUpdateModal(cls)}
+                    >
                       <EditIcon />
                     </IconButton>
                   </TableCell>
