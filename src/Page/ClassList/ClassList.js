@@ -12,6 +12,13 @@ import {
   Pagination,
   Button,
   IconButton,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import styles from "./ClassList.module.css"; // Module-level CSS
@@ -51,6 +58,10 @@ const ClassList = () => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [deletedClassName, setDeletedClassName] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
 
   // Open/close modal
   const handleOpenModal = () => {
@@ -80,11 +91,37 @@ const ClassList = () => {
     setPage(value);
   };
 
+  // Open delete confirmation dialog
+  const handleOpenDeleteDialog = (clsNum) => {
+    const selectedClass = classes.find((cls) => cls.clsNum === clsNum);
+    setSelectedClassToDelete(selectedClass);
+    setDialogOpen(true);
+  };
+
+  // Close delete confirmation dialog
+  const handleCloseDeleteDialog = () => {
+    setDialogOpen(false);
+    setSelectedClassToDelete(null);
+  };
+
   // Handle delete class
-  const handleDelete = (clsNum) => {
-    const updatedClasses = classes.filter((cls) => cls.clsNum !== clsNum);
-    setClasses(updatedClasses);
-    setFilteredClasses(updatedClasses);
+  const handleDelete = () => {
+    if (selectedClassToDelete) {
+      const updatedClasses = classes.filter(
+        (cls) => cls.clsNum !== selectedClassToDelete.clsNum
+      );
+      setDeletedClassName(selectedClassToDelete.clsName);
+      setClasses(updatedClasses);
+      setFilteredClasses(updatedClasses);
+      setSnackbarOpen(true); // Open snackbar
+      setSelectedClassToDelete(null);
+    }
+    setDialogOpen(false);
+  };
+
+  // Handle Snackbar close
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   // Pagination logic
@@ -154,7 +191,7 @@ const ClassList = () => {
                   <TableCell align="center">
                     <IconButton
                       color="secondary"
-                      onClick={() => handleDelete(cls.clsNum)}
+                      onClick={() => handleOpenDeleteDialog(cls.clsNum)}
                     >
                       <Delete />
                     </IconButton>
@@ -179,6 +216,42 @@ const ClassList = () => {
         onChange={handleChangePage}
         className={styles.pagination}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Are you sure you want to delete{" "}
+            <b>{selectedClassToDelete?.clsName}</b>?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar Notification */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="info">
+          {deletedClassName} deleted successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
