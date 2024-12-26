@@ -13,6 +13,7 @@ const CreateClassModal = ({ open, handleClose }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;

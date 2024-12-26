@@ -13,6 +13,7 @@ const UpdateClassModal = ({ open, handleClose, classData }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+
   // Populate form data when classData changes
   useEffect(() => {
     if (classData) {
