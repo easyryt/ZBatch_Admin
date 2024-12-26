@@ -83,7 +83,7 @@ const ClassList = () => {
         {/* Create Class Modal */}
         <CreateClassModal open={isModalOpen} handleClose={handleCloseModal} />
       </div>
-      <br/>
+      <br />
       {/* Search Bar */}
       <TextField
         label="Search Classes"
