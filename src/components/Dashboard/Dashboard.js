@@ -54,7 +54,7 @@ const Dashboard = () => {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: "linear-gradient(135deg, #004D7F, #00A9E0)", // Modern gradient
+          background: "#fd0000", // Modern gradient
           boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)", // Clean shadow for depth
           backdropFilter: "blur(12px)", // Blur effect for a modern feel
           transition: "background 0.3s ease-in-out",

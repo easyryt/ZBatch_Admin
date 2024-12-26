@@ -29,7 +29,7 @@ const Sidebar = () => {
   const sidebarStyles = {
     width: "260px",
     height: "100vh",
-    background: "linear-gradient(135deg, #1A237E, #2196F3)", // Professional blue gradient
+    background: "#fd0000", // Professional blue gradient
     boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)", // Subtle shadow for depth
     padding: "20px 0",
     display: "flex",
