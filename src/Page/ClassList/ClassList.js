@@ -25,6 +25,8 @@ import styles from "./ClassList.module.css"; // Module-level CSS
 import CreateClassModal from "./CreateClassModal";
 import axios from "axios";
 import Cookies from "js-cookie";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 
 const ClassList = () => {
   const [classes, setClasses] = useState([]);
@@ -114,7 +116,9 @@ const ClassList = () => {
       const token = Cookies.get("token");
 
       if (!token) {
-        setSnackbarMessage("Authentication token is missing. Please log in again.");
+        setSnackbarMessage(
+          "Authentication token is missing. Please log in again."
+        );
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
         return;
@@ -138,17 +142,22 @@ const ClassList = () => {
           );
           setClasses(updatedClasses);
           setFilteredClasses(updatedClasses);
-          setSnackbarMessage(`Class "${selectedClassToDelete.clsName}" deleted successfully.`);
+          setSnackbarMessage(
+            `Class "${selectedClassToDelete.clsName}" deleted successfully.`
+          );
           setSnackbarSeverity("success");
         } else {
           setSnackbarMessage(
-            response.data?.message || "Failed to delete class. Please try again."
+            response.data?.message ||
+              "Failed to delete class. Please try again."
           );
           setSnackbarSeverity("error");
         }
       } catch (error) {
         console.error("Error:", error);
-        setSnackbarMessage("An unexpected error occurred. Please try again later.");
+        setSnackbarMessage(
+          "An unexpected error occurred. Please try again later."
+        );
         setSnackbarSeverity("error");
       }
 
@@ -222,13 +231,13 @@ const ClassList = () => {
                 <b>Class Number</b>
               </TableCell>
               <TableCell align="center">
-                <b>Section</b>
+                <b>Update</b>
               </TableCell>
               <TableCell align="center">
-                <b>Total Students</b>
+                <b>Create Batch</b>
               </TableCell>
               <TableCell align="center">
-                <b>Actions</b>
+                <b>Delete</b>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -238,23 +247,28 @@ const ClassList = () => {
                 <TableRow key={index}>
                   <TableCell align="center">{cls.clsName}</TableCell>
                   <TableCell align="center">{cls.clsNum}</TableCell>
-                  <TableCell align="center">{cls.section || "N/A"}</TableCell>
-                  <TableCell align="center">{cls.totalStudents || 0}</TableCell>
                   <TableCell align="center">
+                    {" "}
+                    <IconButton color="primary">
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    {" "}
                     <IconButton
                       color="secondary"
+                      onClick={() => handleOpenBatchModal(cls)}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      color="tertiary"
                       onClick={() => handleOpenDeleteDialog(cls.clsNum)}
                     >
                       <Delete />
                     </IconButton>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={() => handleOpenBatchModal(cls)}
-                    >
-                      Create Batch
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -295,7 +309,10 @@ const ClassList = () => {
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={()=>handleDelete(selectedClassToDelete._id)} color="secondary">
+          <Button
+            onClick={() => handleDelete(selectedClassToDelete._id)}
+            color="secondary"
+          >
             Delete
           </Button>
         </DialogActions>
