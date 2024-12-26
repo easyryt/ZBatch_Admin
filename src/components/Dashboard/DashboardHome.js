@@ -37,7 +37,7 @@ function DashboardHome() {
       {/* Footer */}
       <Box sx={{ marginTop: 5, textAlign: "center", color: "#888" }}>
         <Typography variant="body2">
-          © 2024 PK Pani Wala. All Rights Reserved.
+          © 2024 NCP Classes. All Rights Reserved.
         </Typography>
       </Box>
     </Box>
