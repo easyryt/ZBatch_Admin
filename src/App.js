@@ -3,8 +3,6 @@ import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 import NotFound from "./Page/NotFound/NotFound";
 import DashboardHome from "./components/Dashboard/DashboardHome";
-import CouponCodeForm from "./Page/CouponCodeForm/CouponCodeForm";
-import CouponCodeTable from "./Page/CouponCodeTable/CouponCodeTable";
 import ClassList from "./Page/ClassList/ClassList";
 
 const App = () => {
@@ -21,12 +19,8 @@ const App = () => {
           <Route index element={<DashboardHome />} />
 
           <Route path="class-list" element={<ClassList />} />
-          <Route path="coupon-code" element={<CouponCodeForm />} />
-          <Route path="coupon-code-list" element={<CouponCodeTable />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
-        <Route path="/coupon-code" element={<CouponCodeForm />} />
-        <Route path="/coupon-code-list" element={<CouponCodeTable />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

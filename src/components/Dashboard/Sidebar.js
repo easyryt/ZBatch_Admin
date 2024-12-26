@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import DiscountIcon from '@mui/icons-material/Discount';
+import SchoolIcon from '@mui/icons-material/School';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -20,18 +20,8 @@ const Sidebar = () => {
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
     {
       text: "Class List",
-      icon: <DiscountIcon />,
+      icon: <SchoolIcon />,
       path: "/dashboard/class-list",
-    },
-    {
-      text: "Coupon Code",
-      icon: <DiscountIcon />,
-      path: "/dashboard/coupon-code",
-    },
-    {
-      text: "Coupon Code List",
-      icon: <DiscountIcon />,
-      path: "/dashboard/coupon-code-list",
     },
   ];
 
