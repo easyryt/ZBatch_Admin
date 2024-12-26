@@ -11,12 +11,14 @@ import {
   TextField,
   Pagination,
   Button,
+  IconButton,
 } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import styles from "./ClassList.module.css"; // Module-level CSS
 import CreateClassModal from "./CreateClassModal";
 
 const ClassList = () => {
-  const classes = [
+  const initialClasses = [
     {
       clsName: "6th Class",
       clsNum: 6,
@@ -43,12 +45,14 @@ const ClassList = () => {
     },
   ];
 
-  const [filteredClasses, setFilteredClasses] = useState(classes); // Initialize with all classes
+  const [classes, setClasses] = useState(initialClasses);
+  const [filteredClasses, setFilteredClasses] = useState(initialClasses);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Open/close modal
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -76,6 +80,13 @@ const ClassList = () => {
     setPage(value);
   };
 
+  // Handle delete class
+  const handleDelete = (clsNum) => {
+    const updatedClasses = classes.filter((cls) => cls.clsNum !== clsNum);
+    setClasses(updatedClasses);
+    setFilteredClasses(updatedClasses);
+  };
+
   // Pagination logic
   const paginatedClasses = filteredClasses.slice(
     (page - 1) * rowsPerPage,
@@ -84,9 +95,12 @@ const ClassList = () => {
 
   return (
     <div className={styles.container}>
+      {/* Title */}
       <Typography variant="h4" gutterBottom className={styles.heading}>
         Class List
       </Typography>
+
+      {/* Add New Class Button */}
       <div>
         <Button variant="contained" color="primary" onClick={handleOpenModal}>
           Add New Class
@@ -96,6 +110,7 @@ const ClassList = () => {
         <CreateClassModal open={isModalOpen} handleClose={handleCloseModal} />
       </div>
       <br />
+
       {/* Search Bar */}
       <TextField
         label="Search Classes"
@@ -123,6 +138,9 @@ const ClassList = () => {
               <TableCell align="center">
                 <b>Total Students</b>
               </TableCell>
+              <TableCell align="center">
+                <b>Actions</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -133,11 +151,19 @@ const ClassList = () => {
                   <TableCell align="center">{cls.clsNum}</TableCell>
                   <TableCell align="center">{cls.section || "N/A"}</TableCell>
                   <TableCell align="center">{cls.totalStudents || 0}</TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(cls.clsNum)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} align="center">
+                <TableCell colSpan={5} align="center">
                   No classes found.
                 </TableCell>
               </TableRow>
