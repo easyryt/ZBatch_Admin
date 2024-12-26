@@ -4,7 +4,7 @@
   justify-content: center !important;
   height: 100vh !important;
   width: 100vw !important;
-  background-image: url('../Images/bg.jpg') !important; /* Use your preferred background image */
+  background-image: url('../Images/class-backgroud.webp') !important; /* Use your preferred background image */
   background-size: cover !important;
   background-position: center !important;
   backdrop-filter: blur(5px) !important; /* Blur effect for background */
