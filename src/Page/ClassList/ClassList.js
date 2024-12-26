@@ -28,6 +28,7 @@ import Cookies from "js-cookie";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateClassModal from "./UpdateClassModal";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const ClassList = () => {
   const [classes, setClasses] = useState([]);
@@ -260,6 +261,9 @@ const ClassList = () => {
               <TableCell align="center">
                 <b>Delete</b>
               </TableCell>
+              <TableCell align="center">
+                <b>View Batches</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -292,6 +296,11 @@ const ClassList = () => {
                       onClick={() => handleOpenDeleteDialog(cls.clsNum)}
                     >
                       <Delete />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton color="tertiary">
+                      <VisibilityIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>
