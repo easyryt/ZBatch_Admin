@@ -19,6 +19,11 @@ const Sidebar = () => {
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
     {
+      text: "Class List",
+      icon: <DiscountIcon />,
+      path: "/dashboard/class-list",
+    },
+    {
       text: "Coupon Code",
       icon: <DiscountIcon />,
       path: "/dashboard/coupon-code",
