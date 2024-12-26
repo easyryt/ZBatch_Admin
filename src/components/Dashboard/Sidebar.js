@@ -10,15 +10,6 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import CreateIcon from "@mui/icons-material/Create";
-import BorderAllIcon from "@mui/icons-material/BorderAll";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
-import GroupIcon from '@mui/icons-material/Group';
-import LocalShippingSharpIcon from '@mui/icons-material/LocalShippingSharp';
-import ViewCarouselOutlinedIcon from '@mui/icons-material/ViewCarouselOutlined';
-import BoyIcon from '@mui/icons-material/Boy';
 import DiscountIcon from '@mui/icons-material/Discount';
 
 const Sidebar = () => {
@@ -27,66 +18,6 @@ const Sidebar = () => {
 
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    {
-      text: "Create Product",
-      icon: <CreateIcon />,
-      path: "/dashboard/create-product",
-    },
-    {
-      text: "All Products",
-      icon: <BorderAllIcon />,
-      path: "/dashboard/all-product",
-    },
-    {
-      text: "Floor wise charges",
-      icon: <AttachMoneyIcon />,
-      path: "/dashboard/floor-wise-charges",
-    },
-    {
-      text: "List Of Floor charges",
-      icon: <FormatListNumberedIcon />,
-      path: "/dashboard/charges-list",
-    },
-    {
-      text: "Delivery Charge",
-      icon: <DeliveryDiningIcon />,
-      path: "/dashboard/delivery-Charge",
-    },
-    {
-      text: "All Delivery Charge",
-      icon: <DeliveryDiningIcon />,
-      path: "/dashboard/all-delivery-Charges",
-    },
-    {
-      text: "Consumers",
-      icon: <GroupIcon />,
-      path: "/dashboard/consumers",
-    },
-    {
-      text: "Order History",
-      icon: <LocalShippingSharpIcon />,
-      path: "/dashboard/order-history",
-    },
-    {
-      text: "Banner Create",
-      icon: <ViewCarouselOutlinedIcon />,
-      path: "/dashboard/banner-create",
-    },
-    {
-      text: "All Banner",
-      icon: <ViewCarouselOutlinedIcon />,
-      path: "/dashboard/banner-list",
-    },
-    {
-      text: "Create Delivery Boy",
-      icon: <BoyIcon />,
-      path: "/dashboard/create-delivery-boy",
-    },
-    {
-      text: "Delivery Boy List",
-      icon: <BoyIcon />,
-      path: "/dashboard/delivery-boy-list",
-    },
     {
       text: "Coupon Code",
       icon: <DiscountIcon />,

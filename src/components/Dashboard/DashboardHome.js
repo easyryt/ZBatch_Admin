@@ -5,9 +5,6 @@ import LineChartWidget from "./Widgets/LineChartWidget";
 import Widget2 from "./Widgets/Widget2";
 import Widget3 from "./Widgets/Widget3";
 import Widget4 from "./Widgets/Widget4";
-import ConsumersPage from "../../Page/ConsumersPage/ConsumersPage";
-import DeliveryBoyListPage from "../../Page/DeliveryBoyListPage/DeliveryBoyListPage";
-import OrderHistoryPage from "../../Page/OrderHistoryPage/OrderHistoryPage";
 
 function DashboardHome() {
   return (
@@ -37,49 +34,6 @@ function DashboardHome() {
       {/* Divider between widgets and chart */}
       <Divider sx={{ marginY: 4 }} />
 
-      {/* Line Chart Below Widgets */}
-      <Grid container spacing={3} sx={{ marginTop: 4 }}>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <OrderHistoryPage />
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* Line Chart Below Widgets */}
-      <Grid container spacing={3} sx={{ marginTop: 4 }}>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <ConsumersPage />
-          </Paper>
-        </Grid>
-      </Grid>
-      {/* Line Chart Below Widgets */}
-      <Grid container spacing={3} sx={{ marginTop: 4 }}>
-        <Grid item xs={12}>
-          <Paper
-            sx={{
-              padding: "20px",
-              borderRadius: "12px",
-              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <DeliveryBoyListPage />
-          </Paper>
-        </Grid>
-      </Grid>
       {/* Footer */}
       <Box sx={{ marginTop: 5, textAlign: "center", color: "#888" }}>
         <Typography variant="body2">
