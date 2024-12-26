@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -23,47 +23,49 @@ import {
 import { Delete } from "@mui/icons-material";
 import styles from "./ClassList.module.css"; // Module-level CSS
 import CreateClassModal from "./CreateClassModal";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const ClassList = () => {
-  const initialClasses = [
-    {
-      clsName: "6th Class",
-      clsNum: 6,
-      section: "E",
-      totalStudents: 20,
-    },
-    {
-      clsName: "7th Class",
-      clsNum: 7,
-      section: "C",
-      totalStudents: 60,
-    },
-    {
-      clsName: "8th Class",
-      clsNum: 8,
-      section: "A",
-      totalStudents: 40,
-    },
-    {
-      clsName: "9th Class",
-      clsNum: 9,
-      section: "B",
-      totalStudents: 35,
-    },
-  ];
-
-  const [classes, setClasses] = useState(initialClasses);
-  const [filteredClasses, setFilteredClasses] = useState(initialClasses);
+  const [classes, setClasses] = useState([]);
+  const [filteredClasses, setFilteredClasses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar message
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info"); // Snackbar severity
   const [deletedClassName, setDeletedClassName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
   const [currentBatchClass, setCurrentBatchClass] = useState(null);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const token = Cookies.get("token");
+      try {
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/classes/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
+        );
+        setClasses(response.data.data);
+        setFilteredClasses(response.data.data);
+      } catch (error) {
+        setSnackbarMessage("Error fetching class data.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        console.error("Error fetching class data:", error);
+      }
+    };
+    fetchClasses();
+  }, []);
 
   // Open/close modal
   const handleOpenModal = () => {
@@ -107,18 +109,54 @@ const ClassList = () => {
   };
 
   // Handle delete class
-  const handleDelete = () => {
+  const handleDelete = async (id) => {
     if (selectedClassToDelete) {
-      const updatedClasses = classes.filter(
-        (cls) => cls.clsNum !== selectedClassToDelete.clsNum
-      );
-      setDeletedClassName(selectedClassToDelete.clsName);
-      setClasses(updatedClasses);
-      setFilteredClasses(updatedClasses);
-      setSnackbarOpen(true); // Open snackbar
+      const token = Cookies.get("token");
+
+      if (!token) {
+        setSnackbarMessage("Authentication token is missing. Please log in again.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        return;
+      }
+
+      try {
+        // Send DELETE request to the API
+        const response = await axios.delete(
+          `https://npc-classes.onrender.com/admin/classes/delete/${id}`,
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the classes list
+          const updatedClasses = classes.filter(
+            (cls) => cls.clsNum !== selectedClassToDelete.clsNum
+          );
+          setClasses(updatedClasses);
+          setFilteredClasses(updatedClasses);
+          setSnackbarMessage(`Class "${selectedClassToDelete.clsName}" deleted successfully.`);
+          setSnackbarSeverity("success");
+        } else {
+          setSnackbarMessage(
+            response.data?.message || "Failed to delete class. Please try again."
+          );
+          setSnackbarSeverity("error");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setSnackbarMessage("An unexpected error occurred. Please try again later.");
+        setSnackbarSeverity("error");
+      }
+
+      // Close dialog and reset state
       setSelectedClassToDelete(null);
+      setDialogOpen(false);
+      setSnackbarOpen(true);
     }
-    setDialogOpen(false);
   };
 
   // Handle Snackbar close
@@ -139,7 +177,7 @@ const ClassList = () => {
   };
 
   // Pagination logic
-  const paginatedClasses = filteredClasses.slice(
+  const paginatedClasses = filteredClasses?.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
@@ -257,7 +295,7 @@ const ClassList = () => {
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button onClick={()=>handleDelete(selectedClassToDelete._id)} color="secondary">
             Delete
           </Button>
         </DialogActions>
@@ -293,8 +331,8 @@ const ClassList = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="info">
-          {deletedClassName} deleted successfully!
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </div>
