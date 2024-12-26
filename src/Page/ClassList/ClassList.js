@@ -10,8 +10,10 @@ import {
   Typography,
   TextField,
   Pagination,
+  Button,
 } from "@mui/material";
 import styles from "./ClassList.module.css"; // Module-level CSS
+import CreateClassModal from "./CreateClassModal";
 
 const ClassList = () => {
   const classes = [
@@ -33,6 +35,15 @@ const ClassList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const rowsPerPage = 5; // Number of rows per page
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   // Handle search input
   const handleSearch = (e) => {
@@ -64,7 +75,15 @@ const ClassList = () => {
       <Typography variant="h4" gutterBottom className={styles.heading}>
         Class List
       </Typography>
+      <div>
+        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+          Add New Class
+        </Button>
 
+        {/* Create Class Modal */}
+        <CreateClassModal open={isModalOpen} handleClose={handleCloseModal} />
+      </div>
+      <br/>
       {/* Search Bar */}
       <TextField
         label="Search Classes"
@@ -101,9 +120,7 @@ const ClassList = () => {
                   <TableCell align="center">{cls.clsName}</TableCell>
                   <TableCell align="center">{cls.clsNum}</TableCell>
                   <TableCell align="center">{cls.section || "N/A"}</TableCell>
-                  <TableCell align="center">
-                    {cls.totalStudents || 0}
-                  </TableCell>
+                  <TableCell align="center">{cls.totalStudents || 0}</TableCell>
                 </TableRow>
               ))
             ) : (
