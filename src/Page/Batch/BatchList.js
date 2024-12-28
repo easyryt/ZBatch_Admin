@@ -1,3 +1,4 @@
+// BatchList.js
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -14,6 +15,7 @@ import { Edit as EditIcon } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
+import UpdateBatchModal from "./UpdateBatchModal";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -25,6 +27,8 @@ const BatchList = () => {
     message: "",
     severity: "success",
   });
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -42,6 +46,7 @@ const BatchList = () => {
       });
       return;
     }
+
     try {
       const response = await axios.get(
         `https://npc-classes.onrender.com/admin/course/batches/getAll/${id}`,
@@ -79,9 +84,14 @@ const BatchList = () => {
     setFilteredBatches(filtered);
   };
 
-  const handleUpdateBatch = (id) => {
-    alert(`Update batch with ID: ${id}`);
-    // Add further functionality for updating a batch
+  const handleOpenModal = (batch) => {
+    setSelectedBatch(batch);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBatch(null);
   };
 
   const columns = [
@@ -138,7 +148,7 @@ const BatchList = () => {
       renderCell: (params) => (
         <IconButton
           color="primary"
-          onClick={() => handleUpdateBatch(params.row._id)}
+          onClick={() => handleOpenModal(params.row)}
         >
           <EditIcon />
         </IconButton>
@@ -206,7 +216,12 @@ const BatchList = () => {
           />
         </Box>
       )}
-
+      <UpdateBatchModal
+        open={isModalOpen}
+        batch={selectedBatch}
+        onClose={handleCloseModal}
+        onBatchUpdated={fetchBatches}
+      />
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
