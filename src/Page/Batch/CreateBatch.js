@@ -10,10 +10,12 @@ import {
   Modal,
   Snackbar,
   Alert,
+  IconButton
 } from "@mui/material";
 import Cookies from "js-cookie";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CreateBatchModal = ({ open, handleClose, classId }) => {
   const [thumbnailImg, setThumbnailImg] = useState(null);
@@ -25,6 +27,7 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
     control,
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -81,11 +84,13 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status) {
         setSnackbar({ open: true, message: "Batch created successfully!", severity: "success" });
+        reset();
+        setThumbnailImg(null);
+        setThumbnailPreview(null);
+        setIsFree(false);
         handleClose();
-      } else {
-        setSnackbar({ open: true, message: response.data.message || "Something went wrong", severity: "error" });
       }
     } catch (error) {
       setSnackbar({ open: true, message: "An error occurred while creating the batch", severity: "error" });
@@ -96,6 +101,11 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
     const file = e.target.files[0];
     setThumbnailImg(file);
     setThumbnailPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleThumbnailDelete = () => {
+    setThumbnailImg(null);
+    setThumbnailPreview(null);
   };
 
   return (
@@ -220,12 +230,20 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
             <input type="file" hidden onChange={handleThumbnailChange} />
           </Button>
           {thumbnailPreview && (
-            <Box
-              component="img"
-              src={thumbnailPreview}
-              alt="Thumbnail Preview"
-              sx={{ width: "100%", height: "auto", borderRadius: "8px", mb: 2 }}
-            />
+            <Box sx={{ position: "relative", display: "inline-block", mb: 2 }}>
+              <Box
+                component="img"
+                src={thumbnailPreview}
+                alt="Thumbnail Preview"
+                sx={{ width: "100%", height: "auto", borderRadius: "8px" }}
+              />
+              <IconButton
+                onClick={handleThumbnailDelete}
+                sx={{ position: "absolute", top: 8, right: 8, backgroundColor: "white" }}
+              >
+                <DeleteIcon color="error" />
+              </IconButton>
+            </Box>
           )}
 
           <Button
