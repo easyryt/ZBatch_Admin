@@ -4,7 +4,7 @@ import styles from "./CreateClassModal.module.css"; // Module-level CSS
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const CreateClassModal = ({ open, handleClose }) => {
+const CreateClassModal = ({ open, handleClose ,setUpdate }) => {
   const [formData, setFormData] = useState({
     clsName: "",
     clsNum: "",
@@ -56,17 +56,14 @@ const CreateClassModal = ({ open, handleClose }) => {
         }
       );
 
-      if (response && response.status === 200) {
+      if (response.status) {
         setSnackbarMessage("Class created successfully!");
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
+        setUpdate(true)
         handleClose(); // Close modal on success
         setFormData({ clsName: "", clsNum: "" }); // Clear the form
-      } else {
-        setSnackbarMessage(response.data?.message || "Failed to create class. Please try again.");
-        setSnackbarSeverity("error");
-        setOpenSnackbar(true);
-      }
+      } 
     } catch (error) {
       console.error("Error:", error);
       setSnackbarMessage("An unexpected error occurred. Please try again later.");

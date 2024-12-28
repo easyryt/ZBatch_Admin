@@ -29,6 +29,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateClassModal from "./UpdateClassModal";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useNavigate } from "react-router-dom";
 
 const ClassList = () => {
   const [classes, setClasses] = useState([]);
@@ -40,7 +41,6 @@ const ClassList = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(""); // Snackbar message
   const [snackbarSeverity, setSnackbarSeverity] = useState("info"); // Snackbar severity
-  const [deletedClassName, setDeletedClassName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
@@ -48,6 +48,8 @@ const ClassList = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const [update,setUpdate] = useState(false)
+
+  const navigate = useNavigate()
 
   // Fetch data from the API
   useEffect(() => {
@@ -64,6 +66,7 @@ const ClassList = () => {
         );
         setClasses(response.data.data);
         setFilteredClasses(response.data.data);
+        setUpdate(false)
       } catch (error) {
         setSnackbarMessage("Error fetching class data.");
         setSnackbarSeverity("error");
@@ -229,7 +232,7 @@ const ClassList = () => {
         </Button>
 
         {/* Create Class Modal */}
-        <CreateClassModal open={isModalOpen} handleClose={handleCloseModal} />
+        <CreateClassModal open={isModalOpen} handleClose={handleCloseModal} setUpdate={setUpdate} />
       </div>
       <br />
 
@@ -287,7 +290,7 @@ const ClassList = () => {
                     {" "}
                     <IconButton
                       color="secondary"
-                      onClick={() => handleOpenBatchModal(cls)}
+                      onClick={() => navigate (`/dashboard/create-batch/${cls._id}`)}
                     >
                       <AddIcon />
                     </IconButton>
