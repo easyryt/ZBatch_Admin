@@ -91,7 +91,7 @@ const BatchList = () => {
       ),
     },
     { field: "title", headerName: "Title", width: 200 },
-    { field: "clsName", headerName: "Class", width: 100 },
+    { field: "clsName", headerName: "Class Name", width: 100 },
     { field: "board", headerName: "Board", width: 100 },
     {
       field: "duration",
@@ -111,6 +111,8 @@ const BatchList = () => {
     },
     { field: "price", headerName: "Price", width: 100 },
     { field: "mrp", headerName: "MRP", width: 100 },
+    { field: "discount", headerName: "Discount", width: 100 },
+    { field: "isbatchActive", headerName: "isbatchActive", width: 100 },
     {
       field: "batchTag",
       headerName: "Batch Tag",
