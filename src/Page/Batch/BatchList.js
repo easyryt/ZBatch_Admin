@@ -1,4 +1,3 @@
-// BatchList.js
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -11,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Edit as EditIcon } from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
@@ -30,7 +29,7 @@ const BatchList = () => {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
-    const [update,setUpdate] = useState(false)
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     fetchBatches();
@@ -61,7 +60,7 @@ const BatchList = () => {
       if (response.data.status) {
         setBatches(response.data.data);
         setFilteredBatches(response.data.data);
-        setUpdate(false)
+        setUpdate(false);
       }
     } catch (error) {
       setSnackbar({
@@ -94,6 +93,45 @@ const BatchList = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedBatch(null);
+  };
+
+  const handleDeleteBatch = async (batchId) => {
+    const token = Cookies.get("token");
+
+    if (!token) {
+      setSnackbar({
+        open: true,
+        message: "Authentication token is missing",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `https://npc-classes.onrender.com/admin/course/batches/delete/${batchId}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
+        }
+      );
+
+      if (response.data.status) {
+        setSnackbar({
+          open: true,
+          message: "Batch deleted successfully",
+          severity: "success",
+        });
+        setUpdate(true); // Trigger re-fetch
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: "Failed to delete batch",
+        severity: "error",
+      });
+    }
   };
 
   const columns = [
@@ -146,14 +184,22 @@ const BatchList = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 150,
       renderCell: (params) => (
-        <IconButton
-          color="primary"
-          onClick={() => handleOpenModal(params.row)}
-        >
-          <EditIcon />
-        </IconButton>
+        <Box>
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenModal(params.row)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            color="secondary"
+            onClick={() => handleDeleteBatch(params.row._id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
       ),
     },
   ];
