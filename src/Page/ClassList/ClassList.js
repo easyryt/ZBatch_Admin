@@ -30,6 +30,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import UpdateClassModal from "./UpdateClassModal";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
+import CreateBatchModal from "../Batch/CreateBatch";
 
 const ClassList = () => {
   const [classes, setClasses] = useState([]);
@@ -44,10 +45,10 @@ const ClassList = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedClassToDelete, setSelectedClassToDelete] = useState(null);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
-  const [currentBatchClass, setCurrentBatchClass] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const [update,setUpdate] = useState(false)
+  const [classId,setClassId] = useState(null)
 
   const navigate = useNavigate()
 
@@ -182,15 +183,14 @@ const ClassList = () => {
   };
 
   // Open batch creation modal
-  const handleOpenBatchModal = (cls) => {
-    setCurrentBatchClass(cls);
+  const handleOpenBatchModal = (id) => {
+    setClassId(id);
     setBatchModalOpen(true);
   };
 
   // Close batch creation modal
   const handleCloseBatchModal = () => {
     setBatchModalOpen(false);
-    setCurrentBatchClass(null);
   };
 
   // Open/close Update Class modal
@@ -203,6 +203,7 @@ const ClassList = () => {
     setIsUpdateModalOpen(false);
     setSelectedClass(null);
   };
+
 
   // Pagination logic
   const paginatedClasses = filteredClasses?.slice(
@@ -225,7 +226,11 @@ const ClassList = () => {
         setUpdate={setUpdate}
       />
       {/* Add New Class Button */}
-
+      <CreateBatchModal 
+      open={batchModalOpen}
+      handleClose={handleCloseBatchModal}
+      classId={classId}
+       />
       <div>
         <Button variant="contained" color="primary" onClick={handleOpenModal}>
           Add New Class
@@ -290,7 +295,7 @@ const ClassList = () => {
                     {" "}
                     <IconButton
                       color="secondary"
-                      onClick={() => navigate (`/dashboard/create-batch/${cls._id}`)}
+                      onClick={() =>handleOpenBatchModal(cls._id)}
                     >
                       <AddIcon />
                     </IconButton>
@@ -355,30 +360,6 @@ const ClassList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Batch Creation Modal */}
-      <Dialog
-        open={batchModalOpen}
-        onClose={handleCloseBatchModal}
-        aria-labelledby="batch-dialog-title"
-      >
-        <DialogTitle id="batch-dialog-title">Create Batch</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Creating batch for <b>{currentBatchClass?.clsName}</b>
-          </Typography>
-          {/* Add your batch creation form here */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseBatchModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCloseBatchModal} color="secondary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
       {/* Snackbar Notification */}
       <Snackbar
         open={snackbarOpen}

@@ -7,16 +7,19 @@ import {
   FormControlLabel,
   Checkbox,
   Grid,
+  Modal,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Cookies from "js-cookie";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const CreateBatch = () => {
-  const { id } = useParams(); // Get course ID from URL params
+const CreateBatchModal = ({ open, handleClose, classId }) => {
   const [thumbnailImg, setThumbnailImg] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [isFree, setIsFree] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   const {
     control,
@@ -38,10 +41,10 @@ const CreateBatch = () => {
   });
 
   const onSubmit = async (data) => {
-    const token = Cookies.get("token"); // Retrieve token from cookies
+    const token = Cookies.get("token");
 
     if (!token) {
-      alert("Authentication token is missing");
+      setSnackbar({ open: true, message: "Authentication token is missing", severity: "error" });
       return;
     }
 
@@ -69,7 +72,7 @@ const CreateBatch = () => {
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/course/batches/create/${id}`,
+        `https://npc-classes.onrender.com/admin/course/batches/create/${classId}`,
         formData,
         {
           headers: {
@@ -79,173 +82,179 @@ const CreateBatch = () => {
       );
 
       if (response.status === 200) {
-        alert("Batch created successfully!");
+        setSnackbar({ open: true, message: "Batch created successfully!", severity: "success" });
+        handleClose();
       } else {
-        alert(response.data.message || "Something went wrong");
+        setSnackbar({ open: true, message: response.data.message || "Something went wrong", severity: "error" });
       }
     } catch (error) {
-      console.error("Error creating batch:", error);
-      alert("An error occurred while creating the batch");
+      setSnackbar({ open: true, message: "An error occurred while creating the batch", severity: "error" });
     }
   };
 
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    setThumbnailImg(file);
+    setThumbnailPreview(file ? URL.createObjectURL(file) : null);
+  };
+
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        maxWidth: "700px",
-        margin: "auto",
-        padding: "24px",
-        backgroundColor: "#ffffff",
-        borderRadius: "12px",
-        boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: "bold" }}>
-        Create Batch
-      </Typography>
+    <>
+      <Modal open={open} onClose={handleClose} aria-labelledby="create-batch-modal">
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{
+            maxWidth: "700px",
+            maxHeight: "80vh",
+            overflowY: "auto",
+            margin: "auto",
+            padding: "24px",
+            backgroundColor: "#ffffff",
+            borderRadius: "12px",
+            boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.1)",
+            mt: "10vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: "bold" }}>
+            Create Batch
+          </Typography>
 
-      <Controller
-        name="title"
-        control={control}
-        rules={{ required: "Title is required" }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Title"
-            fullWidth
-            margin="normal"
-            error={!!errors.title}
-            helperText={errors.title?.message}
-          />
-        )}
-      />
-
-      <Controller
-        name="board"
-        control={control}
-        rules={{ required: "Board is required" }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Board"
-            fullWidth
-            margin="normal"
-            error={!!errors.board}
-            helperText={errors.board?.message}
-          />
-        )}
-      />
-
-      <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        Duration
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <TextField
-            {...register("duration.startDate")}
-            label="Start Date"
-            type="date"
-            fullWidth
-            defaultValue="2024-01-01"
-            InputLabelProps={{ shrink: true }}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            {...register("duration.endDate")}
-            label="End Date"
-            type="date"
-            fullWidth
-            defaultValue="2024-12-31"
-            InputLabelProps={{ shrink: true }}
-          />
-        </Grid>
-      </Grid>
-
-      <Controller
-        name="batchTag"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Batch Tag"
-            fullWidth
-            margin="normal"
-          />
-        )}
-      />
-
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isFree}
-            onChange={(e) => setIsFree(e.target.checked)}
-          />
-        }
-        label="Is Free"
-      />
-
-      {!isFree && (
-        <>
           <Controller
-            name="price"
+            name="title"
             control={control}
+            rules={{ required: "Title is required" }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Price"
-                type="number"
+                label="Title"
                 fullWidth
                 margin="normal"
+                error={!!errors.title}
+                helperText={errors.title?.message}
               />
             )}
           />
 
           <Controller
-            name="mrp"
+            name="board"
             control={control}
+            rules={{ required: "Board is required" }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="MRP"
-                type="number"
+                label="Board"
                 fullWidth
                 margin="normal"
+                error={!!errors.board}
+                helperText={errors.board?.message}
               />
             )}
           />
-        </>
-      )}
 
-      <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-        Thumbnail Image
-      </Typography>
-      <Button
-        variant="outlined"
-        component="label"
-        sx={{ marginBottom: "16px" }}
-      >
-        Upload Thumbnail
-        <input
-          type="file"
-          hidden
-          onChange={(e) => setThumbnailImg(e.target.files[0])}
-        />
-      </Button>
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            Duration
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                {...register("duration.startDate")}
+                label="Start Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                {...register("duration.endDate")}
+                label="End Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
 
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{ mt: 3, py: 1.5, fontWeight: "bold" }}
+          <Controller
+            name="batchTag"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Batch Tag" fullWidth margin="normal" />
+            )}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox checked={isFree} onChange={(e) => setIsFree(e.target.checked)} />
+            }
+            label="Is Free"
+          />
+
+          {!isFree && (
+            <>
+              <Controller
+                name="price"
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="Price" type="number" fullWidth margin="normal" />
+                )}
+              />
+              <Controller
+                name="mrp"
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="MRP" type="number" fullWidth margin="normal" />
+                )}
+              />
+            </>
+          )}
+
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            Thumbnail Image
+          </Typography>
+          <Button variant="outlined" component="label" sx={{ marginBottom: "16px" }}>
+            Upload Thumbnail
+            <input type="file" hidden onChange={handleThumbnailChange} />
+          </Button>
+          {thumbnailPreview && (
+            <Box
+              component="img"
+              src={thumbnailPreview}
+              alt="Thumbnail Preview"
+              sx={{ width: "100%", height: "auto", borderRadius: "8px", mb: 2 }}
+            />
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3, py: 1.5, fontWeight: "bold" }}
+          >
+            Create Batch
+          </Button>
+        </Box>
+      </Modal>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
-        Create Batch
-      </Button>
-    </Box>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 
-export default CreateBatch;
+export default CreateBatchModal;
