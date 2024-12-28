@@ -8,6 +8,11 @@ import {
   CircularProgress,
   Button,
   IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -28,6 +33,8 @@ const BatchList = () => {
   });
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [batchToDelete, setBatchToDelete] = useState(null);
   const { id } = useParams();
   const [update, setUpdate] = useState(false);
 
@@ -95,7 +102,17 @@ const BatchList = () => {
     setSelectedBatch(null);
   };
 
-  const handleDeleteBatch = async (batchId) => {
+  const openDeleteDialog = (batchId) => {
+    setBatchToDelete(batchId);
+    setIsDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setIsDialogOpen(false);
+    setBatchToDelete(null);
+  };
+
+  const confirmDeleteBatch = async () => {
     const token = Cookies.get("token");
 
     if (!token) {
@@ -109,7 +126,7 @@ const BatchList = () => {
 
     try {
       const response = await axios.delete(
-        `https://npc-classes.onrender.com/admin/course/batches/delete/${batchId}`,
+        `https://npc-classes.onrender.com/admin/course/batches/delete/${batchToDelete}`,
         {
           headers: {
             "x-admin-token": token,
@@ -131,6 +148,8 @@ const BatchList = () => {
         message: "Failed to delete batch",
         severity: "error",
       });
+    } finally {
+      closeDeleteDialog();
     }
   };
 
@@ -155,26 +174,15 @@ const BatchList = () => {
       headerName: "Duration",
       width: 200,
       renderCell: (params) => (
-        <Typography>{`${params.row.duration.startDate} - ${params.row.duration.endDate}`}</Typography>
+        <div>{`${params.row.duration.startDate} - ${params.row.duration.endDate}`}</div>
       ),
     },
-    {
-      field: "isFree",
-      headerName: "Is Free?",
-      width: 100,
-      renderCell: (params) => (
-        <Typography>{params.row.isFree ? "Yes" : "No"}</Typography>
-      ),
-    },
+    { field: "isFree", headerName: "Is Free?", width: 100 },
     { field: "price", headerName: "Price", width: 100 },
     { field: "mrp", headerName: "MRP", width: 100 },
     { field: "discount", headerName: "Discount", width: 100 },
     { field: "isbatchActive", headerName: "Batch Active", width: 100 },
-    {
-      field: "batchTag",
-      headerName: "Batch Tag",
-      width: 150,
-    },
+    { field: "batchTag", headerName: "Batch Tag", width: 150 },
     {
       field: "createdAt",
       headerName: "Created At",
@@ -195,7 +203,7 @@ const BatchList = () => {
           </IconButton>
           <IconButton
             color="secondary"
-            onClick={() => handleDeleteBatch(params.row._id)}
+            onClick={() => openDeleteDialog(params.row._id)}
           >
             <DeleteIcon />
           </IconButton>
@@ -205,9 +213,7 @@ const BatchList = () => {
   ];
 
   return (
-    <Box
-      sx={{ padding: "24px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}
-    >
+    <Box sx={{ padding: "24px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
       <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
         Batch List
       </Typography>
@@ -228,11 +234,7 @@ const BatchList = () => {
           fullWidth
           sx={{ maxWidth: "400px" }}
         />
-        <Button
-          variant="contained"
-          onClick={fetchBatches}
-          sx={{ marginLeft: "16px" }}
-        >
+        <Button variant="contained" onClick={fetchBatches} sx={{ marginLeft: "16px" }}>
           Refresh
         </Button>
       </Box>
@@ -264,6 +266,7 @@ const BatchList = () => {
           />
         </Box>
       )}
+
       <UpdateBatchModal
         open={isModalOpen}
         batch={selectedBatch}
@@ -271,6 +274,22 @@ const BatchList = () => {
         onBatchUpdated={fetchBatches}
         setUpdate={setUpdate}
       />
+      <Dialog open={isDialogOpen} onClose={closeDeleteDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this batch? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeleteBatch} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
