@@ -30,10 +30,11 @@ const BatchList = () => {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
+    const [update,setUpdate] = useState(false)
 
   useEffect(() => {
     fetchBatches();
-  }, []);
+  }, [update]);
 
   const fetchBatches = async () => {
     const token = Cookies.get("token");
@@ -60,6 +61,7 @@ const BatchList = () => {
       if (response.data.status) {
         setBatches(response.data.data);
         setFilteredBatches(response.data.data);
+        setUpdate(false)
       }
     } catch (error) {
       setSnackbar({
@@ -221,6 +223,7 @@ const BatchList = () => {
         batch={selectedBatch}
         handleClose={handleCloseModal}
         onBatchUpdated={fetchBatches}
+        setUpdate={setUpdate}
       />
       <Snackbar
         open={snackbar.open}

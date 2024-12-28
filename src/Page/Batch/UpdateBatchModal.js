@@ -17,7 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const UpdateBatchModal = ({ open, handleClose, batch }) => {
+const UpdateBatchModal = ({ open, handleClose, batch ,setUpdate }) => {
   const [thumbnailImg, setThumbnailImg] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(
     batch?.thumbnailImg?.url || null
@@ -117,6 +117,7 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
           message: response.data.message || "Batch updated successfully!",
           severity: "success",
         });
+        setUpdate(true)
         handleClose();
       } else {
         throw new Error(response?.data?.message || "Failed to update batch.");
