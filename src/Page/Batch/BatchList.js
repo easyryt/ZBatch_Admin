@@ -219,7 +219,7 @@ const BatchList = () => {
       <UpdateBatchModal
         open={isModalOpen}
         batch={selectedBatch}
-        onClose={handleCloseModal}
+        handleClose={handleCloseModal}
         onBatchUpdated={fetchBatches}
       />
       <Snackbar

@@ -19,9 +19,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const UpdateBatchModal = ({ open, handleClose, batch }) => {
   const [thumbnailImg, setThumbnailImg] = useState(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState(batch?.thumbnailImg?.url || null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(
+    batch?.thumbnailImg?.url || null
+  );
   const [isFree, setIsFree] = useState(batch?.isFree || false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const {
     control,
@@ -63,7 +69,11 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
     const token = Cookies.get("token");
 
     if (!token) {
-      setSnackbar({ open: true, message: "Authentication token is missing", severity: "error" });
+      setSnackbar({
+        open: true,
+        message: "Authentication token is missing",
+        severity: "error",
+      });
       return;
     }
 
@@ -99,12 +109,34 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
           },
         }
       );
-      if (response.data.status) {
-        setSnackbar({ open: true, message: "Batch updated successfully!", severity: "success" });
+
+      // Ensure correct success check
+      if (response.status === 200 && response.data.status === true) {
+        setSnackbar({
+          open: true,
+          message: response.data.message || "Batch updated successfully!",
+          severity: "success",
+        });
         handleClose();
+      } else {
+        throw new Error(response?.data?.message || "Failed to update batch.");
       }
     } catch (error) {
-      setSnackbar({ open: true, message: "An error occurred while updating the batch", severity: "error" });
+      console.error("Error caught:", error); // Log the error to debug
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "An error occurred while updating the batch";
+        setSnackbar({ open: true, message: errorMessage, severity: "error" });
+      } else {
+        // Handle non-Axios errors here (e.g., logic issues)
+        setSnackbar({
+          open: true,
+          message: "Unexpected error occurred.",
+          severity: "error",
+        });
+      }
     }
   };
 
@@ -121,7 +153,11 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
 
   return (
     <>
-      <Modal open={open} onClose={handleClose} aria-labelledby="update-batch-modal">
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="update-batch-modal"
+      >
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -139,7 +175,12 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: "bold" }}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            align="center"
+            sx={{ fontWeight: "bold" }}
+          >
             Update Batch
           </Typography>
 
@@ -251,7 +292,12 @@ const UpdateBatchModal = ({ open, handleClose, batch }) => {
               <img
                 src={thumbnailPreview}
                 alt="Thumbnail Preview"
-                style={{ width: 100, height: 100, borderRadius: 8, marginRight: 16 }}
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 8,
+                  marginRight: 16,
+                }}
               />
               <IconButton onClick={handleThumbnailDelete}>
                 <DeleteIcon />
