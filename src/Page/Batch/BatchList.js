@@ -7,8 +7,10 @@ import {
   Alert,
   CircularProgress,
   Button,
+  IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { Edit as EditIcon } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
@@ -77,6 +79,11 @@ const BatchList = () => {
     setFilteredBatches(filtered);
   };
 
+  const handleUpdateBatch = (id) => {
+    alert(`Update batch with ID: ${id}`);
+    // Add further functionality for updating a batch
+  };
+
   const columns = [
     {
       field: "thumbnailImg",
@@ -112,7 +119,7 @@ const BatchList = () => {
     { field: "price", headerName: "Price", width: 100 },
     { field: "mrp", headerName: "MRP", width: 100 },
     { field: "discount", headerName: "Discount", width: 100 },
-    { field: "isbatchActive", headerName: "isbatchActive", width: 100 },
+    { field: "isbatchActive", headerName: "Batch Active", width: 100 },
     {
       field: "batchTag",
       headerName: "Batch Tag",
@@ -123,6 +130,19 @@ const BatchList = () => {
       headerName: "Created At",
       width: 200,
       renderCell: (params) => new Date(params.row.createdAt).toLocaleString(),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton
+          color="primary"
+          onClick={() => handleUpdateBatch(params.row._id)}
+        >
+          <EditIcon />
+        </IconButton>
+      ),
     },
   ];
 
