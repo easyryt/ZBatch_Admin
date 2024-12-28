@@ -309,7 +309,7 @@ const ClassList = () => {
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton color="tertiary">
+                    <IconButton color="tertiary" onClick={()=>navigate(`/dashboard/batch-list/${cls._id}`)}>
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>

@@ -5,6 +5,7 @@ import NotFound from "./Page/NotFound/NotFound";
 import DashboardHome from "./components/Dashboard/DashboardHome";
 import ClassList from "./Page/ClassList/ClassList";
 import CreateBatch from "./Page/Batch/CreateBatch";
+import BatchList from "./Page/Batch/BatchList";
 
 const App = () => {
   return (
@@ -19,10 +20,10 @@ const App = () => {
           {/* Main Dashboard page */}
           <Route index element={<DashboardHome />} />
           <Route path="class-list" element={<ClassList />} />
-          <Route path="create-batch/:id" element={<CreateBatch />} />
+          <Route path="batch-list/:id" element={<BatchList />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
-        <Route path="/create-batch/:id" element={<CreateBatch />} />
+        <Route path="/batch-list/:id" element={<BatchList />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
