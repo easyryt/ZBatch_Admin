@@ -17,12 +17,12 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const UpdateBatchModal = ({ open, handleClose,batch }) => {
+const UpdateBatchModal = ({ open, handleClose, batch }) => {
   const [thumbnailImg, setThumbnailImg] = useState(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState(batch?.thumbnailUrl || null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(batch?.thumbnailImg?.url || null);
   const [isFree, setIsFree] = useState(batch?.isFree || false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  console.log(batch,"data")
+
   const {
     control,
     handleSubmit,
@@ -34,8 +34,8 @@ const UpdateBatchModal = ({ open, handleClose,batch }) => {
       title: batch?.title || "",
       board: batch?.board || "",
       duration: {
-        startDate: batch?.duration?.startDate || "2024-01-01",
-        endDate: batch?.duration?.endDate || "2024-12-31",
+        startDate: batch?.duration?.startDate || "",
+        endDate: batch?.duration?.endDate || "",
       },
       batchTag: batch?.batchTag || "",
       price: batch?.price || "",
@@ -48,14 +48,14 @@ const UpdateBatchModal = ({ open, handleClose,batch }) => {
       title: batch?.title || "",
       board: batch?.board || "",
       duration: {
-        startDate: batch?.duration?.startDate || "2024-01-01",
-        endDate: batch?.duration?.endDate || "2024-12-31",
+        startDate: batch?.duration?.startDate || "",
+        endDate: batch?.duration?.endDate || "",
       },
       batchTag: batch?.batchTag || "",
       price: batch?.price || "",
       mrp: batch?.mrp || "",
     });
-    setThumbnailPreview(batch?.thumbnailUrl || null);
+    setThumbnailPreview(batch?.thumbnailImg?.url || null);
     setIsFree(batch?.isFree || false);
   }, [batch, reset]);
 
@@ -99,8 +99,7 @@ const UpdateBatchModal = ({ open, handleClose,batch }) => {
           },
         }
       );
-
-      if (response.status) {
+      if (response.data.status) {
         setSnackbar({ open: true, message: "Batch updated successfully!", severity: "success" });
         handleClose();
       }
