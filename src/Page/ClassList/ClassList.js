@@ -47,6 +47,7 @@ const ClassList = () => {
   const [currentBatchClass, setCurrentBatchClass] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [update,setUpdate] = useState(false)
 
   // Fetch data from the API
   useEffect(() => {
@@ -71,7 +72,7 @@ const ClassList = () => {
       }
     };
     fetchClasses();
-  }, []);
+  }, [update]);
 
   // Open/close modal
   const handleOpenModal = () => {
@@ -218,6 +219,7 @@ const ClassList = () => {
         open={isUpdateModalOpen}
         handleClose={handleCloseUpdateModal}
         classData={selectedClass}
+        setUpdate={setUpdate}
       />
       {/* Add New Class Button */}
 

@@ -4,7 +4,7 @@ import styles from "./CreateClassModal.module.css"; // Module-level CSS
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const UpdateClassModal = ({ open, handleClose, classData }) => {
+const UpdateClassModal = ({ open, handleClose, classData ,setUpdate }) => {
   const [formData, setFormData] = useState({
     clsName: "",
     clsNum: "",
@@ -70,6 +70,7 @@ const UpdateClassModal = ({ open, handleClose, classData }) => {
         setSnackbarMessage("Class updated successfully!");
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
+        setUpdate(true)
         handleClose(); // Close modal on success
       } else {
         setSnackbarMessage(response.data?.message || "Failed to update class. Please try again.");
