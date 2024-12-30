@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import UpdateBatchModal from "./UpdateBatchModal";
 import CreateBatchModal from "./CreateBatch";
 import AddIcon from "@mui/icons-material/Add";
+import BatchDetails from "./BatchDetails";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -40,6 +41,20 @@ const BatchList = () => {
   const { id } = useParams();
   const [update, setUpdate] = useState(false);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
+  const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
+    useState(false);
+  const [selectedBatchId, setSelectedBatchId] = useState(null);
+
+  // Open Description batch creation modal
+  const handleDescriptionOpenBatchModal = (id) => {
+    setSelectedBatchId(id);
+    setBatchDescriptionModalOpen(true);
+  };
+
+  // Close Description batch creation modal
+  const handleDescriptionCloseBatchModal = () => {
+    setBatchDescriptionModalOpen(false);
+  };
 
   // Open batch creation modal
   const handleOpenBatchModal = () => {
@@ -228,7 +243,10 @@ const BatchList = () => {
       headerName: "Created Description",
       width: 200,
       renderCell: (params) => (
-        <IconButton color="secondary">
+        <IconButton
+          color="secondary"
+          onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
+        >
           <AddIcon />
         </IconButton>
       ),
@@ -324,7 +342,12 @@ const BatchList = () => {
           />
         </Box>
       )}
-
+      {/* batch description Modal */}
+      <BatchDetails
+        open={batchDescriptionModalOpen}
+        handleClose={handleDescriptionCloseBatchModal}
+        id={selectedBatchId}
+      />
       <UpdateBatchModal
         open={isModalOpen}
         batch={selectedBatch}
