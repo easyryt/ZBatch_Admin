@@ -36,6 +36,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
   const [selectedTeachers, setSelectedTeachers] = useState(
     formData.knowYourTeachers
   );
+  const [error, setError] = useState(""); // State to store the error messa
 
   const handleInputChange = (key, value) => {
     setInputValue(value);
@@ -107,19 +108,27 @@ const BatchDetails = ({ open, handleClose, id }) => {
           "x-admin-token": token,
         },
       });
+
+      // Reset form data and close the modal
       setFormData({
         batchIncludes: [],
         courseDuration: { startDate: "", endDate: "" },
         validity: "",
-        knowYourTeachers: [], // Default teachers
+        knowYourTeachers: [],
         schedule: [],
         otherDetails: [],
         faq: [],
         subjects: "",
-      })
+      });
+      setError(""); // Clear any previous error
       handleClose();
     } catch (error) {
-      console.error("Error:", error);
+      // Extract error message from the response
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message); // Display the backend error message
+      } else {
+        setError("Something went wrong. Please try again."); // Default error message
+      }
     }
   };
 
@@ -852,6 +861,8 @@ const BatchDetails = ({ open, handleClose, id }) => {
             Cancel
           </Button>
         </Box>
+        <br/>
+        {error && <p style={{color:"red"}}>{error}</p>}
       </Box>
     </Modal>
   );
