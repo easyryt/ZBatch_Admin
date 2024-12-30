@@ -20,6 +20,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import UpdateBatchModal from "./UpdateBatchModal";
+import CreateBatchModal from "./CreateBatch";
+import AddIcon from "@mui/icons-material/Add";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -37,6 +39,17 @@ const BatchList = () => {
   const [batchToDelete, setBatchToDelete] = useState(null);
   const { id } = useParams();
   const [update, setUpdate] = useState(false);
+  const [batchModalOpen, setBatchModalOpen] = useState(false);
+
+  // Open batch creation modal
+  const handleOpenBatchModal = () => {
+    setBatchModalOpen(true);
+  };
+
+  // Close batch creation modal
+  const handleCloseBatchModal = () => {
+    setBatchModalOpen(false);
+  };
 
   useEffect(() => {
     fetchBatches();
@@ -210,10 +223,42 @@ const BatchList = () => {
         </Box>
       ),
     },
+    {
+      field: "Created Description",
+      headerName: "Created Description",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary">
+          <AddIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: "Created Classes",
+      headerName: "Created Classes",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary">
+          <AddIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: "Created Testes",
+      headerName: "Created Testes",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary">
+          <AddIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
-    <Box sx={{ padding: "24px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
+    <Box
+      sx={{ padding: "24px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}
+    >
       <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
         Batch List
       </Typography>
@@ -234,9 +279,22 @@ const BatchList = () => {
           fullWidth
           sx={{ maxWidth: "400px" }}
         />
-        <Button variant="contained" onClick={fetchBatches} sx={{ marginLeft: "16px" }}>
-          Refresh
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            onClick={fetchBatches}
+            sx={{ marginLeft: "16px" }}
+          >
+            Refresh
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleOpenBatchModal}
+            sx={{ marginLeft: "16px" }}
+          >
+            Create Batch
+          </Button>
+        </div>
       </Box>
 
       {loading ? (
@@ -274,11 +332,17 @@ const BatchList = () => {
         onBatchUpdated={fetchBatches}
         setUpdate={setUpdate}
       />
+      <CreateBatchModal
+        open={batchModalOpen}
+        handleClose={handleCloseBatchModal}
+        classId={id}
+      />
       <Dialog open={isDialogOpen} onClose={closeDeleteDialog}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this batch? This action cannot be undone.
+            Are you sure you want to delete this batch? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

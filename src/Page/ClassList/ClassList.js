@@ -225,7 +225,7 @@ const ClassList = () => {
         classData={selectedClass}
         setUpdate={setUpdate}
       />
-      {/* Add New Class Button */}
+      {/* Add New Batch Button */}
       <CreateBatchModal 
       open={batchModalOpen}
       handleClose={handleCloseBatchModal}
