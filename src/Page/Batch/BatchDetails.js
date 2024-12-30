@@ -15,6 +15,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Divider,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -28,15 +29,46 @@ const BatchDetails = ({ open, handleClose, id }) => {
     batchIncludes: ["Video Lectures", "Assignments", "Exams"],
     courseDuration: { startDate: "", endDate: "" },
     validity: "",
-    knowYourTeachers: [""],
-    schedule: [{ subject: "", pdf: null }],
-    otherDetails: [""],
+    knowYourTeachers: ["676d58b2aee6c317dc5d3ed9", "676d58f2aee6c317dc5d3edd"], // Default teachers
+    schedule: [
+      { subject: "676d5864aee6c317dc5d3ece" },
+      { subject: "676d587eaee6c317dc5d3ed2" },
+    ],
+    otherDetails: [
+      "Additional details about the batch",
+      "This batch will help you in examonation",
+    ],
     faq: [{ que: "", ans: "" }],
     subjects: [""],
   });
   const [subjectsList, setSubjectsList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [selectedTeachers, setSelectedTeachers] = useState(
+    formData.knowYourTeachers
+  );
+
+  const handleInputChange = (key, value) => {
+    setInputValue(value);
+  };
+
+  const handleAddItem = () => {
+    if (!inputValue.trim()) return; // Prevent empty input
+
+    const newItems = inputValue.split(",").map((item) => item.trim()); // Split and trim input items
+    setFormData((prev) => ({
+      ...prev,
+      batchIncludes: [...newItems, ...prev.batchIncludes], // Add new items at the top
+    }));
+
+    setInputValue(""); // Clear the input field after adding
+  };
+
+  const handleRemoveItem = (index) => {
+    const updatedBatchIncludes = [...formData.batchIncludes];
+    updatedBatchIncludes.splice(index, 1);
+    setFormData({ ...formData, batchIncludes: updatedBatchIncludes });
+  };
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -75,22 +107,6 @@ const BatchDetails = ({ open, handleClose, id }) => {
 
     fetchTeachers();
   }, []);
-
-  const handleInputChange = (name, value) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddItem = (field) => {
-    const newItem = Array.isArray(formData[field][0])
-      ? { que: "", ans: "" }
-      : field === "schedule"
-      ? { subject: "", pdf: null }
-      : "";
-    setFormData((prev) => ({
-      ...prev,
-      [field]: [...prev[field], newItem],
-    }));
-  };
 
   const handleSubmit = async () => {
     const token = Cookies.get("token");
@@ -133,31 +149,81 @@ const BatchDetails = ({ open, handleClose, id }) => {
     }
   };
 
-  const handleAddSchedule = () => {
+  const handleNestedChange = (section, index, field, value) => {
+    const updatedSection = [...formData[section]];
+    updatedSection[index][field] = value;
     setFormData((prev) => ({
       ...prev,
-      schedule: [...prev.schedule, { subject: "", pdf: null }],
+      [section]: updatedSection,
     }));
   };
+
   const handleRemoveSchedule = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      schedule: prev.schedule.filter((_, i) => i !== index),
+    const newSchedule = formData.schedule.filter((_, i) => i !== index);
+    setFormData({ ...formData, schedule: newSchedule });
+  };
+
+  const handleFileChange = (index, file) => {
+    const newSchedule = [...formData.schedule];
+    newSchedule[index].pdf = file;
+    setFormData({ ...formData, schedule: newSchedule });
+  };
+
+  const handleAddSchedule = () => {
+    const newSchedule = [...formData.schedule, { subject: "", pdf: null }];
+    setFormData({ ...formData, schedule: newSchedule });
+  };
+
+  const handleTeacherChange = (e) => {
+    const selectedTeacherId = e.target.value;
+    if (!selectedTeachers.includes(selectedTeacherId)) {
+      const newSelectedTeachers = [...selectedTeachers, selectedTeacherId];
+      setSelectedTeachers(newSelectedTeachers);
+      setFormData((prevData) => ({
+        ...prevData,
+        knowYourTeachers: newSelectedTeachers,
+      }));
+    }
+  };
+
+  const handleRemoveTeacher = (teacherId) => {
+    const newSelectedTeachers = selectedTeachers.filter(
+      (id) => id !== teacherId
+    );
+    setSelectedTeachers(newSelectedTeachers);
+    setFormData((prevData) => ({
+      ...prevData,
+      knowYourTeachers: newSelectedTeachers,
     }));
   };
-  const handleFileChange = (index, file) => {
-    setFormData((prev) => {
-      const updatedSchedule = [...prev.schedule];
-      updatedSchedule[index].pdf = file;
-      return { ...prev, schedule: updatedSchedule };
-    });
+
+  // Handler for updating the `otherDetails` array
+  const handleDetailChange = (index, value) => {
+    const updatedDetails = [...formData.otherDetails];
+    updatedDetails[index] = value;
+    setFormData((prevData) => ({
+      ...prevData,
+      otherDetails: updatedDetails,
+    }));
   };
-  const handleNestedChange = (field, index, key, value) => {
-    setFormData((prev) => {
-      const updatedArray = [...prev[field]];
-      updatedArray[index][key] = value;
-      return { ...prev, [field]: updatedArray };
-    });
+
+  // Handler for adding a new detail
+  const handleAddDetail = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      otherDetails: [...prevData.otherDetails, ""],
+    }));
+  };
+
+  // Handler for removing a detail
+  const handleRemoveDetail = (index) => {
+    const updatedDetails = formData.otherDetails.filter(
+      (_, idx) => idx !== index
+    );
+    setFormData((prevData) => ({
+      ...prevData,
+      otherDetails: updatedDetails,
+    }));
   };
 
   return (
@@ -174,65 +240,293 @@ const BatchDetails = ({ open, handleClose, id }) => {
           borderRadius: 2,
           boxShadow: 24,
           p: 4,
-          overflowY:"scroll",
-          height:"100vh"
+          overflowY: "scroll",
+          height: "95vh",
         }}
       >
         <Typography variant="h6" gutterBottom>
           Create Batch Description
         </Typography>
 
-        <TextField
-          label="Batch Includes"
-          value={formData.batchIncludes.join(", ")}
-          onChange={(e) =>
-            handleInputChange("batchIncludes", e.target.value.split(","))
-          }
-          fullWidth
-          margin="normal"
-        />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Title */}
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+            Batch Includes
+          </Typography>
 
-        <Box sx={{ display: "flex", gap: 2 }}>
+          {/* Input Field and Add Button */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            <TextField
+              label="Enter items (comma-separated)"
+              value={inputValue}
+              onChange={(e) =>
+                handleInputChange("batchIncludes", e.target.value)
+              }
+              fullWidth
+              placeholder="e.g., Video Lectures, Assignments, Exams"
+              variant="outlined"
+            />
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddItem}
+              sx={{ fontWeight: "bold", px: 3 }}
+            >
+              Add
+            </Button>
+          </Box>
+
+          {/* Batch Includes List */}
+          <Box sx={{ mt: 4 }}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{ color: "text.primary", fontWeight: "bold" }}
+            >
+              Added Items:
+            </Typography>
+
+            {formData.batchIncludes.length > 0 ? (
+              <List sx={{ bgcolor: "background.default", borderRadius: 2 }}>
+                {formData.batchIncludes.map((item, index) => (
+                  <ListItem
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderBottom: "1px solid #e0e0e0",
+                      px: 2,
+                      py: 1,
+                    }}
+                  >
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {item}
+                    </Typography>
+
+                    {/* Remove Icon */}
+                    <IconButton
+                      color="error"
+                      onClick={() => handleRemoveItem(index)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 2, fontStyle: "italic" }}
+              >
+                No items added yet. Start by adding items above!
+              </Typography>
+            )}
+          </Box>
+        </Box>
+        <br />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Title */}
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+            Course Duration
+          </Typography>
+
+          {/* Start Date and End Date Fields */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mt: 2,
+            }}
+          >
+            <TextField
+              label="Start Date"
+              type="date"
+              value={formData.courseDuration.startDate}
+              onChange={(e) =>
+                handleInputChange("courseDuration", {
+                  ...formData.courseDuration,
+                  startDate: e.target.value,
+                })
+              }
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                bgcolor: "background.default",
+                borderRadius: 1,
+              }}
+            />
+            <TextField
+              label="End Date"
+              type="date"
+              value={formData.courseDuration.endDate}
+              onChange={(e) =>
+                handleInputChange("courseDuration", {
+                  ...formData.courseDuration,
+                  endDate: e.target.value,
+                })
+              }
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                bgcolor: "background.default",
+                borderRadius: 1,
+              }}
+            />
+          </Box>
+        </Box>
+        <br />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Title */}
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+            Validity
+          </Typography>
+
           <TextField
-            label="Start Date"
+            label="Validity"
             type="date"
-            value={formData.courseDuration.startDate}
-            onChange={(e) =>
-              handleInputChange("courseDuration", {
-                ...formData.courseDuration,
-                startDate: e.target.value,
-              })
-            }
+            value={formData.validity}
+            onChange={(e) => handleInputChange("validity", e.target.value)}
             fullWidth
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            label="End Date"
-            type="date"
-            value={formData.courseDuration.endDate}
-            onChange={(e) =>
-              handleInputChange("courseDuration", {
-                ...formData.courseDuration,
-                endDate: e.target.value,
-              })
-            }
-            fullWidth
+            margin="normal"
             InputLabelProps={{ shrink: true }}
           />
         </Box>
+        <br />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Title */}
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+            know Your Teachers
+          </Typography>
+          {/* Teacher Select */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="teacher-select-label">Select Teacher</InputLabel>
+            <Select
+              labelId="teacher-select-label"
+              value=""
+              onChange={handleTeacherChange}
+              renderValue={() => ""}
+            >
+              {teachersList.map((teacher) => (
+                <MenuItem key={teacher?._id} value={teacher?._id}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <img
+                      src={teacher?.pic?.url}
+                      alt={teacher?.teacherName}
+                      style={{ width: 32, height: 32, borderRadius: "50%" }}
+                    />
+                    <Box>
+                      <Typography variant="body1">
+                        {teacher?.teacherName}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {teacher?.expertise}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <TextField
-          label="Validity"
-          type="date"
-          value={formData.validity}
-          onChange={(e) => handleInputChange("validity", e.target.value)}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{ shrink: true }}
-        />
-
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle1">Schedule</Typography>
+          {/* Display Selected Teachers */}
+          <Box sx={{ mt: 3 }}>
+            {selectedTeachers.map((teacherId) => {
+              const teacher = teachersList.find((t) => t._id === teacherId);
+              return (
+                <Box
+                  key={teacher?._id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    mb: 2,
+                    padding: 2,
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <img
+                    src={teacher?.pic?.url}
+                    alt={teacher?.teacherName}
+                    style={{ width: 48, height: 48, borderRadius: "50%" }}
+                  />
+                  <Box>
+                    <Typography variant="h6">{teacher?.teacherName}</Typography>
+                    <Typography variant="body2">
+                      Expertise: {teacher?.expertise}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Experience: {teacher?.yearOfEx} years
+                    </Typography>
+                  </Box>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleRemoveTeacher(teacher?._id)}
+                  >
+                    Remove
+                  </Button>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+        <br />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Title */}
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+            Schedule
+          </Typography>
           {formData.schedule.map((item, index) => (
             <Box
               key={index}
@@ -288,8 +582,8 @@ const BatchDetails = ({ open, handleClose, id }) => {
                   ))}
                 </Select>
               </FormControl>
-
-              {/* PDF Upload */}
+              <Box style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                  {/* PDF Upload */}
               <Button
                 variant="outlined"
                 component="label"
@@ -303,105 +597,28 @@ const BatchDetails = ({ open, handleClose, id }) => {
                   onChange={(e) => handleFileChange(index, e.target.files[0])}
                 />
               </Button>
+              {item.pdf && (
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                >
+                  {item.pdf.name}
+                </Typography>
+              )}
 
               {/* Remove Schedule Entry */}
               <Button
-                variant="text"
+                variant="outlined"
                 color="error"
                 sx={{ mt: 2 }}
                 onClick={() => handleRemoveSchedule(index)}
               >
                 Remove
               </Button>
+              </Box>
+            
             </Box>
           ))}
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="teacher-select-label">Select Teacher</InputLabel>
-            <Select
-              labelId="teacher-select-label"
-              value=""
-              onChange={(e) => {
-                const selectedTeacher = teachersList.find(
-                  (teacher) => teacher._id === e.target.value
-                );
-                if (
-                  selectedTeacher &&
-                  !selectedTeachers.includes(selectedTeacher._id)
-                ) {
-                  setSelectedTeachers([
-                    ...selectedTeachers,
-                    selectedTeacher._id,
-                  ]);
-                }
-              }}
-              renderValue={() => ""}
-            >
-              {teachersList.map((teacher) => (
-                <MenuItem key={teacher._id} value={teacher._id}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <img
-                      src={teacher.pic.url}
-                      alt={teacher.teacherName}
-                      style={{ width: 32, height: 32, borderRadius: "50%" }}
-                    />
-                    <Box>
-                      <Typography variant="body1">
-                        {teacher.teacherName}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {teacher.expertise}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Box sx={{ mt: 3 }}>
-            {selectedTeachers.map((teacherId) => {
-              const teacher = teachersList.find((t) => t._id === teacherId);
-              return (
-                <Box
-                  key={teacher._id}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    mb: 2,
-                    padding: 2,
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <img
-                    src={teacher.pic.url}
-                    alt={teacher.teacherName}
-                    style={{ width: 48, height: 48, borderRadius: "50%" }}
-                  />
-                  <Box>
-                    <Typography variant="h6">{teacher.teacherName}</Typography>
-                    <Typography variant="body2">
-                      Expertise: {teacher.expertise}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Experience: {teacher.yearOfEx} years
-                    </Typography>
-                  </Box>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() =>
-                      setSelectedTeachers((prev) =>
-                        prev.filter((id) => id !== teacher._id)
-                      )
-                    }
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              );
-            })}
-          </Box>
 
           {/* Add Schedule Entry */}
           <Button
@@ -414,6 +631,54 @@ const BatchDetails = ({ open, handleClose, id }) => {
             Add Schedule
           </Button>
         </Box>
+        <br />
+
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          {/* Displaying and editing otherDetails */}
+          <Typography variant="h6" gutterBottom>
+            Other Details
+          </Typography>
+          {formData.otherDetails.map((detail, index) => (
+            <Box
+              key={index}
+              sx={{ mb: 2, display: "flex", alignItems: "center" }}
+            >
+              <TextField
+                fullWidth
+                value={detail}
+                onChange={(e) => handleDetailChange(index, e.target.value)}
+                label={`Detail ${index + 1}`}
+                variant="outlined"
+                multiline
+                rows={3}
+                sx={{ mr: 2 }}
+              />
+              {/* Remove button */}
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => handleRemoveDetail(index)}
+              >
+                Remove
+              </Button>
+            </Box>
+          ))}
+
+          {/* Button to add a new detail */}
+          <Button variant="outlined" onClick={handleAddDetail} sx={{ mt: 2 }}>
+            Add Detail
+          </Button>
+        </Box>
+
+        <br />
 
         <Accordion sx={{ mt: 3 }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
