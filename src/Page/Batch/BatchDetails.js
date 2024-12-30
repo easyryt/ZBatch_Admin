@@ -107,7 +107,16 @@ const BatchDetails = ({ open, handleClose, id }) => {
           "x-admin-token": token,
         },
       });
-      console.log("Success:", response.data);
+      setFormData({
+        batchIncludes: [],
+        courseDuration: { startDate: "", endDate: "" },
+        validity: "",
+        knowYourTeachers: [], // Default teachers
+        schedule: [],
+        otherDetails: [],
+        faq: [],
+        subjects: "",
+      })
       handleClose();
     } catch (error) {
       console.error("Error:", error);
