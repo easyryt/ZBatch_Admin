@@ -240,7 +240,6 @@ const BatchDetails = ({ open, handleClose, id }) => {
   const subjectList = formData.subjects
     .split(",")
     .map((subject) => subject.trim());
-
   // Handle the addition of a subject from the dropdown
   const handleAddSubject = (subjectId) => {
     const selectedSubject = subjectsList.find(
@@ -824,33 +823,34 @@ const BatchDetails = ({ open, handleClose, id }) => {
               ))}
             </Select>
           </Box>
-
-          {/* Displaying the list of subjects with remove functionality */}
+          {!subjectList[0] == [''] && (
           <Box sx={{ mt: 3 }}>
-            <Typography variant="h6">Current Subjects:</Typography>
-            <br />
-            <ul>
-              {subjectList.map((subject, index) => (
-                <li
-                  key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    margin: "5px",
-                  }}
+          <Typography variant="h6">Current Subjects:</Typography>
+          <br />
+          <ul>
+            {subjectList.map((subject, index) => (
+              <li
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  margin: "5px",
+                }}
+              >
+                <span>{subject}</span>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => handleRemoveSubject(subject)}
                 >
-                  <span>{subject}</span>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleRemoveSubject(subject)}
-                  >
-                    Remove
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </Box>
+                  Remove
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Box>
+          )}
+        
         </Box>
         <br />
         <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
