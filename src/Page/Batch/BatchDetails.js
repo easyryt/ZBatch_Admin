@@ -100,35 +100,11 @@ const BatchDetails = ({ open, handleClose, id }) => {
   const handleSubmit = async () => {
     const token = Cookies.get("token");
     const url = `https://npc-classes.onrender.com/admin/batches/discription/create/${id}`;
-    const data = new FormData();
-
-    Object.entries(formData).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((item, idx) => {
-          if (key === "schedule" && item.pdf) {
-            data.append(`${key}[${idx}][pdf]`, item.pdf);
-          } else if (typeof item === "object") {
-            Object.entries(item).forEach(([subKey, subValue]) => {
-              data.append(`${key}[${idx}][${subKey}]`, subValue);
-            });
-          } else {
-            data.append(`${key}[]`, item);
-          }
-        });
-      } else if (typeof value === "object") {
-        Object.entries(value).forEach(([subKey, subValue]) => {
-          data.append(`${key}[${subKey}]`, subValue);
-        });
-      } else {
-        data.append(key, value);
-      }
-    });
 
     try {
-      const response = await axios.post(url, data, {
+      const response = await axios.post(url, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          "x-admin-token": token,
         },
       });
       console.log("Success:", response.data);
@@ -273,6 +249,14 @@ const BatchDetails = ({ open, handleClose, id }) => {
     }));
   };
 
+  // Handle changes in form data
+  const handleDateInputChange = (field, newValue) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [field]: newValue,
+    }));
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -397,7 +381,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
             boxShadow: 3,
           }}
         >
-          {/* Title */}
+          {/* Course Duration Section */}
           <Typography variant="h5" gutterBottom>
             Course Duration
           </Typography>
@@ -415,7 +399,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
               type="date"
               value={formData.courseDuration.startDate}
               onChange={(e) =>
-                handleInputChange("courseDuration", {
+                handleDateInputChange("courseDuration", {
                   ...formData.courseDuration,
                   startDate: e.target.value,
                 })
@@ -432,7 +416,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
               type="date"
               value={formData.courseDuration.endDate}
               onChange={(e) =>
-                handleInputChange("courseDuration", {
+                handleDateInputChange("courseDuration", {
                   ...formData.courseDuration,
                   endDate: e.target.value,
                 })
@@ -465,7 +449,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
             label="Validity"
             type="date"
             value={formData.validity}
-            onChange={(e) => handleInputChange("validity", e.target.value)}
+            onChange={(e) => handleDateInputChange("validity", e.target.value)}
             fullWidth
             margin="normal"
             InputLabelProps={{ shrink: true }}
