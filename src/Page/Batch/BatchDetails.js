@@ -7,9 +7,6 @@ import {
   Modal,
   List,
   ListItem,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   IconButton,
   FormControl,
   InputLabel,
@@ -27,8 +24,8 @@ import axios from "axios";
 const BatchDetails = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
     batchIncludes: ["Video Lectures", "Assignments", "Exams"],
-    courseDuration: { startDate: "", endDate: "" },
-    validity: "",
+    courseDuration: { startDate: "2024-01-01", endDate: "2024-01-01" },
+    validity: "2025-06-30",
     knowYourTeachers: ["676d58b2aee6c317dc5d3ed9", "676d58f2aee6c317dc5d3edd"], // Default teachers
     schedule: [
       { subject: "676d5864aee6c317dc5d3ece" },
@@ -38,8 +35,8 @@ const BatchDetails = ({ open, handleClose, id }) => {
       "Additional details about the batch",
       "This batch will help you in examonation",
     ],
-    faq: [{ que: "", ans: "" }],
-    subjects: [""],
+    faq: [{ que: "What is the validity?", ans: "The validity is 6 months." }],
+    subjects: "Physics,Chemistry,Mathematics,Hindi,English",
   });
   const [subjectsList, setSubjectsList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
@@ -226,6 +223,64 @@ const BatchDetails = ({ open, handleClose, id }) => {
     }));
   };
 
+  // Handler to update a specific field in an array (used for FAQ)
+  const handleFaqNestedChange = (field, index, subfield, value) => {
+    const updatedData = [...formData[field]];
+    updatedData[index][subfield] = value;
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: updatedData,
+    }));
+  };
+
+  // Handler to add a new FAQ item
+  const handleFaqAddItem = (field) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: [...prevData[field], { que: "", ans: "" }],
+    }));
+  };
+
+  // Handler to remove an FAQ item
+  const handleFaqRemoveItem = (field, index) => {
+    const updatedData = formData[field].filter((_, idx) => idx !== index);
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: updatedData,
+    }));
+  };
+
+  // Convert comma-separated subjects into an array for easier rendering
+  const subjectList = formData.subjects
+    .split(",")
+    .map((subject) => subject.trim());
+
+  // Handle the addition of a subject from the dropdown
+  const handleAddSubject = (subjectId) => {
+    const selectedSubject = subjectsList.find(
+      (subject) => subject._id === subjectId
+    );
+    if (selectedSubject) {
+      setFormData((prevData) => ({
+        ...prevData,
+        subjects: prevData.subjects
+          ? `${prevData.subjects}, ${selectedSubject.subjectName}`
+          : selectedSubject.subjectName, // If subjects are empty, just set the first subject
+      }));
+    }
+  };
+
+  // Function to remove a subject from the list
+  const handleRemoveSubject = (subject) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      subjects: prevData.subjects
+        .split(",")
+        .filter((item) => item.trim() !== subject)
+        .join(", "),
+    }));
+  };
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -258,7 +313,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             Batch Includes
           </Typography>
           {/* Input Field and Add Button */}
@@ -351,7 +406,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             Course Duration
           </Typography>
 
@@ -410,7 +465,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             Validity
           </Typography>
 
@@ -435,7 +490,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             know Your Teachers
           </Typography>
           {/* Teacher Select */}
@@ -523,7 +578,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             Schedule
           </Typography>
           {formData.schedule.map((item, index) => (
@@ -640,7 +695,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+         <Typography variant="h5" gutterBottom>
             Other Details
           </Typography>
           <br />
@@ -671,7 +726,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           ))}
 
           {/* Button to add a new detail */}
-          <Button variant="outlined" onClick={handleAddDetail} sx={{ mt: 2 }}>
+          <Button variant="contained" onClick={handleAddDetail} sx={{ mt: 2 }}>
             Add Detail
           </Button>
         </Box>
@@ -686,46 +741,120 @@ const BatchDetails = ({ open, handleClose, id }) => {
             boxShadow: 3,
           }}
         >
-          <Accordion sx={{ mt: 3 }}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              FAQ
-            </AccordionSummary>
-            <AccordionDetails>
-              {formData.faq.map((item, index) => (
-                <Box key={index} sx={{ mt: 2 }}>
-                  <TextField
-                    label={`Question ${index + 1}`}
-                    value={item.que}
-                    onChange={(e) =>
-                      handleNestedChange("faq", index, "que", e.target.value)
-                    }
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    label={`Answer ${index + 1}`}
-                    value={item.ans}
-                    onChange={(e) =>
-                      handleNestedChange("faq", index, "ans", e.target.value)
-                    }
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-              ))}
-              <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleAddItem("faq")}
-                >
-                  Add FAQ
-                </Button>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+          {/* Title */}
+         <Typography variant="h5" gutterBottom>
+            Faq
+          </Typography>
+          {formData.faq.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                mt: 2,
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 2,
+              }}
+            >
+              <TextField
+                label={`Question ${index + 1}`}
+                value={item.que}
+                onChange={(e) =>
+                  handleFaqNestedChange("faq", index, "que", e.target.value)
+                }
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label={`Answer ${index + 1}`}
+                value={item.ans}
+                onChange={(e) =>
+                  handleFaqNestedChange("faq", index, "ans", e.target.value)
+                }
+                fullWidth
+                margin="normal"
+              />
+              {/* Remove button */}
+              <IconButton
+                variant="outlined"
+                color="error"
+                onClick={() => handleFaqRemoveItem("faq", index)}
+                sx={{ alignSelf: "center" }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+          <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleFaqAddItem("faq")}
+            >
+              Add FAQ
+            </Button>
+          </Box>
         </Box>
+        <br />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Manage Subjects
+          </Typography>
 
+          {/* Subject select dropdown */}
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6">Select a Subject</Typography>
+            <Select
+              label="Select Subject"
+              fullWidth
+              onChange={(e) => handleAddSubject(e.target.value)} // Add subject on change
+            >
+              {subjectsList.map((subject) => (
+                <MenuItem key={subject._id} value={subject._id}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <img
+                      src={subject.icon.url}
+                      alt={subject.subjectName}
+                      style={{ width: 24, height: 24, borderRadius: "50%" }}
+                    />
+                    <span>{subject.subjectName}</span>
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          {/* Displaying the list of subjects with remove functionality */}
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6">Current Subjects:</Typography>
+            <br/>
+            <ul>
+              {subjectList.map((subject, index) => (
+                <li
+                  key={index}
+                  style={{ display: "flex", justifyContent: "space-between",margin:"5px" }}
+                >
+                  <span>{subject}</span>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleRemoveSubject(subject)}
+                  >
+                    Remove
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        </Box>
+        <br />
         <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Submit
