@@ -12,9 +12,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Divider,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,20 +21,14 @@ import axios from "axios";
 
 const BatchDetails = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
-    batchIncludes: ["Video Lectures", "Assignments", "Exams"],
-    courseDuration: { startDate: "2024-01-01", endDate: "2024-01-01" },
-    validity: "2025-06-30",
-    knowYourTeachers: ["676d58b2aee6c317dc5d3ed9", "676d58f2aee6c317dc5d3edd"], // Default teachers
-    schedule: [
-      { subject: "676d5864aee6c317dc5d3ece" },
-      { subject: "676d587eaee6c317dc5d3ed2" },
-    ],
-    otherDetails: [
-      "Additional details about the batch",
-      "This batch will help you in examonation",
-    ],
-    faq: [{ que: "What is the validity?", ans: "The validity is 6 months." }],
-    subjects: "Physics,Chemistry,Mathematics,Hindi,English",
+    batchIncludes: [],
+    courseDuration: { startDate: "", endDate: "" },
+    validity: "",
+    knowYourTeachers: [], // Default teachers
+    schedule: [],
+    otherDetails: [],
+    faq: [],
+    subjects: "",
   });
   const [subjectsList, setSubjectsList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
@@ -313,7 +305,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Batch Includes
           </Typography>
           {/* Input Field and Add Button */}
@@ -406,7 +398,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Course Duration
           </Typography>
 
@@ -465,7 +457,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Validity
           </Typography>
 
@@ -490,7 +482,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             know Your Teachers
           </Typography>
           {/* Teacher Select */}
@@ -578,7 +570,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Schedule
           </Typography>
           {formData.schedule.map((item, index) => (
@@ -695,7 +687,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Other Details
           </Typography>
           <br />
@@ -742,7 +734,7 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-         <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             Faq
           </Typography>
           {formData.faq.map((item, index) => (
@@ -834,12 +826,16 @@ const BatchDetails = ({ open, handleClose, id }) => {
           {/* Displaying the list of subjects with remove functionality */}
           <Box sx={{ mt: 3 }}>
             <Typography variant="h6">Current Subjects:</Typography>
-            <br/>
+            <br />
             <ul>
               {subjectList.map((subject, index) => (
                 <li
                   key={index}
-                  style={{ display: "flex", justifyContent: "space-between",margin:"5px" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    margin: "5px",
+                  }}
                 >
                   <span>{subject}</span>
                   <Button
