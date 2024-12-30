@@ -258,10 +258,9 @@ const BatchDetails = ({ open, handleClose, id }) => {
           }}
         >
           {/* Title */}
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
             Batch Includes
           </Typography>
-
           {/* Input Field and Add Button */}
           <Box
             sx={{
@@ -582,41 +581,39 @@ const BatchDetails = ({ open, handleClose, id }) => {
                   ))}
                 </Select>
               </FormControl>
-              <Box style={{display:"flex",alignItems:"center",gap:"10px"}}>
-                  {/* PDF Upload */}
-              <Button
-                variant="outlined"
-                component="label"
-                startIcon={<UploadFileIcon />}
-                sx={{ mt: 1 }}
+              <Box
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                Upload PDF
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleFileChange(index, e.target.files[0])}
-                />
-              </Button>
-              {item.pdf && (
-                <Typography
-                  variant="body2"
-                  color="textSecondary"
+                {/* PDF Upload */}
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<UploadFileIcon />}
+                  sx={{ mt: 1 }}
                 >
-                  {item.pdf.name}
-                </Typography>
-              )}
+                  Upload PDF
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => handleFileChange(index, e.target.files[0])}
+                  />
+                </Button>
+                {item.pdf && (
+                  <Typography variant="body2" color="textSecondary">
+                    {item.pdf.name}
+                  </Typography>
+                )}
 
-              {/* Remove Schedule Entry */}
-              <Button
-                variant="outlined"
-                color="error"
-                sx={{ mt: 2 }}
-                onClick={() => handleRemoveSchedule(index)}
-              >
-                Remove
-              </Button>
+                {/* Remove Schedule Entry */}
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ mt: 2 }}
+                  onClick={() => handleRemoveSchedule(index)}
+                >
+                  Remove
+                </Button>
               </Box>
-            
             </Box>
           ))}
 
@@ -642,10 +639,11 @@ const BatchDetails = ({ open, handleClose, id }) => {
             boxShadow: 3,
           }}
         >
-          {/* Displaying and editing otherDetails */}
-          <Typography variant="h6" gutterBottom>
+          {/* Title */}
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
             Other Details
           </Typography>
+          <br />
           {formData.otherDetails.map((detail, index) => (
             <Box
               key={index}
@@ -679,45 +677,54 @@ const BatchDetails = ({ open, handleClose, id }) => {
         </Box>
 
         <br />
-
-        <Accordion sx={{ mt: 3 }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            FAQ
-          </AccordionSummary>
-          <AccordionDetails>
-            {formData.faq.map((item, index) => (
-              <Box key={index} sx={{ mt: 2 }}>
-                <TextField
-                  label={`Question ${index + 1}`}
-                  value={item.que}
-                  onChange={(e) =>
-                    handleNestedChange("faq", index, "que", e.target.value)
-                  }
-                  fullWidth
-                  margin="normal"
-                />
-                <TextField
-                  label={`Answer ${index + 1}`}
-                  value={item.ans}
-                  onChange={(e) =>
-                    handleNestedChange("faq", index, "ans", e.target.value)
-                  }
-                  fullWidth
-                  margin="normal"
-                />
+        <Box
+          sx={{
+            margin: "auto",
+            padding: 3,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 3,
+          }}
+        >
+          <Accordion sx={{ mt: 3 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              FAQ
+            </AccordionSummary>
+            <AccordionDetails>
+              {formData.faq.map((item, index) => (
+                <Box key={index} sx={{ mt: 2 }}>
+                  <TextField
+                    label={`Question ${index + 1}`}
+                    value={item.que}
+                    onChange={(e) =>
+                      handleNestedChange("faq", index, "que", e.target.value)
+                    }
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label={`Answer ${index + 1}`}
+                    value={item.ans}
+                    onChange={(e) =>
+                      handleNestedChange("faq", index, "ans", e.target.value)
+                    }
+                    fullWidth
+                    margin="normal"
+                  />
+                </Box>
+              ))}
+              <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleAddItem("faq")}
+                >
+                  Add FAQ
+                </Button>
               </Box>
-            ))}
-            <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleAddItem("faq")}
-              >
-                Add FAQ
-              </Button>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
 
         <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
