@@ -103,9 +103,50 @@ const BatchDetails = ({ open, handleClose, id }) => {
     const url = `https://npc-classes.onrender.com/admin/batches/discription/create/${id}`;
 
     try {
-      const response = await axios.post(url, formData, {
+      // Create a new FormData object
+      const formDataToSend = new FormData();
+
+      // Prepare the schedule array
+      const scheduleData = formData.schedule.map((item) => ({
+        subject: item.subject, // Keep only the subject for JSON
+      }));
+
+      // Append the schedule array as JSON string
+      formDataToSend.append("schedule", JSON.stringify(scheduleData));
+
+      // Append each PDF file separately with indexed keys
+      formData.schedule.forEach((item, index) => {
+        if (item.pdf && item.pdf instanceof File) {
+          formDataToSend.append(`schedule[${index}].pdf`, item.pdf); // Attach PDF file
+        }
+      });
+
+      // Append other form data fields
+      formDataToSend.append(
+        "batchIncludes",
+        JSON.stringify(formData.batchIncludes)
+      );
+      formDataToSend.append(
+        "courseDuration",
+        JSON.stringify(formData.courseDuration)
+      );
+      formDataToSend.append("validity", formData.validity);
+      formDataToSend.append(
+        "knowYourTeachers",
+        JSON.stringify(formData.knowYourTeachers)
+      );
+      formDataToSend.append(
+        "otherDetails",
+        JSON.stringify(formData.otherDetails)
+      );
+      formDataToSend.append("faq", JSON.stringify(formData.faq));
+      formDataToSend.append("subjects", formData.subjects);
+
+      // Send the request
+      const response = await axios.post(url, formDataToSend, {
         headers: {
           "x-admin-token": token,
+          "Content-Type": "multipart/form-data", // Required for file uploads
         },
       });
 
@@ -123,8 +164,12 @@ const BatchDetails = ({ open, handleClose, id }) => {
       setError(""); // Clear any previous error
       handleClose();
     } catch (error) {
-      // Extract error message from the response
-      if (error.response && error.response.data && error.response.data.message) {
+      // Handle errors
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         setError(error.response.data.message); // Display the backend error message
       } else {
         setError("Something went wrong. Please try again."); // Default error message
@@ -823,34 +868,33 @@ const BatchDetails = ({ open, handleClose, id }) => {
               ))}
             </Select>
           </Box>
-          {!subjectList[0] == [''] && (
-          <Box sx={{ mt: 3 }}>
-          <Typography variant="h6">Current Subjects:</Typography>
-          <br />
-          <ul>
-            {subjectList.map((subject, index) => (
-              <li
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  margin: "5px",
-                }}
-              >
-                <span>{subject}</span>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => handleRemoveSubject(subject)}
-                >
-                  Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </Box>
+          {!subjectList[0] == [""] && (
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6">Current Subjects:</Typography>
+              <br />
+              <ul>
+                {subjectList.map((subject, index) => (
+                  <li
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      margin: "5px",
+                    }}
+                  >
+                    <span>{subject}</span>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => handleRemoveSubject(subject)}
+                    >
+                      Remove
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Box>
           )}
-        
         </Box>
         <br />
         <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
@@ -861,8 +905,8 @@ const BatchDetails = ({ open, handleClose, id }) => {
             Cancel
           </Button>
         </Box>
-        <br/>
-        {error && <p style={{color:"red"}}>{error}</p>}
+        <br />
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </Box>
     </Modal>
   );
