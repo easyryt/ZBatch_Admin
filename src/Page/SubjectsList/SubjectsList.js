@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Typography, CircularProgress, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  TextField,
+  Button,
+} from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./SubjectsList.module.css"; // Module CSS for styling
+import CreateSubjectModal from "./CreateSubjectModal";
 
 const SubjectsList = () => {
   const [subjects, setSubjects] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]); // For filtering
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(""); // For the search bar
+  const [openModal, setOpenModal] = useState(false); // Modal state
+  const [update, setUpate] = useState(false);
 
   // Fetch subjects from the API
   useEffect(() => {
@@ -32,11 +41,12 @@ const SubjectsList = () => {
         console.error("Error fetching subjects:", error);
       } finally {
         setLoading(false);
+        setUpate(false);
       }
     };
 
     fetchSubjects();
-  }, []);
+  }, [update]);
 
   // Handle search input
   const handleSearch = (event) => {
@@ -79,6 +89,13 @@ const SubjectsList = () => {
       <Typography variant="h4" className={styles.title} gutterBottom>
         Subjects List
       </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setOpenModal(true)}
+      >
+        Create Subject
+      </Button>
       <TextField
         label="Search Subjects"
         variant="outlined"
@@ -107,6 +124,12 @@ const SubjectsList = () => {
           />
         </Box>
       )}
+      {/* Create Subject Modal */}
+      <CreateSubjectModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        setUpate={setUpate}
+      />
     </Box>
   );
 };
