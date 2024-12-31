@@ -6,9 +6,16 @@ import {
   CircularProgress,
   TextField,
   Button,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Edit, Delete } from "@mui/icons-material";
 import styles from "./SubjectsList.module.css"; // Module CSS for styling
 import CreateSubjectModal from "./CreateSubjectModal";
 
@@ -18,7 +25,13 @@ const SubjectsList = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(""); // For the search bar
   const [openModal, setOpenModal] = useState(false); // Modal state
-  const [update, setUpate] = useState(false);
+  const [update, setUpdate] = useState(false);
+
+  const [selectedSubject, setSelectedSubject] = useState(null); // For updating a subject
+
+  // State for delete confirmation dialog
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteSubjectId, setDeleteSubjectId] = useState(null);
 
   // Fetch subjects from the API
   useEffect(() => {
@@ -41,7 +54,7 @@ const SubjectsList = () => {
         console.error("Error fetching subjects:", error);
       } finally {
         setLoading(false);
-        setUpate(false);
+        setUpdate(false);
       }
     };
 
@@ -56,6 +69,41 @@ const SubjectsList = () => {
       subject.subjectName.toLowerCase().includes(value)
     );
     setFilteredSubjects(filtered);
+  };
+
+  // Open delete confirmation dialog
+  const openDeleteConfirmation = (id) => {
+    setDeleteSubjectId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  // Handle Delete Subject
+  const handleDelete = async () => {
+    const token = Cookies.get("token");
+
+    try {
+      const response = await axios.delete(
+        `https://npc-classes.onrender.com/admin/subjects/delete/${deleteSubjectId}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
+        }
+      );
+      if (response.data.status) {
+        setUpdate(true); // Trigger a re-fetch of data
+      }
+    } catch (error) {
+      console.error("Error deleting subject:", error);
+    } finally {
+      setOpenDeleteDialog(false); // Close the dialog
+    }
+  };
+
+  // Handle Edit/Update Subject
+  const handleEdit = (subject) => {
+    setSelectedSubject(subject);
+    setOpenModal(true); // Open the modal for editing
   };
 
   // Columns definition for DataGrid
@@ -82,6 +130,29 @@ const SubjectsList = () => {
       headerName: "ID",
       width: 250,
     },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton
+            onClick={() => handleEdit(params.row)}
+            color="primary"
+            title="Edit"
+          >
+            <Edit />
+          </IconButton>
+          <IconButton
+            onClick={() => openDeleteConfirmation(params.row._id)}
+            color="error"
+            title="Delete"
+          >
+            <Delete />
+          </IconButton>
+        </Box>
+      ),
+    },
   ];
 
   return (
@@ -92,7 +163,10 @@ const SubjectsList = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setOpenModal(true)}
+        onClick={() => {
+          setSelectedSubject(null); // Reset selected subject
+          setOpenModal(true);
+        }}
       >
         Create Subject
       </Button>
@@ -124,12 +198,39 @@ const SubjectsList = () => {
           />
         </Box>
       )}
-      {/* Create Subject Modal */}
+      {/* Create/Edit Subject Modal */}
       <CreateSubjectModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        setUpate={setUpate}
+        setUpdate={setUpdate}
+        selectedSubject={selectedSubject} // Pass the selected subject for editing
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this subject? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            color="primary"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

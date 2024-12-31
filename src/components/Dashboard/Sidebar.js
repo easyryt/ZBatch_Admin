@@ -11,6 +11,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SchoolIcon from '@mui/icons-material/School';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Sidebar = () => {
     },
     {
       text: "Subjects List",
-      icon: <SchoolIcon />,
+      icon: <FormatListBulletedIcon />,
       path: "/dashboard/subjects-list",
     },
   ];
