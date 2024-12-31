@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import { Edit, Delete } from "@mui/icons-material";
 import styles from "./SubjectsList.module.css"; // Module CSS for styling
 import CreateSubjectModal from "./CreateSubjectModal";
+import UpdateSubjectModal from "./UpdateSubjectModal";
 
 const SubjectsList = () => {
   const [subjects, setSubjects] = useState([]);
@@ -26,8 +27,13 @@ const SubjectsList = () => {
   const [searchTerm, setSearchTerm] = useState(""); // For the search bar
   const [openModal, setOpenModal] = useState(false); // Modal state
   const [update, setUpdate] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedSubject, setSelectedSubject] = useState(null);
 
-  const [selectedSubject, setSelectedSubject] = useState(null); // For updating a subject
+  const handleEdit = (subject) => {
+    setSelectedSubject(subject);
+    setOpenUpdateModal(true);
+  };
 
   // State for delete confirmation dialog
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -98,12 +104,6 @@ const SubjectsList = () => {
     } finally {
       setOpenDeleteDialog(false); // Close the dialog
     }
-  };
-
-  // Handle Edit/Update Subject
-  const handleEdit = (subject) => {
-    setSelectedSubject(subject);
-    setOpenModal(true); // Open the modal for editing
   };
 
   // Columns definition for DataGrid
@@ -204,7 +204,12 @@ const SubjectsList = () => {
         onClose={() => setOpenModal(false)}
         setUpdate={setUpdate}
       />
-
+      <UpdateSubjectModal
+        open={openUpdateModal}
+        onClose={() => setOpenUpdateModal(false)}
+        setUpdate={setUpdate} // Use setUpdate instead of triggerUpdate
+        subject={selectedSubject} // Pass the selected subject for editing
+      />
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDeleteDialog}
