@@ -14,7 +14,7 @@ import Cookies from "js-cookie"; // For managing cookies
 import axios from "axios"; // For API requests
 import styles from "./CreateSubjectModal.module.css"; // Optional module CSS for styling
 
-const CreateSubjectModal = ({ open, onClose, setUpate }) => {
+const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
   const [newSubject, setNewSubject] = useState({ subjectName: "" });
   const [iconFile, setIconFile] = useState(null); // For storing the selected file
   const [loading, setLoading] = useState(false); // For button loading state
@@ -64,10 +64,9 @@ const CreateSubjectModal = ({ open, onClose, setUpate }) => {
       );
       setNewSubject({ subjectName: "" }); // Reset form
       setIconFile(null); // Clear the file input
-      setUpate(true)
+      setUpdate(true)
       onClose(); // Close the modal
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);

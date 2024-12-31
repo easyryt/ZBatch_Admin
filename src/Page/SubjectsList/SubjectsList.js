@@ -198,12 +198,11 @@ const SubjectsList = () => {
           />
         </Box>
       )}
-      {/* Create/Edit Subject Modal */}
+      {/* Create Subject Modal */}
       <CreateSubjectModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         setUpdate={setUpdate}
-        selectedSubject={selectedSubject} // Pass the selected subject for editing
       />
 
       {/* Delete Confirmation Dialog */}
