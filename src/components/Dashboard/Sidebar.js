@@ -23,6 +23,11 @@ const Sidebar = () => {
       icon: <SchoolIcon />,
       path: "/dashboard/class-list",
     },
+    {
+      text: "Subjects List",
+      icon: <SchoolIcon />,
+      path: "/dashboard/subjects-list",
+    },
   ];
 
   // Inline styles for sidebar
