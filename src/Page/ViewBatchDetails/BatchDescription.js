@@ -8,14 +8,10 @@ import {
   CardContent,
   CardMedia,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
   Divider,
+  IconButton,
 } from "@mui/material";
-import { Download, Visibility } from "@mui/icons-material";
+import { Download, Visibility, Event, School, Info } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -49,6 +45,15 @@ const BatchDescription = ({ id }) => {
     fetchBatchDetails();
   }, [id]);
 
+  const handleDownloadPDF = (pdfUrl) => {
+    const link = document.createElement("a");
+    link.href = pdfUrl;
+    link.setAttribute("download", "schedule.pdf");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
   if (loading) {
     return (
       <Box
@@ -77,82 +82,71 @@ const BatchDescription = ({ id }) => {
     );
   }
 
-  const handleDownloadPDF = (pdfUrl) => {
-    const link = document.createElement("a");
-    link.href = pdfUrl;
-    link.setAttribute("download", "schedule.pdf");
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
   return (
-    <Box sx={{ padding: 2 }}>
+    <Box sx={{ p: 3 }}>
+      {/* Header */}
       <Typography variant="h4" gutterBottom>
         Batch Details
       </Typography>
 
-      {/* Batch Info */}
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Batch ID:</Typography>
-              <Typography variant="body1">{batchDetails.batchId}</Typography>
-            </CardContent>
+      {/* Batch Info Section */}
+      <Grid container spacing={3} mb={3}>
+        <Grid item xs={12} sm={6}>
+          <Card sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              <Info /> Batch ID
+            </Typography>
+            <Typography>{batchDetails.batchId}</Typography>
           </Card>
         </Grid>
-        <Divider />
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Course Duration:</Typography>
-              <Typography variant="body1">
-                {new Date(
-                  batchDetails.courseDuration.startDate
-                ).toLocaleDateString()}{" "}
-                -{" "}
-                {new Date(
-                  batchDetails.courseDuration.endDate
-                ).toLocaleDateString()}
-              </Typography>
-            </CardContent>
+        <Grid item xs={12} sm={6}>
+          <Card sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              <Event /> Course Duration
+            </Typography>
+            <Typography>
+              {new Date(batchDetails.courseDuration.startDate).toLocaleDateString()}{" "}
+              -{" "}
+              {new Date(batchDetails.courseDuration.endDate).toLocaleDateString()}
+            </Typography>
           </Card>
         </Grid>
       </Grid>
-      <Divider />
+
       {/* Batch Includes */}
-      <Typography variant="h6" mt={2}>
-        Batch Includes:
+      <Divider />
+      <Typography variant="h5" mt={3} mb={2}>
+        Batch Includes
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" mb={2}>
         {batchDetails.batchIncludes.join(", ")}
       </Typography>
-      <Divider />
+
       {/* Validity */}
-      <Typography variant="h6" mt={2}>
-        Validity:
+      <Divider />
+      <Typography variant="h5" mt={3} mb={2}>
+        Validity
       </Typography>
       <Typography variant="body1">
         {new Date(batchDetails.validity).toLocaleDateString()}
       </Typography>
-      <Divider />
+
       {/* Subjects */}
-      <Typography variant="h6" mt={2}>
-        Subjects:
-      </Typography>
-      <Typography variant="body1">
-        {batchDetails.subjects.join(", ")}
-      </Typography>
       <Divider />
-      {/* Teachers */}
-      <Typography variant="h6" mt={2}>
-        Know Your Teachers:
+      <Typography variant="h5" mt={3} mb={2}>
+        Subjects
       </Typography>
-      <Grid container spacing={2}>
+      <Typography variant="body1">{batchDetails.subjects.join(", ")}</Typography>
+
+      {/* Teachers Section */}
+      <Divider />
+      <Typography variant="h5" mt={3} mb={2}>
+        Know Your Teachers
+      </Typography>
+      <Grid container spacing={3}>
         {batchDetails.knowYourTeachers.map((teacher, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ textAlign: "center", padding: 2 }}>
+            <Card sx={{ textAlign: "center", p: 2 }}>
               <CardMedia
                 component="img"
                 image={teacher.pic}
@@ -166,10 +160,8 @@ const BatchDescription = ({ id }) => {
                 }}
               />
               <CardContent>
-                <Typography variant="h6" mt={1}>
-                  {teacher.teacherName}
-                </Typography>
-                <Typography variant="body1">{teacher.expertise}</Typography>
+                <Typography variant="h6">{teacher.teacherName}</Typography>
+                <Typography variant="body2">{teacher.expertise}</Typography>
                 <Typography variant="body2" color="textSecondary">
                   {teacher.yearOfEx} years of experience
                 </Typography>
@@ -178,12 +170,13 @@ const BatchDescription = ({ id }) => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Schedule Section */}
       <Divider />
-      {/* Schedule */}
-      <Typography variant="h6" mt={2}>
-        Schedule:
+      <Typography variant="h5" mt={3} mb={2}>
+        Schedule
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {batchDetails.schedule.map((item, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card>
@@ -217,21 +210,23 @@ const BatchDescription = ({ id }) => {
           </Grid>
         ))}
       </Grid>
-      <Divider />
+
       {/* Other Details */}
-      <Typography variant="h6" mt={2}>
-        Other Details:
+      <Divider />
+      <Typography variant="h5" mt={3} mb={2}>
+        Other Details
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" mb={2}>
         {batchDetails.otherDetails.join(", ")}
       </Typography>
+
+      {/* FAQ Section */}
       <Divider />
-      {/* FAQ */}
-      <Typography variant="h6" mt={2}>
-        FAQ:
+      <Typography variant="h5" mt={3} mb={2}>
+        FAQ
       </Typography>
       {batchDetails.faq.map((faq, index) => (
-        <Box key={index} mt={1}>
+        <Box key={index} mt={1} mb={2}>
           <Typography variant="body1" fontWeight="bold">
             Q: {faq.question}
           </Typography>
