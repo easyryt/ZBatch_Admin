@@ -23,6 +23,7 @@ import UpdateBatchModal from "./UpdateBatchModal";
 import CreateBatchModal from "./CreateBatch";
 import AddIcon from "@mui/icons-material/Add";
 import BatchDetails from "./BatchDetails";
+import styles from "./BatchList.module.css";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -274,13 +275,10 @@ const BatchList = () => {
   ];
 
   return (
-    <Box
-      sx={{ padding: "24px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}
-    >
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold" }}>
+    <Box className={styles.container}>
+      <Typography variant="h4" className={styles.title} gutterBottom>
         Batch List
       </Typography>
-
       <Box
         sx={{
           display: "flex",
