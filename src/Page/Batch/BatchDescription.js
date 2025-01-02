@@ -19,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const BatchDetails = ({ open, handleClose, id }) => {
+const BatchDescription = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
     batchIncludes: [],
     courseDuration: { startDate: "", endDate: "" },
@@ -912,4 +912,4 @@ const BatchDetails = ({ open, handleClose, id }) => {
   );
 };
 
-export default BatchDetails;
+export default BatchDescription;

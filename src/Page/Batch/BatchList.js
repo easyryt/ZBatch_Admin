@@ -18,13 +18,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UpdateBatchModal from "./UpdateBatchModal";
 import CreateBatchModal from "./CreateBatch";
 import AddIcon from "@mui/icons-material/Add";
-import BatchDetails from "./BatchDetails";
 import styles from "./BatchList.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import BatchDescription from "./BatchDescription";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -46,7 +46,7 @@ const BatchList = () => {
   const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
     useState(false);
   const [selectedBatchId, setSelectedBatchId] = useState(null);
-
+ const navigate = useNavigate()
   // Open Description batch creation modal
   const handleDescriptionOpenBatchModal = (id) => {
     setSelectedBatchId(id);
@@ -286,7 +286,7 @@ const BatchList = () => {
       headerName: "View",
       width: 200,
       renderCell: (params) => (
-        <IconButton color="secondary">
+        <IconButton color="secondary" onClick={()=>navigate(`/dashboard/batch-details/${params.row._id}`)}>
           <VisibilityIcon />
         </IconButton>
       ),
@@ -360,7 +360,7 @@ const BatchList = () => {
         </Box>
       )}
       {/* batch description Modal */}
-      <BatchDetails
+      <BatchDescription
         open={batchDescriptionModalOpen}
         handleClose={handleDescriptionCloseBatchModal}
         id={selectedBatchId}
