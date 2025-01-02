@@ -9,6 +9,10 @@ import {
   CircularProgress,
   Box,
   Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -20,7 +24,35 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
     yearOfEx: "",
     pic: null,
   });
+
   const [loading, setLoading] = useState(false);
+  const [subjectsList, setSubjectsList] = useState([]); // List of subjects
+  const [subjectsLoading, setSubjectsLoading] = useState(true); // Tracks API loading state
+
+  // Fetch subjects from API
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const token = Cookies.get("token");
+      try {
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
+        );
+        setSubjectsList(response.data.data || []); // Update the subjects list
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      } finally {
+        setSubjectsLoading(false); // Mark loading as complete
+      }
+    };
+
+    fetchSubjects();
+  }, []);
+
   // Pre-fill the form when the selected teacher changes
   useEffect(() => {
     if (teacher) {
@@ -28,7 +60,7 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
         teacherName: teacher.teacherName || "",
         expertise: teacher.expertise || "",
         yearOfEx: teacher.yearOfEx || "",
-        pic: null, // Pic is not pre-filled
+        pic: teacher.pic ? teacher.pic.url : null, // Use the teacher's existing pic URL
       });
     }
   }, [teacher]);
@@ -85,60 +117,74 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Update Teacher</DialogTitle>
       <DialogContent>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          {/* Teacher Name */}
-          <TextField
-            label="Teacher Name"
-            name="teacherName"
-            value={formData.teacherName}
-            onChange={handleInputChange}
-            variant="outlined"
-            fullWidth
-            required
-          />
-          {/* Expertise */}
-          <TextField
-            label="Expertise"
-            name="expertise"
-            value={formData.expertise}
-            onChange={handleInputChange}
-            variant="outlined"
-            fullWidth
-            required
-          />
-          {/* Years of Experience */}
-          <TextField
-            label="Years of Experience"
-            name="yearOfEx"
-            value={formData.yearOfEx}
-            onChange={handleInputChange}
-            variant="outlined"
-            fullWidth
-            type="number"
-            required
-          />
-          {/* Picture Upload */}
-          <Button variant="outlined" component="label">
-            Upload Picture
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleFileChange}
+        {subjectsLoading ? (
+          <CircularProgress />
+        ) : (
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            {/* Teacher Name */}
+            <TextField
+              label="Teacher Name"
+              name="teacherName"
+              value={formData.teacherName}
+              onChange={handleInputChange}
+              variant="outlined"
+              fullWidth
+              required
             />
-          </Button>
-          {formData.pic && (
-            <Box>
-              <Typography variant="body2">
-                Selected file: {formData.pic.name}
-              </Typography>
-            </Box>
-          )}
-        </Box>
+
+            {/* Expertise Selection */}
+            <FormControl fullWidth required>
+              <InputLabel>Expertise</InputLabel>
+              <Select
+                name="expertise"
+                value={formData.expertise}
+                onChange={handleInputChange}
+              >
+                {subjectsList.map((subject) => (
+                  <MenuItem key={subject.id} value={subject.subjectName}>
+                    {subject.subjectName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* Years of Experience */}
+            <TextField
+              label="Years of Experience"
+              name="yearOfEx"
+              value={formData.yearOfEx}
+              onChange={handleInputChange}
+              variant="outlined"
+              fullWidth
+              type="number"
+              required
+            />
+
+            {/* Picture Upload */}
+            <Button variant="outlined" component="label">
+              Upload Picture
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleFileChange}
+              />
+            </Button>
+            {formData.pic && (
+              <Box>
+                <Typography variant="body2">
+                  Selected file: {formData.pic.name || "Existing image"}
+                </Typography>
+                {/* Show existing image if no new file is selected */}
+                <img src={formData.pic.name ? URL.createObjectURL(formData.pic) : formData.pic} alt="Teacher" width="100" />
+              </Box>
+            )}
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="outlined">
@@ -148,7 +194,7 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
           onClick={handleSubmit}
           color="primary"
           variant="contained"
-          disabled={loading}
+          disabled={loading || !formData.teacherName || !formData.expertise}
         >
           {loading ? <CircularProgress size={24} /> : "Update"}
         </Button>
