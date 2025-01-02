@@ -17,14 +17,16 @@ import Cookies from "js-cookie";
 import { Delete, Edit } from "@mui/icons-material";
 import styles from "./TeachersList.module.css";
 import CreateTeacherModal from "./CreateTeacherModal";
+import UpdateTeacherModal from "./UpdateTeacherModal";
 
 const TeachersList = () => {
   const [teachers, setTeachers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState(null); // To hold selected teacher data
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openModal, setOpenModal] = useState(false); // Modal state
+  const [openCreateModal, setOpenCreateModal] = useState(false); // State for Create modal
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // State for Update modal
   const [update, setUpdate] = useState(false);
 
   // Fetch teachers data from API
@@ -43,6 +45,7 @@ const TeachersList = () => {
       if (response.data.status) {
         setTeachers(response.data.data);
         setFilteredData(response.data.data);
+        setUpdate(false); 
       } else {
         console.error(response.data.message);
       }
@@ -63,7 +66,7 @@ const TeachersList = () => {
 
   // Handle delete confirmation dialog open
   const handleDeleteClick = (id) => {
-    setSelectedTeacherId(id);
+    setSelectedTeacher(id);
     setOpenDeleteDialog(true);
   };
 
@@ -72,7 +75,7 @@ const TeachersList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/teachers/delete/${selectedTeacherId}`,
+        `https://npc-classes.onrender.com/admin/teachers/delete/${selectedTeacher}`,
         {
           headers: {
             "x-admin-token": token,
@@ -80,15 +83,21 @@ const TeachersList = () => {
         }
       );
       setTeachers((prev) =>
-        prev.filter((teacher) => teacher._id !== selectedTeacherId)
+        prev.filter((teacher) => teacher._id !== selectedTeacher)
       );
       setFilteredData((prev) =>
-        prev.filter((teacher) => teacher._id !== selectedTeacherId)
+        prev.filter((teacher) => teacher._id !== selectedTeacher)
       );
       setOpenDeleteDialog(false);
     } catch (error) {
       console.error("Error deleting teacher:", error);
     }
+  };
+
+  // Handle edit button click
+  const handleEditClick = (teacher) => {
+    setSelectedTeacher(teacher); // Set the selected teacher for editing
+    setOpenUpdateModal(true); // Open Update modal
   };
 
   useEffect(() => {
@@ -125,7 +134,11 @@ const TeachersList = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton color="primary" title="Edit">
+          <IconButton
+            color="primary"
+            title="Edit"
+            onClick={() => handleEditClick(params.row)}
+          >
             <Edit />
           </IconButton>
           <IconButton
@@ -150,16 +163,23 @@ const TeachersList = () => {
         color="primary"
         sx={{ marginBottom: "20px" }}
         onClick={() => {
-          setOpenModal(true);
+          setOpenCreateModal(true);
         }}
       >
         Create Teacher
       </Button>
-      {/* Create Subject Modal */}
+      {/* Create Teacher Modal */}
       <CreateTeacherModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
         setUpdate={setUpdate}
+      />
+      {/* Update Teacher Modal */}
+      <UpdateTeacherModal
+        open={openUpdateModal}
+        onClose={() => setOpenUpdateModal(false)}
+        setUpdate={setUpdate}
+        teacher={selectedTeacher} // Pass the selected teacher for editing
       />
       <TextField
         fullWidth
