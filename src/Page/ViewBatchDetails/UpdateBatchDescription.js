@@ -30,7 +30,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
     faq: [],
     subjects: "",
   });
-
+  
   const [subjectsList, setSubjectsList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -45,6 +45,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
       const teacherIds = batchDetails.knowYourTeachers?.map(
         (teacher) => teacher.teacherId
       );
+      setSelectedTeachers(teacherIds)
       setFormData({
         batchIncludes: batchDetails.batchIncludes,
         courseDuration: batchDetails.courseDuration,
@@ -61,7 +62,8 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
         subjects: batchDetails.subjects.join(", "),
       });
     }
-  }, [batchDetails]);
+}, [batchDetails]);
+
 
   const handleInputChange = (key, value) => {
     setInputValue(value);
