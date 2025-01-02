@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Backdrop,
@@ -15,17 +15,6 @@ import Cookies from "js-cookie"; // For managing cookies
 import axios from "axios"; // For API requests
 import styles from "./CreateTeacherModal.module.css"; // Optional module CSS for styling
 
-const expertiseOptions = [
-  "Mathematics",
-  "Science",
-  "History",
-  "Literature",
-  "Programming",
-  "Art",
-  "Music",
-  "Physical Education",
-]; // Example options for expertise
-
 const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
   const [newTeacher, setNewTeacher] = useState({
     teacherName: "",
@@ -35,6 +24,28 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
   const [picFile, setPicFile] = useState(null); // For storing the selected file
   const [loading, setLoading] = useState(false); // For button loading state
   const [error, setError] = useState(null); // For displaying errors (optional)
+  const [subjectsList, setSubjectsList] = useState([]); // For fetched subjects
+
+  // Fetch subjects from API
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      const token = Cookies.get("token");
+      try {
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
+        );
+        setSubjectsList(response.data.data || []); // Set subjects list
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
+    };
+    fetchSubjects();
+  }, []);
 
   // Handle input change for text fields
   const handleInputChange = (e) => {
@@ -55,7 +66,12 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
       return;
     }
 
-    if (!newTeacher.teacherName || !newTeacher.expertise || !newTeacher.yearOfEx || !picFile) {
+    if (
+      !newTeacher.teacherName ||
+      !newTeacher.expertise ||
+      !newTeacher.yearOfEx ||
+      !picFile
+    ) {
       alert("Please fill in all fields and upload a picture.");
       return;
     }
@@ -103,7 +119,11 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
     >
       <Fade in={open}>
         <Box className={styles.modal}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h5" gutterBottom>
               Create New Teacher
             </Typography>
@@ -128,9 +148,14 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
             value={newTeacher.expertise}
             onChange={handleInputChange}
           >
-            {expertiseOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+            {subjectsList.map((subject) => (
+              <MenuItem key={subject._id} value={subject.subjectName}>
+                <img
+                  src={subject.icon.url}
+                  alt={subject.subjectName}
+                  style={{ width: 20, height: 20, marginRight: 8 }}
+                />
+                {subject.subjectName}
               </MenuItem>
             ))}
           </TextField>

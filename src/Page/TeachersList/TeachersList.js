@@ -72,7 +72,7 @@ const TeachersList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/teachers/${selectedTeacherId}`,
+        `https://npc-classes.onrender.com/admin/teachers/delete/${selectedTeacherId}`,
         {
           headers: {
             "x-admin-token": token,
