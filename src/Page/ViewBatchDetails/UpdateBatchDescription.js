@@ -30,7 +30,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
     faq: [],
     subjects: "",
   });
-  
+
   const [subjectsList, setSubjectsList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -364,7 +364,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Create Batch Description
+          Update Batch Description
         </Typography>
 
         <Box
