@@ -7,6 +7,7 @@ import ClassList from "./Page/ClassList/ClassList";
 import CreateBatch from "./Page/Batch/CreateBatch";
 import BatchList from "./Page/Batch/BatchList";
 import SubjectsList from "./Page/SubjectsList/SubjectsList";
+import TeachersList from "./Page/TeachersList/TeachersList";
 
 const App = () => {
   return (
@@ -23,10 +24,12 @@ const App = () => {
           <Route path="class-list" element={<ClassList />} />
           <Route path="batch-list/:id" element={<BatchList />} />
           <Route path="subjects-list" element={<SubjectsList />} />
+          <Route path="teachers-list" element={<TeachersList />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
         <Route path="/subjects-list" element={<SubjectsList />} />
+        <Route path="/teachers-list" element={<TeachersList />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
