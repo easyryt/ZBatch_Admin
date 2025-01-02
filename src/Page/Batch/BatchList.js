@@ -24,6 +24,7 @@ import CreateBatchModal from "./CreateBatch";
 import AddIcon from "@mui/icons-material/Add";
 import BatchDetails from "./BatchDetails";
 import styles from "./BatchList.module.css";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -244,12 +245,20 @@ const BatchList = () => {
       headerName: "Created Description",
       width: 200,
       renderCell: (params) => (
-        <IconButton
-          color="secondary"
-          onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
-        >
-          <AddIcon />
-        </IconButton>
+        <Box>
+          <IconButton
+            color="secondary"
+            onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
+          >
+            <AddIcon />
+          </IconButton>
+          <IconButton
+            color="secondary"
+            onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       ),
     },
     {
@@ -257,9 +266,14 @@ const BatchList = () => {
       headerName: "Created Classes",
       width: 200,
       renderCell: (params) => (
-        <IconButton color="secondary">
-          <AddIcon />
-        </IconButton>
+        <Box>
+          <IconButton color="secondary">
+            <AddIcon />
+          </IconButton>
+          <IconButton color="secondary">
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       ),
     },
     {
@@ -267,9 +281,14 @@ const BatchList = () => {
       headerName: "Created Testes",
       width: 200,
       renderCell: (params) => (
-        <IconButton color="secondary">
-          <AddIcon />
-        </IconButton>
+        <Box>
+          <IconButton color="secondary">
+            <AddIcon />
+          </IconButton>
+          <IconButton color="secondary">
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       ),
     },
   ];
