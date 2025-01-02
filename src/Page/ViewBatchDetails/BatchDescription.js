@@ -15,11 +15,13 @@ import { Download, Visibility, Event, School, Info } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import EditIcon from "@mui/icons-material/Edit";
+import UpdateBatchDescription from "./UpdateBatchDescription";
 
 const BatchDescription = ({ id }) => {
   const [batchDetails, setBatchDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal open/close
 
   // Fetch batch details
   useEffect(() => {
@@ -55,6 +57,10 @@ const BatchDescription = ({ id }) => {
     link.remove();
   };
 
+  // Handle modal open/close
+  const handleModalOpen = () => setIsModalOpen(true);
+  const handleModalClose = () => setIsModalOpen(false);
+
   if (loading) {
     return (
       <Box
@@ -86,15 +92,21 @@ const BatchDescription = ({ id }) => {
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
-      <Box style={{display:"flex",justifyContent:"space-between"}}>
+      <Box style={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h4" gutterBottom>
           Batch Details
         </Typography>
-        <IconButton color="primary">
+        <IconButton color="primary" onClick={handleModalOpen}>
           <EditIcon />
         </IconButton>
       </Box>
-
+      {/* UpdateBatchDescription Modal */}
+      <UpdateBatchDescription
+        open={isModalOpen}
+        handleClose={handleModalClose}
+        id={id}
+        batchDetails={batchDetails}
+      />
       {/* Batch Info Section */}
       <Grid container spacing={3} mb={3}>
         <Grid item xs={12} sm={6}>
@@ -191,12 +203,19 @@ const BatchDescription = ({ id }) => {
       <Grid container spacing={3}>
         {batchDetails.schedule.map((item, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
+             <Card sx={{ textAlign: "center" }}>
               <CardMedia
                 component="img"
                 height="140"
                 image={item.icon}
                 alt={item.subject}
+                sx={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: "50%",
+                    margin: "0 auto",
+                    objectFit: "cover",
+                  }}
               />
               <CardContent>
                 <Typography variant="h6">{item.subject}</Typography>
