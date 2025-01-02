@@ -35,6 +35,7 @@ const BatchDescription = ({ id }) => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal open/close
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [update,setUpdate] = useState(false)
 
 
   // Fetch batch details
@@ -52,6 +53,7 @@ const BatchDescription = ({ id }) => {
         );
         if (response.data.status) {
           setBatchDetails(response.data.data);
+          setUpdate(false)
         }
       } catch (error) {
         if (error.response) {
@@ -65,7 +67,7 @@ const BatchDescription = ({ id }) => {
       }
     };
     fetchBatchDetails();
-  }, [id]);
+  }, [id,update]);
 
   const handleDownloadPDF = (pdfUrl) => {
     const link = document.createElement("a");
@@ -97,6 +99,7 @@ const BatchDescription = ({ id }) => {
               },
             }
           );
+          setUpdate(true)
           setOpenDeleteDialog(false);
         } catch (error) {
           console.error("Error deleting teacher:", error);
