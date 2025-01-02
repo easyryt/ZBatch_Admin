@@ -14,6 +14,7 @@ import {
 import { Download, Visibility, Event, School, Info } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
+import EditIcon from "@mui/icons-material/Edit";
 
 const BatchDescription = ({ id }) => {
   const [batchDetails, setBatchDetails] = useState(null);
@@ -85,9 +86,14 @@ const BatchDescription = ({ id }) => {
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
-      <Typography variant="h4" gutterBottom>
-        Batch Details
-      </Typography>
+      <Box style={{display:"flex",justifyContent:"space-between"}}>
+        <Typography variant="h4" gutterBottom>
+          Batch Details
+        </Typography>
+        <IconButton color="primary">
+          <EditIcon />
+        </IconButton>
+      </Box>
 
       {/* Batch Info Section */}
       <Grid container spacing={3} mb={3}>
@@ -105,9 +111,13 @@ const BatchDescription = ({ id }) => {
               <Event /> Course Duration
             </Typography>
             <Typography>
-              {new Date(batchDetails.courseDuration.startDate).toLocaleDateString()}{" "}
+              {new Date(
+                batchDetails.courseDuration.startDate
+              ).toLocaleDateString()}{" "}
               -{" "}
-              {new Date(batchDetails.courseDuration.endDate).toLocaleDateString()}
+              {new Date(
+                batchDetails.courseDuration.endDate
+              ).toLocaleDateString()}
             </Typography>
           </Card>
         </Grid>
@@ -136,7 +146,9 @@ const BatchDescription = ({ id }) => {
       <Typography variant="h5" mt={3} mb={2}>
         Subjects
       </Typography>
-      <Typography variant="body1">{batchDetails.subjects.join(", ")}</Typography>
+      <Typography variant="body1">
+        {batchDetails.subjects.join(", ")}
+      </Typography>
 
       {/* Teachers Section */}
       <Divider />
