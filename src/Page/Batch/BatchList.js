@@ -245,20 +245,20 @@ const BatchList = () => {
       headerName: "Created Description",
       width: 200,
       renderCell: (params) => (
-        <Box>
-          <IconButton
-            color="secondary"
-            onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
-          >
-            <AddIcon />
-          </IconButton>
-          <IconButton
-            color="secondary"
-            onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
-          >
-            <VisibilityIcon />
-          </IconButton>
-        </Box>
+        <IconButton
+          color="secondary"
+          onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
+        >
+          <AddIcon />
+        </IconButton>
+      ),
+      renderCell: (params) => (
+        <IconButton
+          color="secondary"
+          onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
+        >
+          <AddIcon />
+        </IconButton>
       ),
     },
     {
@@ -266,14 +266,9 @@ const BatchList = () => {
       headerName: "Created Classes",
       width: 200,
       renderCell: (params) => (
-        <Box>
-          <IconButton color="secondary">
-            <AddIcon />
-          </IconButton>
-          <IconButton color="secondary">
-            <VisibilityIcon />
-          </IconButton>
-        </Box>
+        <IconButton color="secondary">
+          <AddIcon />
+        </IconButton>
       ),
     },
     {
@@ -281,14 +276,19 @@ const BatchList = () => {
       headerName: "Created Testes",
       width: 200,
       renderCell: (params) => (
-        <Box>
-          <IconButton color="secondary">
-            <AddIcon />
-          </IconButton>
-          <IconButton color="secondary">
-            <VisibilityIcon />
-          </IconButton>
-        </Box>
+        <IconButton color="secondary">
+          <AddIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: "View",
+      headerName: "View",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary">
+          <VisibilityIcon />
+        </IconButton>
       ),
     },
   ];
