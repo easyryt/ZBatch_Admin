@@ -321,7 +321,7 @@ const BatchDescription = ({ id }) => {
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this teacher? This action cannot be
+            Are you sure you want to delete this discription? This action cannot be
             undone.
           </DialogContentText>
         </DialogContent>
