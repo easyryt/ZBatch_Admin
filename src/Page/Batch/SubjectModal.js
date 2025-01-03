@@ -16,6 +16,9 @@ import AddIcon from "@mui/icons-material/Add";
 import ContentModal from "./ContentModal";
 import UpdateSubjectModal from "./UpdateSubjectModal";
 import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+
 
 const SubjectModal = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
@@ -151,6 +154,16 @@ const SubjectModal = ({ open, handleClose, id }) => {
       renderCell: (params) => (
         <IconButton color="secondary" onClick={()=>openUpdateModal(params.row)}>
           <EditIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: "View",
+      headerName: "View",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary">
+          <VisibilityIcon />
         </IconButton>
       ),
     },
