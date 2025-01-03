@@ -204,7 +204,7 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
               />
             </Box>
           )}
-
+         <br/>
           {error && (
             <Typography variant="body2" color="error" mb={2}>
               {error}
