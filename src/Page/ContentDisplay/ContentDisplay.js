@@ -256,7 +256,7 @@ const ContentDisplay = () => {
           {dialogContent.type === "video" ? (
             <iframe
               width="100%"
-              height="600"
+              height="400"
               src={dialogContent.content}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
