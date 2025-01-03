@@ -11,10 +11,10 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
-  TextField,
   IconButton,
-  Toolbar,
   AppBar,
+  Toolbar,
+  TextField,
   InputAdornment,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -73,10 +73,12 @@ const ContentDisplay = () => {
   const handleDialogOpen = (type, url) => {
     let embedUrl = url;
 
-    // Convert YouTube URL to embed format
-    if (type === "video" && url.includes("youtube.com/watch")) {
-      const videoId = new URL(url).searchParams.get("v");
-      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    // Check if it's a YouTube video URL and extract the video ID
+    if (type === "video" && url.includes("youtu.be")) {
+      const videoId = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+      if (videoId && videoId[1]) {
+        embedUrl = `https://www.youtube.com/embed/${videoId[1]}`;
+      }
     }
 
     setDialogContent({ type, content: embedUrl });
@@ -87,7 +89,6 @@ const ContentDisplay = () => {
     setDialogOpen(false);
     setDialogContent({ type: "", content: "" });
   };
-
   if (loading) {
     return (
       <Box
@@ -224,23 +225,22 @@ const ContentDisplay = () => {
           </Box>
           {dialogContent.type === "video" ? (
             <iframe
-              src={dialogContent.content}
-              title="YouTube Video"
               width="100%"
-              height="100%"
+              height="400"
+              src={dialogContent.content}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              title="Video Player"
             ></iframe>
           ) : (
-            <Box
-              component="iframe"
-              src={dialogContent.content}
+            <iframe
               width="100%"
-              height="500px"
+              height="400"
+              src={dialogContent.content}
               frameBorder="0"
-              sx={{ mt: 2 }}
-            ></Box>
+              title="PDF Viewer"
+            ></iframe>
           )}
         </DialogContent>
       </Dialog>
