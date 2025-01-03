@@ -9,12 +9,21 @@ import {
   Button,
   Grid,
   CircularProgress,
+  Dialog,
+  DialogContent,
+  TextField,
+  IconButton,
+  Toolbar,
+  AppBar,
+  InputAdornment,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import LockIcon from "@mui/icons-material/Lock";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -22,6 +31,10 @@ const ContentDisplay = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [contentData, setContentData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState({ type: "", content: "" });
   const token = Cookies.get("token");
 
   useEffect(() => {
@@ -37,6 +50,7 @@ const ContentDisplay = () => {
         );
         if (response.data.status) {
           setContentData(response.data.data);
+          setFilteredData(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching content:", error);
@@ -46,6 +60,33 @@ const ContentDisplay = () => {
     };
     fetchContent();
   }, [id]);
+
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = contentData.filter((content) =>
+      content.title.toLowerCase().includes(query)
+    );
+    setFilteredData(filtered);
+  };
+
+  const handleDialogOpen = (type, url) => {
+    let embedUrl = url;
+
+    // Convert YouTube URL to embed format
+    if (type === "video" && url.includes("youtube.com/watch")) {
+      const videoId = new URL(url).searchParams.get("v");
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    setDialogContent({ type, content: embedUrl });
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setDialogContent({ type: "", content: "" });
+  };
 
   if (loading) {
     return (
@@ -62,14 +103,45 @@ const ContentDisplay = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" textAlign="center" mb={4}>
-        Content
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Content Library
+          </Typography>
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search content"
+            value={searchQuery}
+            onChange={handleSearch}
+            sx={{ backgroundColor: "white", borderRadius: 1 }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Toolbar>
+      </AppBar>
+
+      <Typography variant="h4" textAlign="center" mt={4} mb={4}>
+        Explore Content
       </Typography>
+
       <Grid container spacing={3}>
-        {contentData.map((content) => (
+        {filteredData.map((content) => (
           <Grid item xs={12} sm={6} md={4} key={content._id}>
             <Card
-              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: 3,
+                "&:hover": { boxShadow: 6, transform: "scale(1.02)" },
+                transition: "0.3s",
+              }}
             >
               <CardMedia
                 component="img"
@@ -105,20 +177,73 @@ const ContentDisplay = () => {
                 </Box>
               </CardContent>
               <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PlayCircleOutlineIcon />}
-                  href={content.videoUrl}
-                  target="_blank"
-                >
-                  Watch Video
-                </Button>
+                {content.videoUrl && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PlayCircleOutlineIcon />}
+                    onClick={() => handleDialogOpen("video", content.videoUrl)}
+                  >
+                    Watch Video
+                  </Button>
+                )}
+                {content.pdfUrl && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDialogOpen("pdf", content.pdfUrl)}
+                  >
+                    View PDF
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
+
+      {/* Dialog for Video and PDF */}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogContent>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6">
+              {dialogContent.type === "video" ? "Watch Video" : "View PDF"}
+            </Typography>
+            <IconButton onClick={handleDialogClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {dialogContent.type === "video" ? (
+            <iframe
+              src={dialogContent.content}
+              title="YouTube Video"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <Box
+              component="iframe"
+              src={dialogContent.content}
+              width="100%"
+              height="500px"
+              frameBorder="0"
+              sx={{ mt: 2 }}
+            ></Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
