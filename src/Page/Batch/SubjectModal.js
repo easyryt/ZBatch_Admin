@@ -17,6 +17,7 @@ import ContentModal from "./ContentModal";
 import UpdateSubjectModal from "./UpdateSubjectModal";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -34,6 +35,7 @@ const SubjectModal = ({ open, handleClose, id }) => {
   const [selectSubjectId, setSubjectId] = useState(null);
   const [selectedSubject,setSelectedSubject] = useState(null)
   const [update , setUpdate] = useState(false)
+  const navigate = useNavigate()
 
 
   const openContentModal = (batchId,subjectId) => {
@@ -162,7 +164,7 @@ const SubjectModal = ({ open, handleClose, id }) => {
       headerName: "View",
       width: 200,
       renderCell: (params) => (
-        <IconButton color="secondary">
+        <IconButton color="secondary" onClick={()=>navigate(`/dashboard/content-display/${params.row._id}`)}> 
           <VisibilityIcon />
         </IconButton>
       ),
