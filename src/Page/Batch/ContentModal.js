@@ -11,8 +11,9 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const ContentModal = ({ open, handleClose, classId }) => {
+const ContentModal = ({ open, handleClose,batchId ,subjectId }) => {
   const [formData, setFormData] = useState({
     title: "",
     duration: "",
@@ -23,6 +24,7 @@ const ContentModal = ({ open, handleClose, classId }) => {
     thumbnailImg: null,
     pdf: null,
   });
+const token = Cookies.get("token");
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -45,8 +47,13 @@ const ContentModal = ({ open, handleClose, classId }) => {
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/allClass/subjects/contents/create/${classId}`,
-        data
+        `https://npc-classes.onrender.com/admin/allClass/subjects/contents/create/${batchId}/${subjectId}`,
+        data,
+        {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
       );
       console.log("Content created successfully:", response.data);
       handleClose();

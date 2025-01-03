@@ -12,6 +12,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Cookies from "js-cookie";
+import AddIcon from "@mui/icons-material/Add";
+import ContentModal from "./ContentModal";
 
 const SubjectModal = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,20 @@ const SubjectModal = ({ open, handleClose, id }) => {
   const [subjects, setSubjects] = useState([]);
   const [subjectList, setSubjectList] = useState([]); // List of all subjects
   const token = Cookies.get("token");
+  const [contentModalOpen, setContentModalOpen] = useState(false);
+  const [selectBatchId, setBatchId] = useState(null);
+  const [selectSubjectId, setSubjectId] = useState(null);
+
+
+  const openContentModal = (batchId,subjectId) => {
+    setBatchId(batchId);
+    setSubjectId(subjectId)
+    setContentModalOpen(true);
+  };
+
+  const handleSubjectCloseBatchModal=()=>{
+    setContentModalOpen(false);
+  }
 
   useEffect(() => {
     if (open) {
@@ -103,6 +119,16 @@ const SubjectModal = ({ open, handleClose, id }) => {
         />
       ),
     },
+    {
+      field: "Created Content",
+      headerName: "Created Content",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary" onClick={()=>openContentModal(params.row.batchId,params.row._id)}>
+          <AddIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
@@ -123,6 +149,12 @@ const SubjectModal = ({ open, handleClose, id }) => {
           height: "95vh",
         }}
       >
+        <ContentModal
+          open={contentModalOpen}
+          handleClose={handleSubjectCloseBatchModal}
+          subjectId={selectSubjectId}
+          batchId={selectBatchId}
+        />
         <IconButton
           onClick={handleClose}
           sx={{ position: "absolute", top: 8, right: 8 }}
