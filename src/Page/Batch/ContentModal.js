@@ -139,16 +139,6 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
             required
           />
 
-          <TextField
-            fullWidth
-            label="Video URL"
-            name="videoUrl"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-
           <FormControlLabel
             control={
               <Checkbox
@@ -176,6 +166,15 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
 
           {formData.contentType === "Lecture" && (
             <Box mt={2}>
+              <TextField
+                fullWidth
+                label="Video URL"
+                name="videoUrl"
+                value={formData.videoUrl}
+                onChange={handleChange}
+                margin="normal"
+                required
+              />
               <Typography variant="body2" mb={1}>
                 Thumbnail Image:
               </Typography>
@@ -204,7 +203,7 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
               />
             </Box>
           )}
-         <br/>
+          <br />
           {error && (
             <Typography variant="body2" color="error" mb={2}>
               {error}
