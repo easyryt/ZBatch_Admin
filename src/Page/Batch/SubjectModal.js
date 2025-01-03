@@ -14,6 +14,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import AddIcon from "@mui/icons-material/Add";
 import ContentModal from "./ContentModal";
+import UpdateSubjectModal from "./UpdateSubjectModal";
+import EditIcon from "@mui/icons-material/Edit";
 
 const SubjectModal = ({ open, handleClose, id }) => {
   const [formData, setFormData] = useState({
@@ -24,8 +26,11 @@ const SubjectModal = ({ open, handleClose, id }) => {
   const [subjectList, setSubjectList] = useState([]); // List of all subjects
   const token = Cookies.get("token");
   const [contentModalOpen, setContentModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectBatchId, setBatchId] = useState(null);
   const [selectSubjectId, setSubjectId] = useState(null);
+  const [selectedSubject,setSelectedSubject] = useState(null)
+  const [update , setUpdate] = useState(false)
 
 
   const openContentModal = (batchId,subjectId) => {
@@ -38,12 +43,20 @@ const SubjectModal = ({ open, handleClose, id }) => {
     setContentModalOpen(false);
   }
 
+  const openUpdateModal = (data) => {
+    setSelectedSubject(data)
+    setUpdateModalOpen(true);
+  };
+
+  const handleUpdateCloseBatchModal=()=>{
+    setUpdateModalOpen(false);
+  }
   useEffect(() => {
     if (open) {
       fetchSubjects();
       fetchAllSubjects();
     }
-  }, [open]);
+  }, [open,update]);
 
   const fetchSubjects = async () => {
     try {
@@ -56,6 +69,7 @@ const SubjectModal = ({ open, handleClose, id }) => {
         }
       );
       setSubjects(response.data.data);
+      setUpdate(false)
     } catch (error) {
       console.error("Error fetching subjects:", error);
     }
@@ -72,6 +86,7 @@ const SubjectModal = ({ open, handleClose, id }) => {
         }
       );
       setSubjectList(response.data.data || []);
+      setUpdate(false)
     } catch (error) {
       console.error("Error fetching all subjects:", error);
     }
@@ -129,6 +144,16 @@ const SubjectModal = ({ open, handleClose, id }) => {
         </IconButton>
       ),
     },
+    {
+      field: "Edit",
+      headerName: "Edit",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton color="secondary" onClick={()=>openUpdateModal(params.row)}>
+          <EditIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
@@ -149,6 +174,12 @@ const SubjectModal = ({ open, handleClose, id }) => {
           height: "95vh",
         }}
       >
+        <UpdateSubjectModal
+         open={updateModalOpen}
+         handleClose={handleUpdateCloseBatchModal}
+         selectedSubject={selectedSubject}
+         setUpdate={setUpdate}
+        />
         <ContentModal
           open={contentModalOpen}
           handleClose={handleSubjectCloseBatchModal}
