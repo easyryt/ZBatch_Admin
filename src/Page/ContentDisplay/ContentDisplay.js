@@ -42,7 +42,7 @@ const ContentDisplay = () => {
   const [dialogContent, setDialogContent] = useState({ type: "", content: "" });
   const [filterContentType, setFilterContentType] = useState("");
   const token = Cookies.get("token");
-
+ 
   // Fetch content with the selected filter
   useEffect(() => {
     const fetchContent = async () => {
@@ -107,7 +107,12 @@ const ContentDisplay = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -211,12 +216,13 @@ const ContentDisplay = () => {
                     Watch Video
                   </Button>
                 )}
-                {(content.contentType === "Notes" || content.contentType === "DPP PDF") && (
+                {(content.contentType === "Notes" ||
+                  content.contentType === "DPP PDF") && (
                   <Button
                     variant="contained"
                     color="secondary"
                     startIcon={<PictureAsPdfIcon />}
-                    onClick={() => handleViewPdf(content.pdfUrl)}
+                    onClick={() => handleViewPdf(content.pdf.url)}
                   >
                     View PDF
                   </Button>
@@ -228,9 +234,18 @@ const ContentDisplay = () => {
       </Grid>
 
       {/* Dialog for Video and PDF */}
-      <Dialog open={dialogOpen} onClose={handleDialogClose} fullWidth maxWidth="md">
+      <Dialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        fullWidth
+        maxWidth="md"
+      >
         <DialogContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h6">
               {dialogContent.type === "video" ? "Watch Video" : "View PDF"}
             </Typography>
@@ -241,7 +256,7 @@ const ContentDisplay = () => {
           {dialogContent.type === "video" ? (
             <iframe
               width="100%"
-              height="400"
+              height="600"
               src={dialogContent.content}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -251,7 +266,7 @@ const ContentDisplay = () => {
           ) : (
             <iframe
               width="100%"
-              height="400"
+              height="600"
               src={dialogContent.content}
               frameBorder="0"
               title="PDF Viewer"
