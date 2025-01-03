@@ -16,6 +16,10 @@ import {
   Toolbar,
   TextField,
   InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -24,6 +28,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf"; // PDF icon
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -35,8 +40,10 @@ const ContentDisplay = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState({ type: "", content: "" });
+  const [filterContentType, setFilterContentType] = useState("");
   const token = Cookies.get("token");
 
+  // Fetch content with the selected filter
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -45,6 +52,9 @@ const ContentDisplay = () => {
           {
             headers: {
               "x-admin-token": token,
+            },
+            params: {
+              contentType: filterContentType, // Add the filter for content type
             },
           }
         );
@@ -59,7 +69,7 @@ const ContentDisplay = () => {
       }
     };
     fetchContent();
-  }, [id]);
+  }, [id, filterContentType]); // Re-fetch content when filter changes
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -89,14 +99,15 @@ const ContentDisplay = () => {
     setDialogOpen(false);
     setDialogContent({ type: "", content: "" });
   };
+
+  const handleViewPdf = (url) => {
+    setDialogContent({ type: "pdf", content: url });
+    setDialogOpen(true);
+  };
+
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
       </Box>
     );
@@ -124,13 +135,23 @@ const ContentDisplay = () => {
               ),
             }}
           />
+          {/* Filter for content type */}
+          <FormControl variant="outlined" size="small" sx={{ marginLeft: 2 }}>
+            <InputLabel>Content Type</InputLabel>
+            <Select
+              value={filterContentType}
+              onChange={(e) => setFilterContentType(e.target.value)}
+              label="Content Type"
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="Lecture">Lecture</MenuItem>
+              <MenuItem value="Notes">Notes</MenuItem>
+              <MenuItem value="DPP PDF">DPP PDF</MenuItem>
+            </Select>
+          </FormControl>
         </Toolbar>
       </AppBar>
-
-      <Typography variant="h4" textAlign="center" mt={4} mb={4}>
-        Explore Content
-      </Typography>
-
+      <br />
       <Grid container spacing={3}>
         {filteredData.map((content) => (
           <Grid item xs={12} sm={6} md={4} key={content._id}>
@@ -144,12 +165,14 @@ const ContentDisplay = () => {
                 transition: "0.3s",
               }}
             >
-              <CardMedia
-                component="img"
-                height="180"
-                image={content.thumbnailImg.url}
-                alt={content.title}
-              />
+              {!["Notes", "DPP PDF"].includes(content.contentType) && (
+                <CardMedia
+                  component="img"
+                  height="180"
+                  image={content.thumbnailImg?.url}
+                  alt={content.title}
+                />
+              )}
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   {content.title}
@@ -188,11 +211,12 @@ const ContentDisplay = () => {
                     Watch Video
                   </Button>
                 )}
-                {content.pdfUrl && (
+                {(content.contentType === "Notes" || content.contentType === "DPP PDF") && (
                   <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => handleDialogOpen("pdf", content.pdfUrl)}
+                    startIcon={<PictureAsPdfIcon />}
+                    onClick={() => handleViewPdf(content.pdfUrl)}
                   >
                     View PDF
                   </Button>
@@ -204,18 +228,9 @@ const ContentDisplay = () => {
       </Grid>
 
       {/* Dialog for Video and PDF */}
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        fullWidth
-        maxWidth="md"
-      >
+      <Dialog open={dialogOpen} onClose={handleDialogClose} fullWidth maxWidth="md">
         <DialogContent>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+          <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6">
               {dialogContent.type === "video" ? "Watch Video" : "View PDF"}
             </Typography>
