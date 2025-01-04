@@ -25,7 +25,6 @@ import AddIcon from "@mui/icons-material/Add";
 import styles from "./BatchList.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import BatchDescription from "./BatchDescription";
-import SubjectModal from "./SubjectModal";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -44,7 +43,6 @@ const BatchList = () => {
   const { id } = useParams();
   const [update, setUpdate] = useState(false);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
-  const [subjectModalOpen, setSubjectModalOpen] = useState(false);
   const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
     useState(false);
   const [selectedBatchId, setSelectedBatchId] = useState(null);
@@ -54,18 +52,10 @@ const BatchList = () => {
     setSelectedBatchId(id);
     setBatchDescriptionModalOpen(true);
   };
-  const handleSubjectOpenBatchModal = (id) => {
-    setSelectedBatchId(id);
-    setSubjectModalOpen(true);
-  };
 
   // Close Description batch creation modal
   const handleDescriptionCloseBatchModal = () => {
     setBatchDescriptionModalOpen(false);
-  };
-
-  const handleSubjectCloseBatchModal = () => {
-    setSubjectModalOpen(false);
   };
 
   // Open batch creation modal
@@ -268,10 +258,7 @@ const BatchList = () => {
       headerName: "Created Class Subjects",
       width: 200,
       renderCell: (params) => (
-        <IconButton
-          color="secondary"
-          onClick={() => handleSubjectOpenBatchModal(params.row._id)}
-        >
+        <IconButton color="secondary">
           <AddIcon />
         </IconButton>
       ),
@@ -371,12 +358,6 @@ const BatchList = () => {
       <BatchDescription
         open={batchDescriptionModalOpen}
         handleClose={handleDescriptionCloseBatchModal}
-        id={selectedBatchId}
-      />
-      {/* batch description Modal */}
-      <SubjectModal
-        open={subjectModalOpen}
-        handleClose={handleSubjectCloseBatchModal}
         id={selectedBatchId}
       />
       <UpdateBatchModal
