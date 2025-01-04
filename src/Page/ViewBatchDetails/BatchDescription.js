@@ -16,27 +16,30 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-import {
-  Download,
-  Visibility,
-  Event,
-  School,
-  Info,
-  Delete,
-} from "@mui/icons-material";
+import { Download, Visibility, Event, Info, Delete } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateBatchDescription from "./UpdateBatchDescription";
+import { useParams } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import CreateBatchDescription from "./CreateBatchDescription";
 
-const BatchDescription = ({ id }) => {
+const BatchDescription = () => {
   const [batchDetails, setBatchDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal open/close
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [update,setUpdate] = useState(false)
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
+    useState(false);
+  const { id } = useParams();
+  console.log(batchDescriptionModalOpen, "check");
+  // Close Description batch creation modal
+  const handleDescriptionCloseBatchModal = () => {
+    setBatchDescriptionModalOpen(false);
+  };
 
   // Fetch batch details
   useEffect(() => {
@@ -53,21 +56,23 @@ const BatchDescription = ({ id }) => {
         );
         if (response.data.status) {
           setBatchDetails(response.data.data);
-          setUpdate(false)
+          setUpdate(false);
         }
       } catch (error) {
         if (error.response) {
-            // Display the error message from the API response
-            setError(error.response.data.message || "Failed to fetch batch details.");
-          } else {
-            setError("An error occurred while fetching batch details.");
-          }
+          // Display the error message from the API response
+          setError(
+            error.response.data.message || "Failed to fetch batch details."
+          );
+        } else {
+          setError("An error occurred while fetching batch details.");
+        }
       } finally {
         setLoading(false);
       }
     };
     fetchBatchDetails();
-  }, [id,update]);
+  }, [id, update]);
 
   const handleDownloadPDF = (pdfUrl) => {
     const link = document.createElement("a");
@@ -82,29 +87,29 @@ const BatchDescription = ({ id }) => {
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
-    // Handle delete confirmation dialog open
-    const handleDeleteClick = () => {
-        setOpenDeleteDialog(true);
-      };
-    
-      // Handle delete teacher
-      const handleDelete = async () => {
-        try {
-          const token = Cookies.get("token"); // Replace with your token key
-          await axios.delete(
-            `https://npc-classes.onrender.com/admin/batches/discription/delete/${batchDetails._id}`,
-            {
-              headers: {
-                "x-admin-token": token,
-              },
-            }
-          );
-          setUpdate(true)
-          setOpenDeleteDialog(false);
-        } catch (error) {
-          console.error("Error deleting teacher:", error);
+  // Handle delete confirmation dialog open
+  const handleDeleteClick = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  // Handle delete teacher
+  const handleDelete = async () => {
+    try {
+      const token = Cookies.get("token"); // Replace with your token key
+      await axios.delete(
+        `https://npc-classes.onrender.com/admin/batches/discription/delete/${batchDetails._id}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
         }
-      };
+      );
+      setUpdate(true);
+      setOpenDeleteDialog(false);
+    } catch (error) {
+      console.error("Error deleting teacher:", error);
+    }
+  };
 
   if (loading) {
     return (
@@ -125,11 +130,26 @@ const BatchDescription = ({ id }) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        height="100vh"
+        height="90vh"
+        flexDirection="column"
+        gap="2rem"
       >
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => setBatchDescriptionModalOpen(true)}
+        >
+          <AddIcon />
+        </Button>
         <Typography variant="h6" color="error">
           {error}
         </Typography>
+        {/* batch description Modal */}
+        <CreateBatchDescription
+          open={batchDescriptionModalOpen}
+          handleClose={handleDescriptionCloseBatchModal}
+          id={id}
+        />
       </Box>
     );
   }
@@ -156,6 +176,7 @@ const BatchDescription = ({ id }) => {
         handleClose={handleModalClose}
         batchDetails={batchDetails}
       />
+
       {/* Batch Info Section */}
       <Grid container spacing={3} mb={3}>
         <Grid item xs={12} sm={6}>
@@ -313,16 +334,16 @@ const BatchDescription = ({ id }) => {
           <Typography variant="body2">A: {faq.answer}</Typography>
         </Box>
       ))}
-        {/* Delete Confirmation Dialog */}
-        <Dialog
+      {/* Delete Confirmation Dialog */}
+      <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
       >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this discription? This action cannot be
-            undone.
+            Are you sure you want to delete this discription? This action cannot
+            be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -83,7 +83,7 @@ const UpdateSubjectModal = ({
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box className={styles.modalContainer}>
+      <Box className={styles.modal }>
         <IconButton onClick={handleClose} className={styles.closeButton}>
           <CloseIcon />
         </IconButton>

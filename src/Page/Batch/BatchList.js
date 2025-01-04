@@ -21,10 +21,8 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import UpdateBatchModal from "./UpdateBatchModal";
 import CreateBatchModal from "./CreateBatch";
-import AddIcon from "@mui/icons-material/Add";
 import styles from "./BatchList.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import BatchDescription from "./BatchDescription";
 
 const BatchList = () => {
   const [batches, setBatches] = useState([]);
@@ -43,20 +41,9 @@ const BatchList = () => {
   const { id } = useParams();
   const [update, setUpdate] = useState(false);
   const [batchModalOpen, setBatchModalOpen] = useState(false);
-  const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
-    useState(false);
+
   const [selectedBatchId, setSelectedBatchId] = useState(null);
   const navigate = useNavigate();
-  // Open Description batch creation modal
-  const handleDescriptionOpenBatchModal = (id) => {
-    setSelectedBatchId(id);
-    setBatchDescriptionModalOpen(true);
-  };
-
-  // Close Description batch creation modal
-  const handleDescriptionCloseBatchModal = () => {
-    setBatchDescriptionModalOpen(false);
-  };
 
   // Open batch creation modal
   const handleOpenBatchModal = () => {
@@ -241,39 +228,6 @@ const BatchList = () => {
       ),
     },
     {
-      field: "Created Description",
-      headerName: "Created Description",
-      width: 200,
-      renderCell: (params) => (
-        <IconButton
-          color="secondary"
-          onClick={() => handleDescriptionOpenBatchModal(params.row._id)}
-        >
-          <AddIcon />
-        </IconButton>
-      ),
-    },
-    {
-      field: "Created Class Subjects",
-      headerName: "Created Class Subjects",
-      width: 200,
-      renderCell: (params) => (
-        <IconButton color="secondary">
-          <AddIcon />
-        </IconButton>
-      ),
-    },
-    {
-      field: "Created Testes",
-      headerName: "Created Testes",
-      width: 200,
-      renderCell: (params) => (
-        <IconButton color="secondary">
-          <AddIcon />
-        </IconButton>
-      ),
-    },
-    {
       field: "View",
       headerName: "View",
       width: 200,
@@ -354,12 +308,7 @@ const BatchList = () => {
           />
         </Box>
       )}
-      {/* batch description Modal */}
-      <BatchDescription
-        open={batchDescriptionModalOpen}
-        handleClose={handleDescriptionCloseBatchModal}
-        id={selectedBatchId}
-      />
+
       <UpdateBatchModal
         open={isModalOpen}
         batch={selectedBatch}

@@ -9,6 +9,7 @@ import BatchTests from "./BatchTests";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ClassIcon from "@mui/icons-material/Class";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import CreateBatchDescription from "./CreateBatchDescription";
 
 function ViewBatchDetails() {
   const { id } = useParams();
