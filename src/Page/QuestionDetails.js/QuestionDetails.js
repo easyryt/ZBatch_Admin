@@ -35,6 +35,7 @@ const QuestionDetails = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [update, setUpdate] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [questionId, setQuestionId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +51,7 @@ const QuestionDetails = () => {
         );
         setTestDetails(response.data.data);
         setLoading(false);
+        setUpdate(false);
       } catch (error) {
         console.error("Error fetching test details:", error);
         setLoading(false);
@@ -59,11 +61,30 @@ const QuestionDetails = () => {
     fetchData();
   }, [id, update]);
 
-  const handleDelete = () => {
-    // Delete logic here
-    setOpenDeleteDialog(false);
+  // Handle delete confirmation dialog open
+  const handleDeleteClick = (id) => {
+    setQuestionId(id);
+    setOpenDeleteDialog(true);
   };
 
+  // Handle delete teacher
+  const handleDelete = async () => {
+    try {
+      const token = Cookies.get("token"); // Replace with your token key
+      await axios.delete(
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
+        }
+      );
+      setUpdate(true);
+      setOpenDeleteDialog(false);
+    } catch (error) {
+      console.error("Error deleting teacher:", error);
+    }
+  };
   const handleOpenCreateModal = () => {
     setCreateModalOpen(true);
   };
@@ -147,7 +168,7 @@ const QuestionDetails = () => {
               <div>
                 <IconButton
                   color="error"
-                  onClick={() => setOpenDeleteDialog(true)}
+                  onClick={() => handleDeleteClick(question._id)}
                   className={styles.editButton}
                 >
                   <Delete />
@@ -173,7 +194,9 @@ const QuestionDetails = () => {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${String.fromCharCode(65 + i)}: ${option.optionText}`}
+                    primary={`${String.fromCharCode(65 + i)}: ${
+                      option.optionText
+                    }`}
                   />
                 </ListItem>
               ))}
@@ -225,7 +248,8 @@ const QuestionDetails = () => {
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this question? This action cannot be undone.
+            Are you sure you want to delete this question? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
