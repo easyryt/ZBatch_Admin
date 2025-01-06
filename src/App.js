@@ -32,7 +32,7 @@ const App = () => {
           <Route path="batch-details/:id" element={<ViewBatchDetails  />} />
           <Route path="content-display/:id" element={<ContentDisplay  />} />
           <Route path="tests-list/:batchId/:subjectId" element={<TestsList  />} />
-          <Route path="question-details/:id" element={<QuestionDetails  />} />
+          <Route path="question-details/:batchId/:id" element={<QuestionDetails  />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -41,7 +41,7 @@ const App = () => {
         <Route path="/batch-details/:id" element={<ViewBatchDetails  />} />
         <Route path="/content-display/:id" element={<ContentDisplay  />} />
         <Route path="/tests-list/:batchId/:subjectId" element={<TestsList  />} />
-        <Route path="/question-details/:id" element={<QuestionDetails />} />
+        <Route path="/question-details/:batchId/:id" element={<QuestionDetails  />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

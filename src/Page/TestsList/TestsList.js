@@ -155,7 +155,7 @@ const TestsList = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row._id}`)}>
+          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row.batchId}/${params.row._id}`)}>
             <VisibilityIcon />
           </IconButton>
         </Box>
