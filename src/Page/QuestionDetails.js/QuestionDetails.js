@@ -17,12 +17,14 @@ import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import styles from "./QuestionDetails.module.css";
 import CreateQuestionModal from "./CreateQuestionModal";
+import UpdateQuestionModal from "./UpdateQuestionModal";
 
 const QuestionDetails = () => {
   const [testDetails, setTestDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const { batchId, id } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [update, setUpdate] = useState(false);
 
@@ -70,9 +72,13 @@ const QuestionDetails = () => {
 
   const { name, description, questions, totalMarks, duration } = testDetails;
 
-  const handleOpenModal = (question = null) => {
+  const handleOpenCreateModal = () => {
+    setCreateModalOpen(true);
+  };
+
+  const handleOpenUpdateModal = (question) => {
     setSelectedQuestion(question);
-    setModalOpen(true);
+    setUpdateModalOpen(true);
   };
 
   return (
@@ -136,9 +142,7 @@ const QuestionDetails = () => {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${String.fromCharCode(65 + i)}: ${
-                      option.optionText
-                    }`}
+                    primary={`${String.fromCharCode(65 + i)}: ${option.optionText}`}
                   />
                 </ListItem>
               ))}
@@ -159,7 +163,7 @@ const QuestionDetails = () => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => handleOpenModal(question)}
+              onClick={() => handleOpenUpdateModal(question)}
               className={styles.editButton}
             >
               Edit Question
@@ -167,21 +171,30 @@ const QuestionDetails = () => {
           </Paper>
         ))}
       </Box>
+
       <Button
         variant="contained"
         color="primary"
-        onClick={() => handleOpenModal()}
+        onClick={handleOpenCreateModal}
         className={styles.addButton}
       >
         Add New Question
       </Button>
-      <CreateQuestionModal
-        open={modalOpen}
-        handleClose={() => setModalOpen(false)}
+
+      <UpdateQuestionModal
+        open={updateModalOpen}
+        handleClose={() => setUpdateModalOpen(false)}
         setUpdate={setUpdate}
         id={id}
         batchId={batchId}
         question={selectedQuestion}
+      />
+      <CreateQuestionModal
+        open={createModalOpen}
+        handleClose={() => setCreateModalOpen(false)}
+        setUpdate={setUpdate}
+        id={id}
+        batchId={batchId}
       />
     </Paper>
   );
