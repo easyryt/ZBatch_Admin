@@ -11,6 +11,11 @@ import {
   CircularProgress,
   Divider,
   IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { CheckCircle, Cancel } from "@mui/icons-material";
 import axios from "axios";
@@ -29,6 +34,7 @@ const QuestionDetails = () => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [update, setUpdate] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +59,20 @@ const QuestionDetails = () => {
     fetchData();
   }, [id, update]);
 
+  const handleDelete = () => {
+    // Delete logic here
+    setOpenDeleteDialog(false);
+  };
+
+  const handleOpenCreateModal = () => {
+    setCreateModalOpen(true);
+  };
+
+  const handleOpenUpdateModal = (question) => {
+    setSelectedQuestion(question);
+    setUpdateModalOpen(true);
+  };
+
   if (loading) {
     return (
       <Box className={styles.loadingContainer}>
@@ -74,22 +94,13 @@ const QuestionDetails = () => {
 
   const { name, description, questions, totalMarks, duration } = testDetails;
 
-  const handleOpenCreateModal = () => {
-    setCreateModalOpen(true);
-  };
-
-  const handleOpenUpdateModal = (question) => {
-    setSelectedQuestion(question);
-    setUpdateModalOpen(true);
-  };
-
   return (
     <Paper className={styles.container}>
       <Typography variant="h4" className={styles.title} gutterBottom>
         Test Details
       </Typography>
 
-      <Divider />
+      <Divider sx={{ marginBottom: 2 }} />
 
       <Box className={styles.section}>
         <Typography variant="h6">Test Name</Typography>
@@ -127,7 +138,7 @@ const QuestionDetails = () => {
           <Paper
             key={question._id}
             className={styles.questionCard}
-            elevation={2}
+            elevation={3}
           >
             <Box className={styles.header_box}>
               <Typography className={styles.questionText}>
@@ -136,7 +147,7 @@ const QuestionDetails = () => {
               <div>
                 <IconButton
                   color="error"
-                  onClick={() => handleOpenUpdateModal(question)}
+                  onClick={() => setOpenDeleteDialog(true)}
                   className={styles.editButton}
                 >
                   <Delete />
@@ -162,9 +173,7 @@ const QuestionDetails = () => {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${String.fromCharCode(65 + i)}: ${
-                      option.optionText
-                    }`}
+                    primary={`${String.fromCharCode(65 + i)}: ${option.optionText}`}
                   />
                 </ListItem>
               ))}
@@ -198,8 +207,6 @@ const QuestionDetails = () => {
         open={updateModalOpen}
         handleClose={() => setUpdateModalOpen(false)}
         setUpdate={setUpdate}
-        id={id}
-        batchId={batchId}
         question={selectedQuestion}
       />
       <CreateQuestionModal
@@ -209,6 +216,31 @@ const QuestionDetails = () => {
         id={id}
         batchId={batchId}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this question? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            color="primary"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 };
