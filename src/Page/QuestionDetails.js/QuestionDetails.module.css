@@ -5,7 +5,11 @@
     background-color: #ffffff!important;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1)!important;
   }
-  
+  .header_box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .title {
     margin-bottom: 24px!important;
     text-align: center!important;

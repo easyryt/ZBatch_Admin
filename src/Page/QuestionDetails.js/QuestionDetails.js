@@ -10,6 +10,7 @@ import {
   Button,
   CircularProgress,
   Divider,
+  IconButton,
 } from "@mui/material";
 import { CheckCircle, Cancel } from "@mui/icons-material";
 import axios from "axios";
@@ -18,6 +19,7 @@ import { useParams } from "react-router-dom";
 import styles from "./QuestionDetails.module.css";
 import CreateQuestionModal from "./CreateQuestionModal";
 import UpdateQuestionModal from "./UpdateQuestionModal";
+import { Delete, Edit } from "@mui/icons-material";
 
 const QuestionDetails = () => {
   const [testDetails, setTestDetails] = useState(null);
@@ -127,9 +129,27 @@ const QuestionDetails = () => {
             className={styles.questionCard}
             elevation={2}
           >
-            <Typography className={styles.questionText}>
-              {index + 1}. {question.questionText}
-            </Typography>
+            <Box className={styles.header_box}>
+              <Typography className={styles.questionText}>
+                {index + 1}. {question.questionText}
+              </Typography>
+              <div>
+                <IconButton
+                  color="error"
+                  onClick={() => handleOpenUpdateModal(question)}
+                  className={styles.editButton}
+                >
+                  <Delete />
+                </IconButton>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleOpenUpdateModal(question)}
+                  className={styles.editButton}
+                >
+                  <Edit />
+                </IconButton>
+              </div>
+            </Box>
 
             <List>
               {question.options.map((option, i) => (
@@ -142,7 +162,9 @@ const QuestionDetails = () => {
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${String.fromCharCode(65 + i)}: ${option.optionText}`}
+                    primary={`${String.fromCharCode(65 + i)}: ${
+                      option.optionText
+                    }`}
                   />
                 </ListItem>
               ))}
@@ -159,15 +181,6 @@ const QuestionDetails = () => {
             <Typography variant="body2" className={styles.explanation}>
               Explanation: {question.explanation}
             </Typography>
-
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleOpenUpdateModal(question)}
-              className={styles.editButton}
-            >
-              Edit Question
-            </Button>
           </Paper>
         ))}
       </Box>

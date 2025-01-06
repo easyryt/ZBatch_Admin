@@ -11,7 +11,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./CreateQuestionModal.module.css";
 
-const UpdateQuestionModal = ({ open, handleClose, setUpdate, id, batchId, question }) => {
+const UpdateQuestionModal = ({ open, handleClose, setUpdate, question }) => {
   const [formData, setFormData] = useState({
     questionText: "",
     options: ["", "", "", ""],
@@ -88,7 +88,7 @@ const UpdateQuestionModal = ({ open, handleClose, setUpdate, id, batchId, questi
       };
 
       await axios.put(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/update/${batchId}/${id}/${question._id}`,
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/update/${question._id}`,
         payload,
         {
           headers: {
