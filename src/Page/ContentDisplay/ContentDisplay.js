@@ -20,6 +20,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  DialogContentText,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -31,6 +34,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf"; // PDF icon
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import UpdateContentModal from "./UpdateContentModal";
 
 const ContentDisplay = () => {
   const { id } = useParams();
@@ -42,7 +47,20 @@ const ContentDisplay = () => {
   const [dialogContent, setDialogContent] = useState({ type: "", content: "" });
   const [filterContentType, setFilterContentType] = useState("");
   const token = Cookies.get("token");
- 
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState(null);
+  const [selectedContentId, setSelectedContentId] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleCloseModal = () => {
+    setUpdateModalOpen(false);
+  };
+
+  const handleEditClick = (content) => {
+    setSelectedContent(content);
+    setUpdateModalOpen(true);
+  };
+
   // Fetch content with the selected filter
   useEffect(() => {
     const fetchContent = async () => {
@@ -105,6 +123,30 @@ const ContentDisplay = () => {
     setDialogOpen(true);
   };
 
+  // Handle delete confirmation dialog open
+  const handleDeleteClick = (id) => {
+    setSelectedContentId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  // Handle delete teacher
+  const handleDelete = async () => {
+    try {
+      const token = Cookies.get("token"); // Replace with your token key
+      await axios.delete(
+        `https://npc-classes.onrender.com/admin/allClass/subjects/contents/delete/${selectedContentId}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
+        }
+      );
+      setOpenDeleteDialog(false);
+    } catch (error) {
+      console.error("Error deleting teacher:", error);
+    }
+  };
+
   if (loading) {
     return (
       <Box
@@ -160,6 +202,22 @@ const ContentDisplay = () => {
       <Grid container spacing={3}>
         {filteredData.map((content) => (
           <Grid item xs={12} sm={6} md={4} key={content._id}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "flex-end",
+                gap: "1rem",
+              }}
+            >
+              <IconButton onClick={() => handleDeleteClick(content._id)}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton onClick={() => handleEditClick(content)}>
+                <EditIcon />
+              </IconButton>
+            </div>
+
             <Card
               sx={{
                 height: "100%",
@@ -232,7 +290,11 @@ const ContentDisplay = () => {
           </Grid>
         ))}
       </Grid>
-
+      <UpdateContentModal
+        open={updateModalOpen}
+        handleClose={handleCloseModal}
+        content={selectedContent} // Pass selected content data
+      />
       {/* Dialog for Video and PDF */}
       <Dialog
         open={dialogOpen}
@@ -273,6 +335,31 @@ const ContentDisplay = () => {
             ></iframe>
           )}
         </DialogContent>
+      </Dialog>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this Content? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            color="primary"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );
