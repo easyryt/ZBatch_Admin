@@ -120,17 +120,6 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
 
           <TextField
             fullWidth
-            label="Duration (hh:mm:ss)"
-            name="duration"
-            value={formData.duration}
-            onChange={(e) => handleChange(e, formatDuration)}
-            margin="normal"
-            placeholder="hh:mm:ss"
-            required
-          />
-
-          <TextField
-            fullWidth
             label="Part"
             name="part"
             value={formData.part}
@@ -173,6 +162,16 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
                 value={formData.videoUrl}
                 onChange={handleChange}
                 margin="normal"
+                required
+              />
+              <TextField
+                fullWidth
+                label="Duration (hh:mm:ss)"
+                name="duration"
+                value={formData.duration}
+                onChange={(e) => handleChange(e, formatDuration)}
+                margin="normal"
+                placeholder="hh:mm:ss"
                 required
               />
               <Typography variant="body2" mb={1}>

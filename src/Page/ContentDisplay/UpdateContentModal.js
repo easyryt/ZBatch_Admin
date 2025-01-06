@@ -50,7 +50,8 @@ const UpdateContentModal = ({ open, handleClose, content }) => {
     const { name, value, type, checked, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "file" ? files[0] : type === "checkbox" ? checked : value,
+      [name]:
+        type === "file" ? files[0] : type === "checkbox" ? checked : value,
     }));
   };
 
@@ -127,17 +128,6 @@ const UpdateContentModal = ({ open, handleClose, content }) => {
 
           <TextField
             fullWidth
-            label="Duration (hh:mm:ss)"
-            name="duration"
-            value={formData.duration}
-            onChange={handleChange}
-            margin="normal"
-            placeholder="hh:mm:ss"
-            required
-          />
-
-          <TextField
-            fullWidth
             label="Part"
             name="part"
             value={formData.part}
@@ -180,6 +170,16 @@ const UpdateContentModal = ({ open, handleClose, content }) => {
                 value={formData.videoUrl}
                 onChange={handleChange}
                 margin="normal"
+                required
+              />
+              <TextField
+                fullWidth
+                label="Duration (hh:mm:ss)"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                margin="normal"
+                placeholder="hh:mm:ss"
                 required
               />
               <Typography variant="body2" mb={1}>
