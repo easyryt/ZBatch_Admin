@@ -1,0 +1,39 @@
+
+/* QuestionDetails.module.css */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .title {
+    margin-bottom: 16px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .section {
+    margin-bottom: 16px;
+  }
+  
+  .questionText {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .chip {
+    font-size: 14px;
+  }
+  
+  .correctAnswer {
+    font-weight: bold;
+    color: #00796b;
+  }
+  
+  .explanation {
+    font-style: italic;
+    color: #757575;
+  }
+  

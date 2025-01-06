@@ -26,6 +26,8 @@ const UpdateTestModal = ({ open, handleClose, selectedTest, setUpdate }) => {
 
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Retrieve token once to avoid unnecessary re-fetching
   const token = Cookies.get("token");
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const UpdateTestModal = ({ open, handleClose, selectedTest, setUpdate }) => {
         {
           headers: {
             "x-admin-token": token,
-            "Content-Type": "application/json", // Explicitly set content type
+            "Content-Type": "application/json", // Ensure Content-Type is JSON
           },
         }
       );

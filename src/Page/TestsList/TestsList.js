@@ -13,7 +13,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import CreateTestModal from "./CreateTestModal";
@@ -34,6 +34,7 @@ const TestsList = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [update, setUpdate] = useState(false);
   const [selectedTest,setSelectedTest] = useState(null)
+  const navigate= useNavigate()
 
 
   const handleEditClick =(data)=>{
@@ -154,7 +155,7 @@ const TestsList = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton title="Edit">
+          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row._id}`)}>
             <VisibilityIcon />
           </IconButton>
         </Box>

@@ -1,0 +1,29 @@
+
+/* CreateQuestionModal.module.css */
+.modalContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modalTitle {
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .inputField {
+    margin-bottom: 16px;
+  }
+  
+  .actionButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
