@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const CreateTestModal = ({ open, handleClose, batchId, subjectId }) => {
+const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -49,6 +49,7 @@ const CreateTestModal = ({ open, handleClose, batchId, subjectId }) => {
           headers: { "x-admin-token": token },
         }
       );
+      setUpdate(true)
       handleClose();
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");

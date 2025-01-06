@@ -5,12 +5,21 @@ import {
   Typography,
   CircularProgress,
   Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import CreateTestModal from "../ViewBatchDetails/CreateTestModal";
+import CreateTestModal from "./CreateTestModal";
+import { Delete, Edit } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import UpdateTestModal from "./UpdateTestModal";
 
 const TestsList = () => {
   const { batchId, subjectId } = useParams();
@@ -20,6 +29,43 @@ const TestsList = () => {
   const [loading, setLoading] = useState(true);
   const token = Cookies.get("token");
   const [contentModalOpen, setContentModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedSelectedId, setSelectedId] = useState(null); // To hold selected teacher data
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [selectedTest,setSelectedTest] = useState(null)
+
+
+  const handleEditClick =(data)=>{
+    setSelectedTest(data)
+    setUpdateModalOpen(true)
+  }
+
+
+  // Handle delete confirmation dialog open
+  const handleDeleteClick = (id) => {
+    setSelectedId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  // Handle delete teacher
+  const handleDelete = async () => {
+    try {
+      const token = Cookies.get("token"); // Replace with your token key
+      await axios.delete(
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/delete/${selectedSelectedId}`,
+        {
+          headers: {
+            "x-admin-token": token,
+          },
+        }
+      );
+      setOpenDeleteDialog(false);
+      fetchTests();
+    } catch (error) {
+      console.error("Error deleting teacher:", error);
+    }
+  };
 
   const fetchTests = async () => {
     try {
@@ -31,6 +77,7 @@ const TestsList = () => {
       );
       setTests(response.data.data);
       setFilteredTests(response.data.data);
+      setUpdate(false);
     } catch (error) {
       console.error("Error fetching tests:", error);
     } finally {
@@ -40,7 +87,7 @@ const TestsList = () => {
 
   useEffect(() => {
     fetchTests();
-  }, [subjectId]);
+  }, [subjectId, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -76,7 +123,42 @@ const TestsList = () => {
       field: "createdAt",
       headerName: "Created At",
       flex: 1,
-      renderCell: ( params ) => new Date(params.row.createdAt).toLocaleString(),
+      renderCell: (params) => new Date(params.row.createdAt).toLocaleString(),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton
+            color="primary"
+            title="Edit"
+            onClick={() => handleEditClick(params.row)}
+          >
+            <Edit />
+          </IconButton>
+          <IconButton
+            color="error"
+            title="Delete"
+            onClick={() => handleDeleteClick(params.row._id)}
+          >
+            <Delete />
+          </IconButton>
+        </Box>
+      ),
+    },
+    {
+      field: "View",
+      headerName: "View",
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton title="Edit">
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
+      ),
     },
   ];
 
@@ -149,7 +231,39 @@ const TestsList = () => {
         handleClose={() => setContentModalOpen(false)}
         subjectId={subjectId}
         batchId={batchId}
+        setUpdate={setUpdate}
       />
+      <UpdateTestModal
+        open={updateModalOpen}
+        handleClose={() => setUpdateModalOpen(false)}
+        selectedTest={selectedTest}
+        setUpdate={setUpdate}
+      />
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this Test? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenDeleteDialog(false)}
+            color="primary"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

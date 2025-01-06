@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ContentModal from "./ContentModal";
 import UpdateSubjectModal from "./UpdateSubjectModal";
 import UpdateTestSubjectModal from "./UpdateTestSubjectModal";
-import CreateTestModal from "./CreateTestModal";
+import CreateTestModal from "../TestsList/CreateTestModal";
 
 const BatchTests = () => {
   const [formData, setFormData] = useState({ subject: "" });
