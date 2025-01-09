@@ -35,7 +35,6 @@ const BatchDescription = () => {
   const [batchDescriptionModalOpen, setBatchDescriptionModalOpen] =
     useState(false);
   const { id } = useParams();
-  console.log(batchDescriptionModalOpen, "check");
   // Close Description batch creation modal
   const handleDescriptionCloseBatchModal = () => {
     setBatchDescriptionModalOpen(false);
@@ -179,14 +178,6 @@ const BatchDescription = () => {
 
       {/* Batch Info Section */}
       <Grid container spacing={3} mb={3}>
-        <Grid item xs={12} sm={6}>
-          <Card sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              <Info /> Batch ID
-            </Typography>
-            <Typography>{batchDetails.batchId}</Typography>
-          </Card>
-        </Grid>
         <Grid item xs={12} sm={6}>
           <Card sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
