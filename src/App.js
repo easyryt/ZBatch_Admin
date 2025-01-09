@@ -12,6 +12,8 @@ import ViewBatchDetails from "./Page/ViewBatchDetails/ViewBatchDetails";
 import ContentDisplay from "./Page/ContentDisplay/ContentDisplay";
 import TestsList from "./Page/TestsList/TestsList";
 import QuestionDetails from "./Page/QuestionDetails.js/QuestionDetails";
+import DirectTestList from "./Page/DirectTestList/DirectTestList";
+import QuestionList from "./Page/DirectTestList/QuestionList";
 
 const App = () => {
   return (
@@ -33,6 +35,8 @@ const App = () => {
           <Route path="content-display/:id" element={<ContentDisplay  />} />
           <Route path="tests-list/:batchId/:subjectId" element={<TestsList  />} />
           <Route path="question-details/:batchId/:id" element={<QuestionDetails  />} />
+          <Route path="direct-test-list/:id" element={<DirectTestList  />} />
+          <Route path="question-list/:id" element={<QuestionList  />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -42,6 +46,8 @@ const App = () => {
         <Route path="/content-display/:id" element={<ContentDisplay  />} />
         <Route path="/tests-list/:batchId/:subjectId" element={<TestsList  />} />
         <Route path="/question-details/:batchId/:id" element={<QuestionDetails  />} />
+        <Route path="/direct-test-list/:id" element={<DirectTestList  />} />
+        <Route path="/question-list/:id" element={<QuestionList  />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
