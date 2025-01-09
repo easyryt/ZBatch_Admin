@@ -25,12 +25,14 @@ import styles from "./QuestionDetails.module.css";
 import CreateQuestionModal from "./CreateQuestionModal";
 import UpdateQuestionModal from "./UpdateQuestionModal";
 import { Delete, Edit } from "@mui/icons-material";
+import UploadDocxModal from "./UploadDocxModal";
 
 const QuestionDetails = () => {
   const [testDetails, setTestDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const { batchId, id } = useParams();
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [uploadDocModalOpen, setUploadDocModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [update, setUpdate] = useState(false);
@@ -225,6 +227,14 @@ const QuestionDetails = () => {
       >
         Add New Question
       </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setUploadDocModalOpen(true)}
+        className={styles.addButton}
+      >
+        Upload Docx
+      </Button>
 
       <UpdateQuestionModal
         open={updateModalOpen}
@@ -235,6 +245,14 @@ const QuestionDetails = () => {
       <CreateQuestionModal
         open={createModalOpen}
         handleClose={() => setCreateModalOpen(false)}
+        setUpdate={setUpdate}
+        id={id}
+        batchId={batchId}
+      />
+
+      <UploadDocxModal
+        open={uploadDocModalOpen}
+        handleClose={() => setUploadDocModalOpen(false)}
         setUpdate={setUpdate}
         id={id}
         batchId={batchId}
