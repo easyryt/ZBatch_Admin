@@ -10,13 +10,15 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
+import AddContentModal from "./AddContentModal";
 
 const BookContent = () => {
   const [content, setContent] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-
+  const [openModal, setOpenModal] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   // Fetch content from API
   useEffect(() => {
@@ -33,6 +35,7 @@ const BookContent = () => {
         );
         if (response.data.status) {
           setContent(response.data.data);
+          setUpdate(false);
         }
       } catch (error) {
         console.error("Error fetching content:", error);
@@ -42,7 +45,7 @@ const BookContent = () => {
       }
     };
     fetchContent();
-  }, []);
+  }, [update]);
 
   // Filtered content based on search
   const filteredContent = content.filter(
@@ -53,7 +56,6 @@ const BookContent = () => {
 
   // Columns for the DataGrid
   const columns = [
-    { field: "id", headerName: "ID", width: 250 },
     { field: "title", headerName: "Title", width: 300 },
     { field: "medium", headerName: "Medium", width: 150 },
     { field: "chapter", headerName: "Chapter", width: 100 },
@@ -88,6 +90,12 @@ const BookContent = () => {
       <Typography variant="h4" gutterBottom>
         Book Content
       </Typography>
+      {/* Add Content Modal */}
+      <AddContentModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        setUpdate={setUpdate}
+      />
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <TextField
           label="Search by Title or Chapter"
@@ -97,6 +105,14 @@ const BookContent = () => {
           onChange={(e) => setSearch(e.target.value)}
           sx={{ mr: 2 }}
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpenModal(true)}
+          sx={{ ml: 2 }}
+        >
+          Add Content
+        </Button>
       </Box>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
