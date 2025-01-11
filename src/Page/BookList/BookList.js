@@ -147,7 +147,7 @@ const BookList = () => {
         align="center"
         sx={{ fontWeight: 600 }}
       >
-        NCERT Books
+         Books
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 3, alignItems: "center" }}>
