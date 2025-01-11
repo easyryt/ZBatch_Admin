@@ -13,14 +13,16 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 
-const AddContentModal = ({ open, onClose,setUpdate }) => {
+const AddContentModal = ({ open, onClose, setUpdate }) => {
   const [newContent, setNewContent] = useState({
     title: "",
     pdf: null,
     medium: "",
     chapter: "",
   });
-const {id} = useParams()
+  const [pdfName, setPdfName] = useState(""); // State to store PDF file name
+  const { id } = useParams();
+
   // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -44,13 +46,19 @@ const {id} = useParams()
         }
       );
       if (response.data.status) {
-        setUpdate(true)
+        setUpdate(true);
         onClose();
       }
     } catch (error) {
       console.error("Error adding content:", error);
-      alert("Failed to add content.");
     }
+  };
+
+  // Handle PDF file selection
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setNewContent({ ...newContent, pdf: file });
+    setPdfName(file ? file.name : "");
   };
 
   return (
@@ -81,6 +89,7 @@ const {id} = useParams()
             Add New Content
           </Typography>
           <form onSubmit={handleFormSubmit}>
+            {/* Title Input */}
             <TextField
               label="Title"
               variant="outlined"
@@ -92,6 +101,8 @@ const {id} = useParams()
                 setNewContent({ ...newContent, title: e.target.value })
               }
             />
+
+            {/* Medium Dropdown */}
             <TextField
               label="Medium"
               variant="outlined"
@@ -107,6 +118,8 @@ const {id} = useParams()
               <MenuItem value="Hindi">Hindi</MenuItem>
               <MenuItem value="English">English</MenuItem>
             </TextField>
+
+            {/* Chapter Input */}
             <TextField
               label="Chapter"
               variant="outlined"
@@ -118,22 +131,33 @@ const {id} = useParams()
                 setNewContent({ ...newContent, chapter: e.target.value })
               }
             />
+
+            {/* PDF Upload */}
             <Button
               variant="contained"
               component="label"
-              sx={{ mb: 2 }}
               fullWidth
+              sx={{ mb: 2 }}
             >
               Upload PDF
               <input
                 type="file"
                 hidden
                 accept=".pdf"
-                onChange={(e) =>
-                  setNewContent({ ...newContent, pdf: e.target.files[0] })
-                }
+                onChange={handleFileChange}
               />
             </Button>
+            {pdfName && (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mb: 2, wordBreak: "break-word" }}
+              >
+                Selected File: {pdfName}
+              </Typography>
+            )}
+
+            {/* Submit Button */}
             <Button
               variant="contained"
               color="primary"

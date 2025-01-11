@@ -5,6 +5,8 @@ import {
   Typography,
   Button,
   CircularProgress,
+  Paper,
+  useTheme,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -19,6 +21,7 @@ const BookContent = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState(false);
+  const theme = useTheme();
 
   // Fetch content from API
   useEffect(() => {
@@ -39,13 +42,12 @@ const BookContent = () => {
         }
       } catch (error) {
         console.error("Error fetching content:", error);
-        alert("Failed to fetch content.");
       } finally {
         setLoading(false);
       }
     };
     fetchContent();
-  }, [update]);
+  }, [id, update]);
 
   // Filtered content based on search
   const filteredContent = content.filter(
@@ -62,13 +64,14 @@ const BookContent = () => {
     {
       field: "pdfUrl",
       headerName: "PDF Link",
-      width: 250,
+      width: 200,
       renderCell: (params) => (
         <Button
           variant="contained"
-          color="primary"
-          href={params.url}
+          color="secondary"
+          href={params.value}
           target="_blank"
+          rel="noopener noreferrer"
         >
           View PDF
         </Button>
@@ -86,34 +89,39 @@ const BookContent = () => {
   }));
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 4, backgroundColor: theme.palette.background.default }}>
       <Typography variant="h4" gutterBottom>
         Book Content
       </Typography>
-      {/* Add Content Modal */}
-      <AddContentModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        setUpdate={setUpdate}
-      />
-      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-        <TextField
-          label="Search by Title or Chapter"
-          variant="outlined"
-          fullWidth
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{ mr: 2 }}
+      <Paper
+        elevation={3}
+        sx={{ p: 3, mb: 4, backgroundColor: theme.palette.background.paper }}
+      >
+        {/* Add Content Modal */}
+        <AddContentModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          setUpdate={setUpdate}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenModal(true)}
-          sx={{ ml: 2 }}
+        <Box
+          sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}
         >
-          Add Content
-        </Button>
-      </Box>
+          <TextField
+            label="Search by Title or Chapter"
+            variant="outlined"
+            fullWidth
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenModal(true)}
+          >
+            Add Content
+          </Button>
+        </Box>
+      </Paper>
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
           <CircularProgress />
