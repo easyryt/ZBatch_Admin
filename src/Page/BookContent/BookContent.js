@@ -65,7 +65,7 @@ const BookContent = () => {
         <Button
           variant="contained"
           color="primary"
-          href={params.value}
+          href={params.url}
           target="_blank"
         >
           View PDF
