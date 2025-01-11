@@ -7,12 +7,15 @@ import {
   CircularProgress,
   Paper,
   useTheme,
+  IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import AddContentModal from "./AddContentModal";
+import UpdateContentModal from "./UpdateContentModal";
+import EditIcon from "@mui/icons-material/Edit";
 
 const BookContent = () => {
   const [content, setContent] = useState([]);
@@ -21,6 +24,8 @@ const BookContent = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [selectedContent, setSelectedContent] = useState(null); // Store the selected content for update
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false); // Track modal open state for update
   const theme = useTheme();
 
   // Fetch content from API
@@ -77,6 +82,20 @@ const BookContent = () => {
         </Button>
       ),
     },
+    {
+      field: "edit",
+      headerName: "Edit",
+      width: 100,
+      renderCell: (params) => (
+        <IconButton
+          onClick={() => handleOpenUpdate(params.row)}
+          color="primary"
+          title="Edit"
+        >
+          <EditIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   // Rows for the DataGrid
@@ -87,6 +106,12 @@ const BookContent = () => {
     chapter: item.chapter,
     pdfUrl: item.pdf.url,
   }));
+
+  // Handle opening the update modal with the selected content
+  const handleOpenUpdate = (content) => {
+    setSelectedContent(content);
+    setIsModalUpdateOpen(true);
+  };
 
   return (
     <Box sx={{ p: 4, backgroundColor: theme.palette.background.default }}>
@@ -103,9 +128,15 @@ const BookContent = () => {
           onClose={() => setOpenModal(false)}
           setUpdate={setUpdate}
         />
-        <Box
-          sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}
-        >
+        {/* Update Content Modal */}
+        <UpdateContentModal
+          open={isModalUpdateOpen}
+          onClose={() => setIsModalUpdateOpen(false)}
+          selectedContent={selectedContent}
+          setUpdate={setUpdate}
+        />
+
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
           <TextField
             label="Search by Title or Chapter"
             variant="outlined"
