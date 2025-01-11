@@ -4,42 +4,59 @@ import {
   Box,
   TextField,
   Typography,
-  Container
+  Container,
+  Button,
+  Grid,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useParams } from "react-router-dom";
+import CreateBookModal from "./CreateBookModal";
+import Cookies from "js-cookie";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const {id}  = useParams()
+  const { id } = useParams();
+  const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // Fetch data from API
   useEffect(() => {
     const fetchBooks = async () => {
+      const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/book/getAll?clsId=${id}`
+          `https://npc-classes.onrender.com/admin/materials/book/getAll?clsId=${id}`,
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
         );
         if (response.data.status) {
           setBooks(response.data.data);
           setFilteredBooks(response.data.data);
+          setUpdate(false);
         }
       } catch (error) {
         console.error("Error fetching books:", error);
       }
     };
     fetchBooks();
-  }, []);
+  }, [update]);
 
   // Handle search input
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchText(value);
-    const filtered = books.filter((book) =>
-      book.subjectName.toLowerCase().includes(value) ||
-      book.title.toLowerCase().includes(value)
+    const filtered = books.filter(
+      (book) =>
+        book.subjectName.toLowerCase().includes(value) ||
+        book.title.toLowerCase().includes(value)
     );
     setFilteredBooks(filtered);
   };
@@ -64,39 +81,61 @@ const BookList = () => {
       field: "createdAt",
       headerName: "Created At",
       width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      renderCell: (params) => new Date(params.row.createdAt).toLocaleString(),
     },
     {
       field: "updatedAt",
       headerName: "Updated At",
       width: 200,
-      valueGetter: (params) => new Date(params.value).toLocaleString(),
+      renderCell: (params) => new Date(params.row.updatedAt).toLocaleString(),
     },
   ];
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
+      <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 600 }}>
         NCERT Books
       </Typography>
 
-      <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end" }}>
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={searchText}
-          onChange={handleSearch}
-          sx={{ width: "300px" }}
-        />
-      </Box>
+      <Grid container spacing={2} sx={{ mb: 3, alignItems: "center" }}>
+        <Grid item xs={12} sm={8}>
+          <TextField
+            label="Search by Subject or Title"
+            variant="outlined"
+            value={searchText}
+            onChange={handleSearch}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ textAlign: { xs: "center", sm: "right" } }}>
+          <Button variant="contained" color="primary" onClick={handleOpen} sx={{ px: 4, py: 1 }}>
+            Add New Book
+          </Button>
+        </Grid>
+      </Grid>
 
-      <Box sx={{ height: 500, width: "100%" }}>
+      <CreateBookModal
+        open={open}
+        handleClose={handleClose}
+        setUpdate={setUpdate}
+      />
+
+      <Box sx={{ height: 500, width: "100%", backgroundColor: "#fff", borderRadius: 2, p: 2 }}>
         <DataGrid
           rows={filteredBooks.map((book) => ({ id: book._id, ...book }))}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
+          sx={{
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#f5f5f5",
+              fontWeight: "bold",
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#f9f9f9",
+            },
+          }}
         />
       </Box>
     </Container>
