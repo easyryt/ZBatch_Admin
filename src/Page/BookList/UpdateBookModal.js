@@ -3,26 +3,33 @@ import axios from "axios";
 import {
   Box,
   Button,
+  FormControl,
+  InputLabel,
   MenuItem,
+  Modal,
   Select,
   TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Modal,
 } from "@mui/material";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
 
-const CreateBookModal = ({ open, handleClose, setUpdate }) => {
+const UpdateBookModal = ({ open, handleClose, book, setUpdate }) => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
-  const [materialType, setMaterialType] = useState("");
   const [title, setTitle] = useState("");
+  const [materialType, setMaterialType] = useState("");
   const [loading, setLoading] = useState(false);
-  const { id } = useParams();
 
-  // Fetch subjects from API
+  // Update state when the `book` prop changes
+  useEffect(() => {
+    if (book) {
+      setSelectedSubject(book.subjectName || "");
+      setTitle(book.title || "");
+      setMaterialType(book.materialType || "");
+    }
+  }, [book]);
+
+  // Fetch subjects for the dropdown
   useEffect(() => {
     const fetchSubjects = async () => {
       const token = Cookies.get("token");
@@ -48,22 +55,17 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedSubject || !materialType || !title) {
+    if (!selectedSubject || !title || !materialType) {
       alert("Please fill all fields.");
       return;
     }
-
     const token = Cookies.get("token");
-    const payload = {
-      subject: selectedSubject,
-      materialType,
-      title,
-    };
+    const payload = { subjectName: selectedSubject, title, materialType };
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/book/create/${id}`,
+      const response = await axios.put(
+        `https://npc-classes.onrender.com/admin/materials/book/update/${book?._id}`,
         payload,
         {
           headers: {
@@ -72,17 +74,14 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
         }
       );
       if (response.data.status) {
-        setSelectedSubject("");
-        setMaterialType("");
-        setTitle("");
-        setUpdate((prev) => !prev); // Trigger update in parent component
+        setUpdate((prev) => !prev);
         handleClose();
       } else {
-        alert("Failed to create book.");
+        alert("Failed to update book.");
       }
     } catch (error) {
-      console.error("Error creating book:", error);
-      alert("An error occurred while creating the book.");
+      console.error("Error updating book:", error);
+      alert("An error occurred while updating the book.");
     } finally {
       setLoading(false);
     }
@@ -104,9 +103,8 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Create Book
+          Update Book
         </Typography>
-
         <Box component="form" onSubmit={handleSubmit}>
           {/* Subject Dropdown */}
           <FormControl fullWidth sx={{ mb: 2 }}>
@@ -118,12 +116,22 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
               label="Subject"
             >
               {subjects.map((subject) => (
-                <MenuItem key={subject._id} value={subject._id}>
+                <MenuItem key={subject._id} value={subject.subjectName}>
                   {subject.subjectName}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
+          {/* Title Input */}
+          <TextField
+            label="Title"
+            variant="outlined"
+            fullWidth
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{ mb: 2 }}
+          />
 
           {/* Material Type Dropdown */}
           <FormControl fullWidth sx={{ mb: 2 }}>
@@ -139,16 +147,6 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
             </Select>
           </FormControl>
 
-          {/* Title Input */}
-          <TextField
-            label="Title"
-            variant="outlined"
-            fullWidth
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-
           {/* Submit Button */}
           <Button
             type="submit"
@@ -157,7 +155,7 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
             fullWidth
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Create Book"}
+            {loading ? "Updating..." : "Update Book"}
           </Button>
         </Box>
       </Box>
@@ -165,4 +163,4 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
   );
 };
 
-export default CreateBookModal;
+export default UpdateBookModal;
