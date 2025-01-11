@@ -14,11 +14,12 @@ import {
   InputLabel,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CreateBookModal from "./CreateBookModal";
 import Cookies from "js-cookie";
 import { Edit } from "@mui/icons-material";
 import UpdateBookModal from "./UpdateBookModal";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -30,6 +31,7 @@ const BookList = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [update, setUpdate] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
+  const navigate = useNavigate()
 
   const handleOpenUpdate = (book) => {
     setOpenUpdate(true);
@@ -122,6 +124,19 @@ const BookList = () => {
         </IconButton>
       ),
     },
+    {
+        field: "View Content",
+        headerName: "View Content",
+        width: 250,
+        renderCell: (params) => (
+          <IconButton
+            color="tertiary"
+            onClick={() => navigate(`/dashboard/book-content/${params.row._id}`)}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        ),
+      },
   ];
 
   return (
