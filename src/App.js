@@ -14,6 +14,7 @@ import TestsList from "./Page/TestsList/TestsList";
 import QuestionDetails from "./Page/QuestionDetails.js/QuestionDetails";
 import DirectTestList from "./Page/DirectTestList/DirectTestList";
 import QuestionList from "./Page/DirectTestList/QuestionList";
+import BookList from "./Page/BookList/BookList";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="question-details/:batchId/:id" element={<QuestionDetails  />} />
           <Route path="direct-test-list/:id" element={<DirectTestList  />} />
           <Route path="question-list/:id" element={<QuestionList  />} />
+          <Route path="book-list/:id" element={<BookList  />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -48,6 +50,7 @@ const App = () => {
         <Route path="/question-details/:batchId/:id" element={<QuestionDetails  />} />
         <Route path="/direct-test-list/:id" element={<DirectTestList  />} />
         <Route path="/question-list/:id" element={<QuestionList  />} />
+        <Route path="/book-list/:id" element={<BookList  />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

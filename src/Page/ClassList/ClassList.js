@@ -277,6 +277,9 @@ const ClassList = () => {
               <TableCell align="center">
                 <b>View Tests</b>
               </TableCell>
+              <TableCell align="center">
+                <b>View Books</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -318,6 +321,11 @@ const ClassList = () => {
                   </TableCell>
                   <TableCell align="center">
                     <IconButton color="tertiary" onClick={()=>navigate(`/dashboard/direct-test-list/${cls._id}`)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton color="tertiary" onClick={()=>navigate(`/dashboard/book-list/${cls._id}`)}>
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
