@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 
 // Add your logo image here
 import logo from "../Images/logo512.png"; // Adjust the path
+import Breadcrumbs from "./Breadcrumbs";
 
 const drawerWidth = 260;
 
@@ -188,6 +189,7 @@ const Dashboard = () => {
         }}
       >
         <Toolbar />
+        <Breadcrumbs />
         <Outlet />
       </Box>
     </Box>
