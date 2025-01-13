@@ -8,41 +8,37 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import orderImage from "../../Images/Revenue.gif"; // Assuming you have an image for orders
+import testImage from "../../Images/Revenue.gif"; // Replace with the correct path to your image
 import { useNavigate } from "react-router-dom";
 
 const Widget3 = () => {
-  const [orders, setOrders] = useState(null); // State to store revenue data
+  const [totalTests, setTotalTests] = useState(null); // State to store total direct test count
   const [loading, setLoading] = useState(true); // Loading state for API call
   const [error, setError] = useState(null); // Error state for API call
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    const token = Cookies.get("token"); // Get the token from cookies
-
-    axios
-      .get(
-        "https://www.backend.pkpaniwala.com/admin/order/dateWiseRevenue",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-token": token, // Pass token in header
-          },
-        }
-      )
-      .then((response) => {
-        const revenueData = response.data.totalRevenue;
-        if (revenueData) {
-          setOrders(revenueData); // Set the revenue data correctly
-        } else {
-          setOrders(0); // Handle case when no revenue data is found
-        }
+    const fetchData = async () => {
+      try {
+        const token = Cookies.get("token"); // Get the token from cookies
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/dashBoard/totalDirectTest",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-admin-token": token, // Pass token in header
+            },
+          }
+        );
+        setTotalTests(response.data.data); // Set total test count
         setLoading(false); // Stop loading spinner
-      })
-      .catch((error) => {
+      } catch (error) {
         setError("Failed to fetch data"); // Set error message
         setLoading(false); // Stop loading spinner
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -66,11 +62,11 @@ const Widget3 = () => {
         flexDirection: "column",
         alignItems: "center",
         textAlign: "center",
-        cursor:"pointer"
+        cursor: "pointer",
       }}
-      onClick={()=>navigate("/dashboard/order-history")} // Add the click handler to the card
+      onClick={() => navigate("/dashboard/test-history")} // Navigate to test history on click
     >
-      {/* Order Image and Title */}
+      {/* Test Image */}
       <Box
         sx={{
           width: "100%",
@@ -80,13 +76,13 @@ const Widget3 = () => {
         }}
       >
         <Avatar
-          src={orderImage}
-          alt="Orders"
+          src={testImage}
+          alt="Direct Tests"
           sx={{
             width: 80,
             height: 80,
             borderRadius: "50%",
-            backgroundColor:"white",
+            backgroundColor: "white",
           }}
         />
       </Box>
@@ -137,9 +133,9 @@ const Widget3 = () => {
           }}
         >
           <span style={{ color: "#1A237E", fontWeight: "bold" }}>
-            {orders !== null ? orders : 0}
+            {totalTests !== null ? totalTests : 0}
           </span>{" "}
-          Revenue
+          Direct Tests
         </Typography>
       )}
     </Paper>

@@ -2,41 +2,37 @@ import React, { useEffect, useState } from "react";
 import { Paper, Typography, Box, CircularProgress, Avatar } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import orderImage from "../../Images/products.gif"; // Assuming you have an image for orders
+import revenueImage from "../../Images/products.gif"; // Replace with the correct path to your image
 import { useNavigate } from "react-router-dom";
 
 const Widget4 = () => {
-  const [products, setProducts] = useState(null); // State to store product data
+  const [batchRevenue, setBatchRevenue] = useState(null); // State to store batch revenue data
   const [loading, setLoading] = useState(true); // Loading state for API call
   const [error, setError] = useState(null); // Error state for API call
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    const token = Cookies.get("token"); // Get the token from cookies
-
-    axios
-      .get(
-        "https://www.backend.pkpaniwala.com/admin/count/totalProducts",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-token": token, // Pass token in header
-          },
-        }
-      )
-      .then((response) => {
-        const productData = response.data.data;
-        if (productData) {
-          setProducts(productData); // Set the product data correctly
-        } else {
-          setProducts([]); // Handle case when no product data is found
-        }
+    const fetchBatchRevenue = async () => {
+      try {
+        const token = Cookies.get("token"); // Get the token from cookies
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/dashBoard/totalBatchRevenue",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-admin-token": token, // Pass token in header
+            },
+          }
+        );
+        setBatchRevenue(response.data.data); // Set batch revenue
         setLoading(false); // Stop loading spinner
-      })
-      .catch((error) => {
+      } catch (error) {
         setError("Failed to fetch data"); // Set error message
         setLoading(false); // Stop loading spinner
-      });
+      }
+    };
+
+    fetchBatchRevenue();
   }, []);
 
   return (
@@ -62,9 +58,9 @@ const Widget4 = () => {
         textAlign: "center",
         cursor: "pointer",
       }}
-      onClick={() => navigate("/dashboard/all-product")} // Add the click handler to the card
+      onClick={() => navigate("/dashboard/batch-revenue")} // Add the click handler to the card
     >
-      {/* Order Image and Title */}
+      {/* Revenue Image */}
       <Box
         sx={{
           width: "100%",
@@ -74,13 +70,13 @@ const Widget4 = () => {
         }}
       >
         <Avatar
-          src={orderImage}
-          alt="Orders"
+          src={revenueImage}
+          alt="Batch Revenue"
           sx={{
             width: 80,
             height: 80,
             borderRadius: "50%",
-            backgroundColor:"white",
+            backgroundColor: "white",
           }}
         />
       </Box>
@@ -131,9 +127,9 @@ const Widget4 = () => {
           }}
         >
           <span style={{ color: "#1A237E", fontWeight: "bold" }}>
-            {products}
+            ₹{batchRevenue !== null ? batchRevenue.toLocaleString() : 0}
           </span>{" "}
-          Products
+          Batch Revenue
         </Typography>
       )}
     </Paper>

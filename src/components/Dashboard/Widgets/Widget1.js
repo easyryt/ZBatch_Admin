@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Paper, Typography, Box, CircularProgress, Avatar } from '@mui/material';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import {
+  Paper,
+  Typography,
+  Box,
+  CircularProgress,
+  Avatar,
+} from "@mui/material";
+import axios from "axios";
 import Cookies from "js-cookie";
-import consumerImage from "../../Images/consumer.gif"; // Assuming you have a GIF or image for consumers
-import { useNavigate } from 'react-router-dom';
+import consumerImage from "../../Images/consumer.gif"; // Replace with the correct path to your image
+import { useNavigate } from "react-router-dom";
 
 const Widget1 = () => {
   const [totalConsumers, setTotalConsumers] = useState(null); // State to store consumer data
@@ -12,52 +18,63 @@ const Widget1 = () => {
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    const token = Cookies.get("token"); // Get the token from cookies
-
-    axios
-      .get('https://www.backend.pkpaniwala.com/admin/count/totalUsers', {
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-token": token, // Pass token in header
-        },
-      })
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const token = Cookies.get("token"); // Get the token from cookies
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/dashBoard/totalStudent",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-admin-token": token, // Pass token in header
+            },
+          }
+        );
         setTotalConsumers(response.data.data); // Set total consumers data
         setLoading(false); // Stop loading spinner
-      })
-      .catch((error) => {
-        setError('Failed to fetch data'); // Set error message
+      } catch (error) {
+        setError("Failed to fetch data"); // Set error message
         setLoading(false); // Stop loading spinner
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <Paper
-      elevation={16} // High elevation for a modern, sleek shadow effect
+      elevation={16}
       sx={{
-        padding: { xs: 3, sm: 4 }, // Responsive padding (smaller on mobile)
-        backgroundImage: "linear-gradient(to top, #dfe9f3 0%, white 100%)", // Gradient background
-        backdropFilter: 'blur(12px)', // Blur effect for a modern look
-        borderRadius: 3, // Rounded corners for a soft, premium design
-        color: '#333', // Darker text for better contrast
-        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.15)', // Smooth, elegant shadow
-        '&:hover': {
-          boxShadow: '0px 15px 40px rgba(0, 0, 0, 0.2)', // Enhanced shadow on hover for depth
-          transform: 'scale(1.05)', // Slight scale-up effect on hover for interactivity
+        padding: { xs: 3, sm: 4 },
+        backgroundImage: "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+        backdropFilter: "blur(12px)",
+        borderRadius: 3,
+        color: "#333",
+        boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.15)",
+        "&:hover": {
+          boxShadow: "0px 15px 40px rgba(0, 0, 0, 0.2)",
+          transform: "scale(1.05)",
         },
-        transition: 'all 0.3s ease-in-out', // Smooth transition for hover effects
-        maxWidth: { xs: '100%', sm: '480px' }, // Full width on mobile, 480px on larger screens
-        margin: '0 auto', // Centering the widget horizontally
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        cursor:"pointer"
+        transition: "all 0.3s ease-in-out",
+        maxWidth: { xs: "100%", sm: "480px" },
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        cursor: "pointer",
       }}
-      onClick={()=>navigate("/dashboard/consumers")} // Add the click handler to the card
+      onClick={() => navigate("/dashboard/consumers")} // Navigate on click
     >
-      {/* Consumer Image and Title */}
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: 3 }}>
+      {/* Consumer Image */}
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: 3,
+        }}
+      >
         <Avatar
           src={consumerImage}
           alt="Consumer"
@@ -65,26 +82,38 @@ const Widget1 = () => {
             width: 80,
             height: 80,
             borderRadius: "50%",
-            backgroundColor:"white",
+            backgroundColor: "white",
           }}
         />
       </Box>
+
       {/* Loading, Error, or Data Display */}
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
-          <CircularProgress color="primary" size={60} sx={{ animationDuration: '500ms' }} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <CircularProgress
+            color="primary"
+            size={60}
+            sx={{ animationDuration: "500ms" }}
+          />
         </Box>
       ) : error ? (
         <Typography
           variant="body1"
           sx={{
-            color: 'red',
-            fontSize: '16px',
+            color: "red",
+            fontSize: "16px",
             fontWeight: 500,
-            textAlign: 'center',
+            textAlign: "center",
             padding: 1,
             borderRadius: 1,
-            backgroundColor: '#fff0f0', // Soft background for error
+            backgroundColor: "#fff0f0",
             marginBottom: 2,
           }}
         >
@@ -94,16 +123,19 @@ const Widget1 = () => {
         <Typography
           variant="h6"
           sx={{
-            color: '#333', // Dark text color for contrast
-            fontSize: { xs: '1.2rem', sm: '1.4rem' },
+            color: "#333",
+            fontSize: { xs: "1.2rem", sm: "1.4rem" },
             fontWeight: 500,
             lineHeight: 1.6,
             display: "flex",
-            flexDirection:"column",
+            flexDirection: "column",
             marginTop: 2,
           }}
         >
-          <span style={{ color: '#1A237E', fontWeight: 'bold' }}>{totalConsumers}</span> Consumers
+          <span style={{ color: "#1A237E", fontWeight: "bold" }}>
+            {totalConsumers}
+          </span>{" "}
+          Students
         </Typography>
       )}
     </Paper>

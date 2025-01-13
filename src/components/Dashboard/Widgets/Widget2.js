@@ -8,36 +8,37 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import orderImage from "../../Images/order.gif"; // Assuming you have an image for orders
+import orderImage from "../../Images/order.gif"; // Replace with the correct path to your image
 import { useNavigate } from "react-router-dom";
 
 const Widget2 = () => {
-  const [orders, setOrders] = useState([]); // State to store order data
+  const [totalBatches, setTotalBatches] = useState(null); // State to store batch data
   const [loading, setLoading] = useState(true); // Loading state for API call
   const [error, setError] = useState(null); // Error state for API call
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
-    const token = Cookies.get("token"); // Get the token from cookies
-
-    axios
-      .get(
-        "https://www.backend.pkpaniwala.com/admin/count/totalOrders",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-token": token, // Pass token in header
-          },
-        }
-      )
-      .then((response) => {
-        setOrders(response.data.data); // Set orders data
+    const fetchData = async () => {
+      try {
+        const token = Cookies.get("token"); // Get the token from cookies
+        const response = await axios.get(
+          "https://npc-classes.onrender.com/admin/dashBoard/totalBatch",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-admin-token": token, // Pass token in header
+            },
+          }
+        );
+        setTotalBatches(response.data.data); // Set batch data
         setLoading(false); // Stop loading spinner
-      })
-      .catch((error) => {
+      } catch (error) {
         setError("Failed to fetch data"); // Set error message
         setLoading(false); // Stop loading spinner
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -61,11 +62,11 @@ const Widget2 = () => {
         flexDirection: "column",
         alignItems: "center",
         textAlign: "center",
-        cursor:"pointer"
+        cursor: "pointer",
       }}
-      onClick={()=>navigate("/dashboard/order-history")} // Add the click handler to the card
+      onClick={() => navigate("/dashboard/order-history")} // Navigate on click
     >
-      {/* Order Image and Title */}
+      {/* Batch Image */}
       <Box
         sx={{
           width: "100%",
@@ -76,12 +77,12 @@ const Widget2 = () => {
       >
         <Avatar
           src={orderImage}
-          alt="Orders"
+          alt="Batches"
           sx={{
             width: 80,
             height: 80,
             borderRadius: "50%",
-            backgroundColor:"white",
+            backgroundColor: "white",
           }}
         />
       </Box>
@@ -127,14 +128,14 @@ const Widget2 = () => {
             fontWeight: 500,
             lineHeight: 1.6,
             display: "flex",
-            flexDirection:"column",
+            flexDirection: "column",
             marginTop: 2,
           }}
         >
           <span style={{ color: "#1A237E", fontWeight: "bold" }}>
-            {orders}
+            {totalBatches}
           </span>{" "}
-          Orders
+          Batches
         </Typography>
       )}
     </Paper>

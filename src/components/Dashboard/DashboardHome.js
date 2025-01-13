@@ -1,10 +1,10 @@
 import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
 import React from "react";
 import Widget1 from "./Widgets/Widget1";
-import LineChartWidget from "./Widgets/LineChartWidget";
 import Widget2 from "./Widgets/Widget2";
 import Widget3 from "./Widgets/Widget3";
 import Widget4 from "./Widgets/Widget4";
+import ClassList from "../../Page/ClassList/ClassList"
 
 function DashboardHome() {
   return (
@@ -33,7 +33,7 @@ function DashboardHome() {
 
       {/* Divider between widgets and chart */}
       <Divider sx={{ marginY: 4 }} />
-
+         <ClassList  />
       {/* Footer */}
       <Box sx={{ marginTop: 5, textAlign: "center", color: "#888" }}>
         <Typography variant="body2">
