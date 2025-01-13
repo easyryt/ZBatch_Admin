@@ -4,7 +4,6 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import NotFound from "./Page/NotFound/NotFound";
 import DashboardHome from "./components/Dashboard/DashboardHome";
 import ClassList from "./Page/ClassList/ClassList";
-import CreateBatch from "./Page/Batch/CreateBatch";
 import BatchList from "./Page/Batch/BatchList";
 import SubjectsList from "./Page/SubjectsList/SubjectsList";
 import TeachersList from "./Page/TeachersList/TeachersList";
@@ -16,7 +15,7 @@ import DirectTestList from "./Page/DirectTestList/DirectTestList";
 import QuestionList from "./Page/DirectTestList/QuestionList";
 import BookList from "./Page/BookList/BookList";
 import BookContent from "./Page/BookContent/BookContent";
-import WholeMaterial from "./Page/WholeMaterial/WholeMaterial";
+import TitlesDataGrid from "./Page/WholeMaterial/MaterialTitle/TitlesDataGrid";
 
 const App = () => {
   return (
@@ -42,7 +41,7 @@ const App = () => {
           <Route path="question-list/:id" element={<QuestionList  />} />
           <Route path="book-list/:id" element={<BookList  />} />
           <Route path="book-content/:id" element={<BookContent  />} />
-          <Route path="whole-material/:id" element={<WholeMaterial />} />
+          <Route path="material-title/:id" element={<TitlesDataGrid />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -56,7 +55,7 @@ const App = () => {
         <Route path="/question-list/:id" element={<QuestionList  />} />
         <Route path="/book-list/:id" element={<BookList  />} />
         <Route path="/book-content/:id" element={<BookContent  />} />
-        <Route path="/whole-material/:id" element={<WholeMaterial />} />
+        <Route path="/material-title/:id" element={<TitlesDataGrid />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

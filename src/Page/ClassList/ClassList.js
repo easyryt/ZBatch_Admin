@@ -333,7 +333,7 @@ const ClassList = () => {
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton color="tertiary" onClick={()=>navigate(`/dashboard/whole-material/${cls._id}`)}>
+                    <IconButton color="tertiary" onClick={()=>navigate(`/dashboard/material-title/${cls._id}`)}>
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
