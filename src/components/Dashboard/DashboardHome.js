@@ -5,6 +5,7 @@ import Widget2 from "./Widgets/Widget2";
 import Widget3 from "./Widgets/Widget3";
 import Widget4 from "./Widgets/Widget4";
 import ClassList from "../../Page/ClassList/ClassList"
+import Widget5 from "./Widgets/Widget5";
 
 function DashboardHome() {
   return (
@@ -28,6 +29,9 @@ function DashboardHome() {
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={3}>
           <Widget4 />
+        </Grid>
+        <Grid item xs={12} sm={12} md={4} lg={3}>
+          <Widget5 />
         </Grid>
       </Grid>
 
