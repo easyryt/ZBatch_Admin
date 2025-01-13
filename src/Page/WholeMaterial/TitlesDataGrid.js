@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import CreateTitleModal from "./CreateTitleModal";
+import UpdateTitleModal from "./UpdateTitleModal";
+import { Edit } from "@mui/icons-material";
 
 const TitlesDataGrid = () => {
   const [titles, setTitles] = useState([]);
@@ -14,10 +16,20 @@ const TitlesDataGrid = () => {
   const { id } = useParams();
   const token = Cookies.get("token");
   const [modalOpen, setModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [update, setUpdate] = useState(false); // Trigger updates
+  const [selectedTitle, setSelectedTitle] = useState(null);
 
   const handleOpen = () => setModalOpen(true);
-  const handleClose = () => setModalOpen(false);
+  const handleClose = () => {
+    setModalOpen(false);
+    setUpdateModalOpen(false);
+  };
+
+  const handleEditClick = (title) => {
+    setSelectedTitle(title);
+    setUpdateModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchTitles = async () => {
@@ -32,7 +44,7 @@ const TitlesDataGrid = () => {
         if (response.data.status) {
           setTitles(response.data.data);
           setFilteredTitles(response.data.data);
-          setUpdate(false)
+          setUpdate(false);
         } else {
           console.error("Failed to fetch titles:", response.data.message);
         }
@@ -44,7 +56,7 @@ const TitlesDataGrid = () => {
     };
 
     fetchTitles();
-  }, [id, token,update]);
+  }, [id, token, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -62,7 +74,6 @@ const TitlesDataGrid = () => {
       headerName: "Title",
       width: 300,
     },
-
     {
       field: "createdAt",
       headerName: "Created At",
@@ -74,6 +85,20 @@ const TitlesDataGrid = () => {
       headerName: "Updated At",
       width: 200,
       renderCell: (params) => new Date(params.row.updatedAt).toLocaleString(),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <IconButton
+          color="primary"
+          title="Edit"
+          onClick={() => handleEditClick(params.row)}
+        >
+          <Edit />
+        </IconButton>
+      ),
     },
   ];
 
@@ -102,6 +127,12 @@ const TitlesDataGrid = () => {
         open={modalOpen}
         handleClose={handleClose}
         setUpdate={setUpdate}
+      />
+      <UpdateTitleModal
+        open={updateModalOpen}
+        handleClose={handleClose}
+        setUpdate={setUpdate}
+        selectedTitle={selectedTitle}
       />
       <DataGrid
         rows={filteredTitles}
