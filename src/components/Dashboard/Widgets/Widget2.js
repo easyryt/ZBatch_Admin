@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import orderImage from "../../Images/order.gif"; // Replace with the correct path to your image
+import orderImage from "../../Images/batches.png"; // Replace with the correct path to your image
 import { useNavigate } from "react-router-dom";
 
 const Widget2 = () => {

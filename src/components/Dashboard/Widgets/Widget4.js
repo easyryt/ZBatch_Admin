@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Paper, Typography, Box, CircularProgress, Avatar } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import revenueImage from "../../Images/products.gif"; // Replace with the correct path to your image
+import revenueImage from "../../Images/revenue.png"; // Replace with the correct path to your image
 import { useNavigate } from "react-router-dom";
 
 const Widget4 = () => {
