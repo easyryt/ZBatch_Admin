@@ -6,6 +6,10 @@ import {
   Button,
   IconButton,
   Stack,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -16,15 +20,16 @@ import CreateSubjectTitleModal from "./CreateSubjectTitleModal";
 import UpdateSubjectTitleModal from "./UpdateSubjectTitleModal";
 
 const SubjectsDataGrid = () => {
-  const [subjects, setSubjects] = useState([]); // Updated to handle 'subjects'
+  const [subjects, setSubjects] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMedium, setSelectedMedium] = useState("English"); // Default medium
   const { id } = useParams();
   const token = Cookies.get("token");
   const [modalOpen, setModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [update, setUpdate] = useState(false); // Trigger updates
+  const [update, setUpdate] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
 
   const handleOpen = () => setModalOpen(true);
@@ -38,32 +43,32 @@ const SubjectsDataGrid = () => {
     setUpdateModalOpen(true);
   };
 
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllSub/${id}?medium=English`,
-          {
-            headers: { "x-admin-token": token },
-          }
-        );
-        if (response.data.status) {
-          setSubjects(response.data.data);
-          setFilteredSubjects(response.data.data);
-          setUpdate(false);
-        } else {
-          console.error("Failed to fetch subjects:", response.data.message);
+  const fetchSubjects = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllSub/${id}?medium=${selectedMedium}`,
+        {
+          headers: { "x-admin-token": token },
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+      );
+      if (response.data.status) {
+        setSubjects(response.data.data);
+        setFilteredSubjects(response.data.data);
+        setUpdate(false);
+      } else {
+        console.error("Failed to fetch subjects:", response.data.message);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchSubjects();
-  }, [id, token, update]);
+  }, [id, token, update, selectedMedium]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -73,6 +78,10 @@ const SubjectsDataGrid = () => {
       subject.subject.toLowerCase().includes(query)
     );
     setFilteredSubjects(filtered);
+  };
+
+  const handleMediumChange = (event) => {
+    setSelectedMedium(event.target.value);
   };
 
   const columns = [
@@ -125,6 +134,18 @@ const SubjectsDataGrid = () => {
         Material Subjects
       </Typography>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+        <FormControl sx={{ minWidth: 150 }}>
+          <InputLabel id="medium-filter-label">Medium</InputLabel>
+          <Select
+            labelId="medium-filter-label"
+            id="medium-filter"
+            value={selectedMedium}
+            onChange={handleMediumChange}
+          >
+            <MenuItem value="English">English</MenuItem>
+            <MenuItem value="Hindi">Hindi</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
           label="Search by Subject"
           variant="outlined"
