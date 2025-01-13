@@ -4,11 +4,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import CreateTitleModal from "./MaterialTitle/CreateTitleModal";
-import UpdateTitleModal from "./MaterialTitle/UpdateTitleModal";
+import CreateTitleModal from "../MaterialTitle/CreateTitleModal";
+import UpdateTitleModal from "../MaterialTitle/UpdateTitleModal";
 import { Edit } from "@mui/icons-material";
 
-const SubjectsDataGrid = () => {
+const ContentsDataGrid = () => {
   const [titles, setTitles] = useState([]);
   const [filteredTitles, setFilteredTitles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const SubjectsDataGrid = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllSub/${id}?medium=English`,
+          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
           {
             headers: { "x-admin-token": token },
           }
@@ -153,4 +153,4 @@ const SubjectsDataGrid = () => {
   );
 };
 
-export default SubjectsDataGrid;
+export default ContentsDataGrid;

@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, IconButton, Stack } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import CreateTitleModal from "./CreateTitleModal";
 import UpdateTitleModal from "./UpdateTitleModal";
 import { Edit } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const TitlesDataGrid = () => {
   const [titles, setTitles] = useState([]);
@@ -19,6 +27,7 @@ const TitlesDataGrid = () => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [update, setUpdate] = useState(false); // Trigger updates
   const [selectedTitle, setSelectedTitle] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => {
@@ -104,10 +113,31 @@ const TitlesDataGrid = () => {
         </IconButton>
       ),
     },
+    {
+      field: "View Subject",
+      headerName: "View Subject",
+      flex: 0.5,
+      minWidth: 150,
+      renderCell: (params) => (
+        <IconButton
+          color="tertiary"
+          onClick={() => navigate(`/dashboard/material-subject/${params.row._id}`)}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
-    <Box sx={{ height: "100%", width: "100%", p: 4, bgcolor: "background.default" }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        p: 4,
+        bgcolor: "background.default",
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Material Titles
       </Typography>

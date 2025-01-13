@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, IconButton, Stack } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import CreateTitleModal from "./MaterialTitle/CreateTitleModal";
-import UpdateTitleModal from "./MaterialTitle/UpdateTitleModal";
 import { Edit } from "@mui/icons-material";
+import CreateSubjectTitleModal from "./CreateSubjectTitleModal";
+import UpdateSubjectTitleModal from "./UpdateSubjectTitleModal";
 
-const ContentsDataGrid = () => {
-  const [titles, setTitles] = useState([]);
-  const [filteredTitles, setFilteredTitles] = useState([]);
+const SubjectsDataGrid = () => {
+  const [subjects, setSubjects] = useState([]); // Updated to handle 'subjects'
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { id } = useParams();
@@ -18,7 +25,7 @@ const ContentsDataGrid = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [update, setUpdate] = useState(false); // Trigger updates
-  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => {
@@ -26,27 +33,27 @@ const ContentsDataGrid = () => {
     setUpdateModalOpen(false);
   };
 
-  const handleEditClick = (title) => {
-    setSelectedTitle(title);
+  const handleEditClick = (subject) => {
+    setSelectedSubject(subject);
     setUpdateModalOpen(true);
   };
 
   useEffect(() => {
-    const fetchTitles = async () => {
+    const fetchSubjects = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
+          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllSub/${id}?medium=English`,
           {
             headers: { "x-admin-token": token },
           }
         );
         if (response.data.status) {
-          setTitles(response.data.data);
-          setFilteredTitles(response.data.data);
+          setSubjects(response.data.data);
+          setFilteredSubjects(response.data.data);
           setUpdate(false);
         } else {
-          console.error("Failed to fetch titles:", response.data.message);
+          console.error("Failed to fetch subjects:", response.data.message);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -55,25 +62,31 @@ const ContentsDataGrid = () => {
       }
     };
 
-    fetchTitles();
+    fetchSubjects();
   }, [id, token, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = titles.filter((title) =>
-      title.title.toLowerCase().includes(query)
+    const filtered = subjects.filter((subject) =>
+      subject.subject.toLowerCase().includes(query)
     );
-    setFilteredTitles(filtered);
+    setFilteredSubjects(filtered);
   };
 
   const columns = [
     {
-      field: "title",
-      headerName: "Title",
+      field: "subject",
+      headerName: "Subject",
       flex: 1,
       minWidth: 200,
+    },
+    {
+      field: "medium",
+      headerName: "Medium",
+      flex: 1,
+      minWidth: 150,
     },
     {
       field: "createdAt",
@@ -109,11 +122,11 @@ const ContentsDataGrid = () => {
   return (
     <Box sx={{ height: "100%", width: "100%", p: 4, bgcolor: "background.default" }}>
       <Typography variant="h4" gutterBottom>
-        Material Titles
+        Material Subjects
       </Typography>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
         <TextField
-          label="Search by Title"
+          label="Search by Subject"
           variant="outlined"
           fullWidth
           value={searchQuery}
@@ -125,22 +138,22 @@ const ContentsDataGrid = () => {
           sx={{ textTransform: "none", fontWeight: "bold" }}
           onClick={handleOpen}
         >
-          Create New Titles
+          Create New Subject
         </Button>
       </Stack>
-      <CreateTitleModal
+      <CreateSubjectTitleModal
         open={modalOpen}
         handleClose={handleClose}
         setUpdate={setUpdate}
       />
-      <UpdateTitleModal
+      <UpdateSubjectTitleModal
         open={updateModalOpen}
         handleClose={handleClose}
         setUpdate={setUpdate}
-        selectedTitle={selectedTitle}
+        selectedSubject={selectedSubject}
       />
       <DataGrid
-        rows={filteredTitles}
+        rows={filteredSubjects}
         columns={columns}
         getRowId={(row) => row._id}
         loading={loading}
@@ -153,4 +166,4 @@ const ContentsDataGrid = () => {
   );
 };
 
-export default ContentsDataGrid;
+export default SubjectsDataGrid;
