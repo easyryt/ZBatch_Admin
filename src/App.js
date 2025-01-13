@@ -16,6 +16,7 @@ import DirectTestList from "./Page/DirectTestList/DirectTestList";
 import QuestionList from "./Page/DirectTestList/QuestionList";
 import BookList from "./Page/BookList/BookList";
 import BookContent from "./Page/BookContent/BookContent";
+import WholeMaterial from "./Page/WholeMaterial/WholeMaterial";
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="question-list/:id" element={<QuestionList  />} />
           <Route path="book-list/:id" element={<BookList  />} />
           <Route path="book-content/:id" element={<BookContent  />} />
+          <Route path="whole-material/:id" element={<WholeMaterial />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -54,6 +56,7 @@ const App = () => {
         <Route path="/question-list/:id" element={<QuestionList  />} />
         <Route path="/book-list/:id" element={<BookList  />} />
         <Route path="/book-content/:id" element={<BookContent  />} />
+        <Route path="/whole-material/:id" element={<WholeMaterial />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
