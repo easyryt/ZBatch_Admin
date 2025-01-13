@@ -266,9 +266,6 @@ const ClassList = () => {
                 <b>Update</b>
               </TableCell>
               <TableCell align="center">
-                <b>Create Batch</b>
-              </TableCell>
-              <TableCell align="center">
                 <b>Delete</b>
               </TableCell>
               <TableCell align="center">
@@ -298,15 +295,6 @@ const ClassList = () => {
                       onClick={() => handleOpenUpdateModal(cls)}
                     >
                       <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="center">
-                    {" "}
-                    <IconButton
-                      color="secondary"
-                      onClick={() =>handleOpenBatchModal(cls._id)}
-                    >
-                      <AddIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
