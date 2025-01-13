@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
+import { Box, Typography, TextField, Button, IconButton, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -72,24 +72,28 @@ const TitlesDataGrid = () => {
     {
       field: "title",
       headerName: "Title",
-      width: 300,
+      flex: 1,
+      minWidth: 200,
     },
     {
       field: "createdAt",
       headerName: "Created At",
-      width: 200,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => new Date(params.row.createdAt).toLocaleString(),
     },
     {
       field: "updatedAt",
       headerName: "Updated At",
-      width: 200,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => new Date(params.row.updatedAt).toLocaleString(),
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      flex: 0.5,
+      minWidth: 150,
       renderCell: (params) => (
         <IconButton
           color="primary"
@@ -103,26 +107,27 @@ const TitlesDataGrid = () => {
   ];
 
   return (
-    <Box sx={{ height: 550, width: "100%", p: 2 }}>
-      <Typography variant="h5" gutterBottom>
+    <Box sx={{ height: "100%", width: "100%", p: 4, bgcolor: "background.default" }}>
+      <Typography variant="h4" gutterBottom>
         Material Titles
       </Typography>
-      <TextField
-        label="Search by Title"
-        variant="outlined"
-        fullWidth
-        value={searchQuery}
-        onChange={handleSearch}
-        sx={{ mb: 2 }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ textTransform: "none", fontWeight: "bold" }}
-        onClick={handleOpen}
-      >
-        Create New Titles
-      </Button>
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+        <TextField
+          label="Search by Title"
+          variant="outlined"
+          fullWidth
+          value={searchQuery}
+          onChange={handleSearch}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ textTransform: "none", fontWeight: "bold" }}
+          onClick={handleOpen}
+        >
+          Create New Titles
+        </Button>
+      </Stack>
       <CreateTitleModal
         open={modalOpen}
         handleClose={handleClose}
@@ -143,11 +148,6 @@ const TitlesDataGrid = () => {
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         checkboxSelection
-        sx={{
-          bgcolor: "background.paper",
-          boxShadow: 3,
-          borderRadius: 2,
-        }}
       />
     </Box>
   );
