@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, IconButton, Stack } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Edit } from "@mui/icons-material";
 import CreateTitleModal from "../MaterialTitle/CreateTitleModal";
 import UpdateTitleModal from "../MaterialTitle/UpdateTitleModal";
-import { Edit } from "@mui/icons-material";
+import CreateContentsTitleModal from "./CreateContentsTitleModal";
+import UpdateContentsTitleModal from "./UpdateContentsTitleModal";
 
 const ContentsDataGrid = () => {
-  const [titles, setTitles] = useState([]);
-  const [filteredTitles, setFilteredTitles] = useState([]);
+  const [contents, setContents] = useState([]);
+  const [filteredContents, setFilteredContents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { id } = useParams();
   const token = Cookies.get("token");
   const [modalOpen, setModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [update, setUpdate] = useState(false); // Trigger updates
-  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [update, setUpdate] = useState(false);
+  const [selectedContent, setSelectedContent] = useState(null);
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => {
@@ -26,27 +35,27 @@ const ContentsDataGrid = () => {
     setUpdateModalOpen(false);
   };
 
-  const handleEditClick = (title) => {
-    setSelectedTitle(title);
+  const handleEditClick = (content) => {
+    setSelectedContent(content);
     setUpdateModalOpen(true);
   };
 
   useEffect(() => {
-    const fetchTitles = async () => {
+    const fetchContents = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
+          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllContent/${id}`,
           {
             headers: { "x-admin-token": token },
           }
         );
         if (response.data.status) {
-          setTitles(response.data.data);
-          setFilteredTitles(response.data.data);
+          setContents(response.data.data);
+          setFilteredContents(response.data.data);
           setUpdate(false);
         } else {
-          console.error("Failed to fetch titles:", response.data.message);
+          console.error("Failed to fetch contents:", response.data.message);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -55,17 +64,17 @@ const ContentsDataGrid = () => {
       }
     };
 
-    fetchTitles();
+    fetchContents();
   }, [id, token, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = titles.filter((title) =>
-      title.title.toLowerCase().includes(query)
+    const filtered = contents.filter((content) =>
+      content.title.toLowerCase().includes(query)
     );
-    setFilteredTitles(filtered);
+    setFilteredContents(filtered);
   };
 
   const columns = [
@@ -74,6 +83,28 @@ const ContentsDataGrid = () => {
       headerName: "Title",
       flex: 1,
       minWidth: 200,
+    },
+    {
+      field: "chapterNo",
+      headerName: "Chapter No.",
+      flex: 0.5,
+      minWidth: 150,
+    },
+    {
+      field: "pdf",
+      headerName: "PDF Link",
+      flex: 1,
+      minWidth: 200,
+      renderCell: (params) => (
+        <a
+          href={params.row.pdf.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          View PDF
+        </a>
+      ),
     },
     {
       field: "createdAt",
@@ -109,7 +140,7 @@ const ContentsDataGrid = () => {
   return (
     <Box sx={{ height: "100%", width: "100%", p: 4, bgcolor: "background.default" }}>
       <Typography variant="h4" gutterBottom>
-        Material Titles
+        Material Contents
       </Typography>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
         <TextField
@@ -125,22 +156,22 @@ const ContentsDataGrid = () => {
           sx={{ textTransform: "none", fontWeight: "bold" }}
           onClick={handleOpen}
         >
-          Create New Titles
+          Create New Content
         </Button>
       </Stack>
-      <CreateTitleModal
+      <CreateContentsTitleModal
         open={modalOpen}
         handleClose={handleClose}
         setUpdate={setUpdate}
       />
-      <UpdateTitleModal
+      <UpdateContentsTitleModal
         open={updateModalOpen}
         handleClose={handleClose}
         setUpdate={setUpdate}
-        selectedTitle={selectedTitle}
+        selectedContent={selectedContent}
       />
       <DataGrid
-        rows={filteredTitles}
+        rows={filteredContents}
         columns={columns}
         getRowId={(row) => row._id}
         loading={loading}

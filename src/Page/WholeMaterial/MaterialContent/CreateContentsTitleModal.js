@@ -1,28 +1,48 @@
 import React, { useState } from "react";
-import { Box, Typography, TextField, Button, Modal } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Modal,
+} from "@mui/material";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
-const CreateContentsTitleModal= ({ open, handleClose, setUpdate }) => {
+const CreateContentsTitleModal = ({ open, handleClose, setUpdate }) => {
   const [title, setTitle] = useState("");
+  const [chapterNo, setChapterNo] = useState("");
+  const [pdf, setPdf] = useState(null);
   const [loading, setLoading] = useState(false);
   const token = Cookies.get("token");
-  const {id} = useParams()
+  const { id } = useParams();
 
-  const handleCreateTitle = async () => {
-    if (!title.trim()) {
-      alert("Title cannot be empty!");
+  const handleFileChange = (event) => {
+    setPdf(event.target.files[0]);
+  };
+
+  const handleCreateContent = async () => {
+    if (!title.trim() || !chapterNo.trim() || !pdf) {
+      alert("All fields are required!");
       return;
     }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("chapterNo", chapterNo);
+    formData.append("pdf", pdf);
 
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/createTitle/${id}`,
-        { title },
+        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/createContent/${id}`,
+        formData,
         {
-          headers: { "x-admin-token": token },
+          headers: {
+            "x-admin-token": token,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
@@ -33,8 +53,8 @@ const CreateContentsTitleModal= ({ open, handleClose, setUpdate }) => {
         alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
-      console.error("Error creating title:", error);
-      alert("An error occurred while creating the title. Please try again.");
+      console.error("Error creating content:", error);
+      alert("An error occurred while creating the content. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -44,8 +64,8 @@ const CreateContentsTitleModal= ({ open, handleClose, setUpdate }) => {
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="create-title-modal"
-      aria-describedby="create-title-modal-description"
+      aria-labelledby="create-content-modal"
+      aria-describedby="create-content-modal-description"
     >
       <Box
         sx={{
@@ -60,8 +80,8 @@ const CreateContentsTitleModal= ({ open, handleClose, setUpdate }) => {
           p: 4,
         }}
       >
-        <Typography id="create-title-modal" variant="h6" gutterBottom>
-          Create New Title
+        <Typography id="create-content-modal" variant="h6" gutterBottom>
+          Create New Content
         </Typography>
         <TextField
           fullWidth
@@ -71,12 +91,38 @@ const CreateContentsTitleModal= ({ open, handleClose, setUpdate }) => {
           onChange={(e) => setTitle(e.target.value)}
           sx={{ mb: 2 }}
         />
+        <TextField
+          fullWidth
+          label="Chapter No"
+          variant="outlined"
+          value={chapterNo}
+          onChange={(e) => setChapterNo(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <Button
+          variant="outlined"
+          component="label"
+          sx={{ mb: 2, textAlign: "left" }}
+        >
+          Upload PDF
+          <input
+            type="file"
+            hidden
+            accept="application/pdf"
+            onChange={handleFileChange}
+          />
+        </Button>
+        {pdf && (
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+            Selected File: {pdf.name}
+          </Typography>
+        )}
         <Box display="flex" justifyContent="flex-end" gap={2}>
           <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancel
           </Button>
           <Button
-            onClick={handleCreateTitle}
+            onClick={handleCreateContent}
             variant="contained"
             color="primary"
             disabled={loading}

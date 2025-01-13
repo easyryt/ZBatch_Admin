@@ -13,11 +13,12 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Edit } from "@mui/icons-material";
 import CreateSubjectTitleModal from "./CreateSubjectTitleModal";
 import UpdateSubjectTitleModal from "./UpdateSubjectTitleModal";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const SubjectsDataGrid = () => {
   const [subjects, setSubjects] = useState([]);
@@ -31,6 +32,7 @@ const SubjectsDataGrid = () => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [update, setUpdate] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => {
@@ -126,10 +128,33 @@ const SubjectsDataGrid = () => {
         </IconButton>
       ),
     },
+    {
+      field: "View Subject",
+      headerName: "View Subject",
+      flex: 0.5,
+      minWidth: 150,
+      renderCell: (params) => (
+        <IconButton
+          color="tertiary"
+          onClick={() =>
+            navigate(`/dashboard/material-contents/${params.row._id}`)
+          }
+        >
+          <VisibilityIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
-    <Box sx={{ height: "100%", width: "100%", p: 4, bgcolor: "background.default" }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        p: 4,
+        bgcolor: "background.default",
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Material Subjects
       </Typography>
