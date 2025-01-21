@@ -10,14 +10,17 @@ import { DataGrid } from "@mui/x-data-grid";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import CreateChapterModal from "./CreateChapterModal ";
 
+import UpdateChapterModal from "./UpdateChapterModal"; // Import the update modal
+import CreateChapterModal from "./CreateChapterModal ";
 
 const ChapterDataGrid = () => {
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openModal, setOpenModal] = useState(false); // State for modal
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedChapter, setSelectedChapter] = useState(null); // For update modal
   const { id } = useParams(); // SubjectTest ID
 
   useEffect(() => {
@@ -50,6 +53,11 @@ const ChapterDataGrid = () => {
     fetchChapters();
   }, [id]);
 
+  const handleUpdateClick = (chapter) => {
+    setSelectedChapter(chapter);
+    setOpenUpdateModal(true);
+  };
+
   const columns = [
     { field: "chapterNo", headerName: "Chapter No", width: 130 },
     { field: "chapterName", headerName: "Chapter Name", width: 250 },
@@ -57,7 +65,21 @@ const ChapterDataGrid = () => {
       field: "createdAt",
       headerName: "Created At",
       width: 250,
-      renderCell: (params) => new Date(params?.row?.createdAt).toLocaleString(),
+      renderCell: (params) => new Date(params.row.createdAt).toLocaleString(),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 200,
+      renderCell: (params) => (
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => handleUpdateClick(params.row)}
+        >
+          Update
+        </Button>
+      ),
     },
   ];
 
@@ -70,7 +92,7 @@ const ChapterDataGrid = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setOpenModal(true)} // Open the modal
+        onClick={() => setOpenCreateModal(true)}
         sx={{ mb: 2 }}
       >
         Create Chapter
@@ -99,10 +121,10 @@ const ChapterDataGrid = () => {
         </Box>
       )}
 
-      {/* Render the modal */}
+      {/* Create Modal */}
       <CreateChapterModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
         clsId={chapters[0]?.clsId || ""}
         subjectTest={id}
         refreshChapters={() => {
@@ -110,6 +132,19 @@ const ChapterDataGrid = () => {
           setError(null);
         }}
       />
+
+      {/* Update Modal */}
+      {selectedChapter && (
+        <UpdateChapterModal
+          open={openUpdateModal}
+          onClose={() => setOpenUpdateModal(false)}
+          chapter={selectedChapter}
+          refreshChapters={() => {
+            setLoading(true);
+            setError(null);
+          }}
+        />
+      )}
     </Box>
   );
 };
