@@ -12,7 +12,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./TestSubjectsDataGrid.module.css"; // Module CSS for styling
 import CreateTestSubjectModal from "./CreateTestSubjectModal";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const TestSubjectsDataGrid = () => {
@@ -23,6 +23,7 @@ const TestSubjectsDataGrid = () => {
   const [openModal, setOpenModal] = useState(false); // Modal state
   const [update, setUpdate] = useState(false);
   const { id } = useParams(); // Fetch id from URL
+  const navigate = useNavigate()
 
   // Fetch subjects from the API
   useEffect(() => {
@@ -86,7 +87,7 @@ const TestSubjectsDataGrid = () => {
       headerName: "View Chapters",
       width: 200,
       renderCell: (params) => (
-        <IconButton>
+        <IconButton onClick={()=>navigate(`/dashboard/chapter-list/${params.row._id}`)}>
           <VisibilityIcon />
         </IconButton>
       ),
