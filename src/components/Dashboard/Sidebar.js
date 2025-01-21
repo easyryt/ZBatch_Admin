@@ -13,6 +13,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import SchoolIcon from '@mui/icons-material/School';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PersonIcon from '@mui/icons-material/Person';
+import Face3Icon from '@mui/icons-material/Face3';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -34,6 +35,11 @@ const Sidebar = () => {
       text: "Teachers List",
       icon: <PersonIcon />,
       path: "/dashboard/teachers-list",
+    },
+    {
+      text: "Student Data",
+      icon: <Face3Icon />,
+      path: "/dashboard/student-data",
     },
   ];
 
