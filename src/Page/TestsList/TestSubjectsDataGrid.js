@@ -6,12 +6,14 @@ import {
   CircularProgress,
   TextField,
   Button,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./TestSubjectsDataGrid.module.css"; // Module CSS for styling
 import CreateTestSubjectModal from "./CreateTestSubjectModal";
 import { useParams } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const TestSubjectsDataGrid = () => {
   const [subjects, setSubjects] = useState([]);
@@ -62,8 +64,6 @@ const TestSubjectsDataGrid = () => {
 
   // Columns definition for DataGrid
   const columns = [
-    { field: "_id", headerName: "ID", width: 200 },
-    { field: "clsId", headerName: "Class ID", width: 150 },
     {
       field: "subjectName",
       headerName: "Subject",
@@ -81,6 +81,16 @@ const TestSubjectsDataGrid = () => {
     },
     { field: "createdAt", headerName: "Created At", width: 200 },
     { field: "updatedAt", headerName: "Updated At", width: 200 },
+    {
+      field: "View Chapters",
+      headerName: "View Chapters",
+      width: 200,
+      renderCell: (params) => (
+        <IconButton>
+          <VisibilityIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
