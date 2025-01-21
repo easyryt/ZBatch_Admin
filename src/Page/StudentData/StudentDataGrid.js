@@ -1,3 +1,6 @@
+
+
+// StudentDataGrid.js
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -9,6 +12,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Cookies from "js-cookie";
+import BatchDetailsModal from "./BatchDetailsModal";
 
 const StudentDataGrid = () => {
   const [data, setData] = useState([]);
@@ -25,6 +29,10 @@ const StudentDataGrid = () => {
     totalPages: 1,
     totalCount: 0,
   });
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [batchData, setBatchData] = useState(null);
+  const [batchLoading, setBatchLoading] = useState(false);
 
   useEffect(() => {
     fetchStudentData();
@@ -78,6 +86,29 @@ const StudentDataGrid = () => {
 
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage + 1 }));
+  };
+
+  const handleRowClick = async (row) => {
+    setBatchLoading(true);
+    setModalOpen(true);
+    try {
+      const response = await axios.get(
+        `https://npc-classes.onrender.com/admin/student/analytics/purchased/batch/student/${row._id}`,
+        {
+          headers: { "x-admin-token": Cookies.get("token") },
+        }
+      );
+      setBatchData(response.data);
+    } catch (error) {
+      console.error("Error fetching batch details:", error);
+    } finally {
+      setBatchLoading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setBatchData(null);
   };
 
   const columns = [
@@ -180,10 +211,18 @@ const StudentDataGrid = () => {
           paginationMode="server"
           onPageChange={handlePageChange}
           getRowId={(row) => row._id}
+          onRowClick={(params) => handleRowClick(params.row)}
           autoHeight
           sx={{ border: "none" }}
         />
       )}
+
+      <BatchDetailsModal
+        open={modalOpen}
+        handleClose={handleModalClose}
+        batchData={batchData}
+        loading={batchLoading}
+      />
     </Box>
   );
 };
