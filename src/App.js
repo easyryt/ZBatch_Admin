@@ -19,6 +19,7 @@ import TitlesDataGrid from "./Page/WholeMaterial/MaterialTitle/TitlesDataGrid";
 import SubjectsDataGrid from "./Page/WholeMaterial/MaterialSubject/SubjectsDataGrid";
 import ContentsDataGrid from "./Page/WholeMaterial/MaterialContent/ContentsDataGrid";
 import StudentDataGrid from "./Page/StudentData/StudentDataGrid";
+import TestSubjectsDataGrid from "./Page/TestsList/TestSubjectsDataGrid";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="material-subject/:id" element={<SubjectsDataGrid/>} />
           <Route path="material-contents/:id" element={<ContentsDataGrid/>} />
           <Route path="student-data" element={<StudentDataGrid/>} />
+          <Route path="test-subjects-list/:id" element={<TestSubjectsDataGrid  />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -65,6 +67,7 @@ const App = () => {
         <Route path="/material-subject/:id" element={<SubjectsDataGrid/>} />
         <Route path="/material-contents/:id" element={<ContentsDataGrid/>} />
         <Route path="/student-data" element={<StudentDataGrid/>} />
+        <Route path="/test-subjects-list/:id" element={<TestSubjectsDataGrid  />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
