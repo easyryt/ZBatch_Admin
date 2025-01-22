@@ -38,39 +38,51 @@ const App = () => {
           <Route path="batch-list/:id" element={<BatchList />} />
           <Route path="subjects-list" element={<SubjectsList />} />
           <Route path="teachers-list" element={<TeachersList />} />
-          <Route path="batch-details/:id" element={<ViewBatchDetails  />} />
-          <Route path="content-display/:id" element={<ContentDisplay  />} />
-          <Route path="tests-list/:batchId/:subjectId" element={<TestsList  />} />
-          <Route path="question-details/:batchId/:id" element={<QuestionDetails  />} />
-          <Route path="direct-test-list/:id" element={<DirectTestList  />} />
-          <Route path="question-list/:id" element={<QuestionList  />} />
-          <Route path="book-list/:id" element={<BookList  />} />
-          <Route path="book-content/:id" element={<BookContent  />} />
+          <Route path="batch-details/:id" element={<ViewBatchDetails />} />
+          <Route path="content-display/:id" element={<ContentDisplay />} />
+          <Route path="tests-list/:chapterId" element={<TestsList />} />
+          <Route
+            path="question-details/:batchId/:id"
+            element={<QuestionDetails />}
+          />
+          <Route path="direct-test-list/:id" element={<DirectTestList />} />
+          <Route path="question-list/:id" element={<QuestionList />} />
+          <Route path="book-list/:id" element={<BookList />} />
+          <Route path="book-content/:id" element={<BookContent />} />
           <Route path="material-title/:id" element={<TitlesDataGrid />} />
-          <Route path="material-subject/:id" element={<SubjectsDataGrid/>} />
-          <Route path="material-contents/:id" element={<ContentsDataGrid/>} />
-          <Route path="student-data" element={<StudentDataGrid/>} />
-          <Route path="test-subjects-list/:id" element={<TestSubjectsDataGrid  />} />
-          <Route path="chapter-list/:id" element={<ChapterDataGrid  />} />
+          <Route path="material-subject/:id" element={<SubjectsDataGrid />} />
+          <Route path="material-contents/:id" element={<ContentsDataGrid />} />
+          <Route path="student-data" element={<StudentDataGrid />} />
+          <Route
+            path="test-subjects-list/:id"
+            element={<TestSubjectsDataGrid />}
+          />
+          <Route path="chapter-list/:id" element={<ChapterDataGrid />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
         <Route path="/subjects-list" element={<SubjectsList />} />
         <Route path="/teachers-list" element={<TeachersList />} />
-        <Route path="/batch-details/:id" element={<ViewBatchDetails  />} />
-        <Route path="/content-display/:id" element={<ContentDisplay  />} />
-        <Route path="/tests-list/:batchId/:subjectId" element={<TestsList  />} />
-        <Route path="/question-details/:batchId/:id" element={<QuestionDetails  />} />
-        <Route path="/direct-test-list/:id" element={<DirectTestList  />} />
-        <Route path="/question-list/:id" element={<QuestionList  />} />
-        <Route path="/book-list/:id" element={<BookList  />} />
-        <Route path="/book-content/:id" element={<BookContent  />} />
+        <Route path="/batch-details/:id" element={<ViewBatchDetails />} />
+        <Route path="/content-display/:id" element={<ContentDisplay />} />
+        <Route path="tests-list/:chapterId" element={<TestsList />} />
+        <Route
+          path="/question-details/:batchId/:id"
+          element={<QuestionDetails />}
+        />
+        <Route path="/direct-test-list/:id" element={<DirectTestList />} />
+        <Route path="/question-list/:id" element={<QuestionList />} />
+        <Route path="/book-list/:id" element={<BookList />} />
+        <Route path="/book-content/:id" element={<BookContent />} />
         <Route path="/material-title/:id" element={<TitlesDataGrid />} />
-        <Route path="/material-subject/:id" element={<SubjectsDataGrid/>} />
-        <Route path="/material-contents/:id" element={<ContentsDataGrid/>} />
-        <Route path="/student-data" element={<StudentDataGrid/>} />
-        <Route path="/test-subjects-list/:id" element={<TestSubjectsDataGrid  />} />
-        <Route path="/chapter-list/:id" element={<ChapterDataGrid  />} />
+        <Route path="/material-subject/:id" element={<SubjectsDataGrid />} />
+        <Route path="/material-contents/:id" element={<ContentsDataGrid />} />
+        <Route path="/student-data" element={<StudentDataGrid />} />
+        <Route
+          path="/test-subjects-list/:id"
+          element={<TestSubjectsDataGrid />}
+        />
+        <Route path="/chapter-list/:id" element={<ChapterDataGrid />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -5,15 +5,14 @@ import {
   TextField,
   Button,
   Typography,
-  Checkbox,
-  FormControlLabel,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useParams } from "react-router-dom";
 
-const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) => {
+const CreateTestModal = ({ open, handleClose, setUpdate }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -21,19 +20,29 @@ const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) =>
     duration: "",
     wrongAnswerDeduction: "",
     unattemptedDeduction: "",
-    isFreeTest: false,
+    numberOfTests: "",
+    file: null,
   });
-
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const token = Cookies.get("token");
+  const { chapterId } = useParams();
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "file" ? files[0] : value,
     }));
+  };
+
+  const validateFile = (file) => {
+    if (!file) return "Please upload a file.";
+    const allowedTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!allowedTypes.includes(file.type)) return "Only DOC or DOCX files are allowed.";
+    if (file.size > 5 * 1024 * 1024) return "File size must be less than 5MB.";
+    return "";
   };
 
   const handleSubmit = async (e) => {
@@ -41,15 +50,30 @@ const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) =>
     setError("");
     setIsSubmitting(true);
 
+    const fileError = validateFile(formData.file);
+    if (fileError) {
+      setError(fileError);
+      setIsSubmitting(false);
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataToSend.append(key, formData[key]);
+    });
+
     try {
       await axios.post(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/create/${batchId}/${subjectId}`,
-        formData,
+        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/create/${chapterId}`,
+        formDataToSend,
         {
-          headers: { "x-admin-token": token },
+          headers: {
+            "x-admin-token": token,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
-      setUpdate(true)
+      setUpdate(true);
       handleClose();
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
@@ -83,12 +107,7 @@ const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) =>
           <CloseIcon />
         </IconButton>
 
-        <Typography
-          variant="h5"
-          component="h2"
-          mb={2}
-          sx={{ fontWeight: "bold" }}
-        >
+        <Typography variant="h5" component="h2" mb={2} sx={{ fontWeight: "bold" }}>
           Create Test
         </Typography>
 
@@ -157,19 +176,30 @@ const CreateTestModal = ({ open, handleClose, batchId, subjectId ,setUpdate}) =>
             required
           />
 
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="isFreeTest"
-                checked={formData.isFreeTest}
-                onChange={handleChange}
-              />
-            }
-            label="Is Free Test"
+          <TextField
+            fullWidth
+            label="Number of Tests"
+            name="numberOfTests"
+            type="number"
+            value={formData.numberOfTests}
+            onChange={handleChange}
+            margin="normal"
+            required
+          />
+
+          <Typography variant="body1" mt={2} mb={1}>
+            Upload DOC/DOCX (Max size: 5MB):
+          </Typography>
+          <input
+            type="file"
+            name="file"
+            accept=".doc,.docx"
+            onChange={handleChange}
+            required
           />
 
           {error && (
-            <Typography variant="body2" color="error" mb={2}>
+            <Typography variant="body2" color="error" mt={2}>
               {error}
             </Typography>
           )}

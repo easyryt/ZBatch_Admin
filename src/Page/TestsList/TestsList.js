@@ -22,7 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import UpdateTestModal from "./UpdateTestModal";
 
 const TestsList = () => {
-  const { batchId, subjectId } = useParams();
+  const { chapterId } = useParams();
   const [tests, setTests] = useState([]);
   const [filteredTests, setFilteredTests] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,7 +54,7 @@ const TestsList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/delete/${selectedSelectedId}`,
+        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
         {
           headers: {
             "x-admin-token": token,
@@ -71,7 +71,7 @@ const TestsList = () => {
   const fetchTests = async () => {
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/getAll/${subjectId}`,
+        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
         {
           headers: { "x-admin-token": token },
         }
@@ -88,7 +88,7 @@ const TestsList = () => {
 
   useEffect(() => {
     fetchTests();
-  }, [subjectId, update]);
+  }, [chapterId, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -149,18 +149,18 @@ const TestsList = () => {
         </Box>
       ),
     },
-    {
-      field: "View",
-      headerName: "View",
-      width: 150,
-      renderCell: (params) => (
-        <Box>
-          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row.batchId}/${params.row._id}`)}>
-            <VisibilityIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
+    // {
+    //   field: "View",
+    //   headerName: "View",
+    //   width: 150,
+    //   renderCell: (params) => (
+    //     <Box>
+    //       <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row.clsId}/${params.row._id}`)}>
+    //         <VisibilityIcon />
+    //       </IconButton>
+    //     </Box>
+    //   ),
+    // },
   ];
 
   return (
@@ -230,8 +230,7 @@ const TestsList = () => {
       <CreateTestModal
         open={contentModalOpen}
         handleClose={() => setContentModalOpen(false)}
-        subjectId={subjectId}
-        batchId={batchId}
+        chapterId={chapterId}
         setUpdate={setUpdate}
       />
       <UpdateTestModal

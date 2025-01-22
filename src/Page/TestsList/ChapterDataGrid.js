@@ -5,12 +5,13 @@ import {
   Button,
   CircularProgress,
   Alert,
+  IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import UpdateChapterModal from "./UpdateChapterModal"; // Import the update modal
 import CreateChapterModal from "./CreateChapterModal ";
 
@@ -22,6 +23,7 @@ const ChapterDataGrid = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState(null); // For update modal
   const { id } = useParams(); // SubjectTest ID
+  const navigate= useNavigate()
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -79,6 +81,18 @@ const ChapterDataGrid = () => {
         >
           Update
         </Button>
+      ),
+    },
+    {
+      field: "View",
+      headerName: "View",
+      width: 150,
+      renderCell: (params) => (
+        <Box>
+          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/tests-list/${params.row._id}`)}>
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       ),
     },
   ];
