@@ -17,17 +17,16 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { CheckCircle, Cancel } from "@mui/icons-material";
+import { CheckCircle, Cancel, Delete, Edit } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import styles from "./QuestionDetails.module.css";
 import CreateQuestionModal from "./CreateQuestionModal";
 import UpdateQuestionModal from "./UpdateQuestionModal";
-import { Delete, Edit } from "@mui/icons-material";
 import UploadDocxModal from "./UploadDocxModal";
 
-const QuestionDetails = () => {
+const BatchQuestionDetails = () => {
   const [testDetails, setTestDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const { batchId, id } = useParams();
@@ -63,16 +62,14 @@ const QuestionDetails = () => {
     fetchData();
   }, [id, update]);
 
-  // Handle delete confirmation dialog open
   const handleDeleteClick = (id) => {
     setQuestionId(id);
     setOpenDeleteDialog(true);
   };
 
-  // Handle delete teacher
   const handleDelete = async () => {
     try {
-      const token = Cookies.get("token"); // Replace with your token key
+      const token = Cookies.get("token");
       await axios.delete(
         `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
         {
@@ -84,9 +81,10 @@ const QuestionDetails = () => {
       setUpdate(true);
       setOpenDeleteDialog(false);
     } catch (error) {
-      console.error("Error deleting teacher:", error);
+      console.error("Error deleting question:", error);
     }
   };
+
   const handleOpenCreateModal = () => {
     setCreateModalOpen(true);
   };
@@ -107,118 +105,106 @@ const QuestionDetails = () => {
     );
   }
 
-  if (!testDetails) {
-    return (
-      <Typography variant="body1" color="error" align="center">
-        Error loading test details.
-      </Typography>
-    );
-  }
-
-  const { name, description, questions, totalMarks, duration } = testDetails;
+  const { name, description, questions = [], totalMarks, duration } =
+    testDetails || {};
 
   return (
     <Paper className={styles.container}>
       <Typography variant="h4" className={styles.title} gutterBottom>
         Test Details
       </Typography>
-
       <Divider sx={{ marginBottom: 2 }} />
-
       <Box className={styles.section}>
         <Typography variant="h6">Test Name</Typography>
         <Typography variant="body1" color="textSecondary">
-          {name}
+          {name || "N/A"}
         </Typography>
       </Box>
-
       <Box className={styles.section}>
         <Typography variant="h6">Description</Typography>
         <Typography variant="body1" color="textSecondary">
-          {description}
+          {description || "N/A"}
         </Typography>
       </Box>
-
       <Box className={styles.section}>
         <Typography variant="h6">Total Marks</Typography>
         <Typography variant="body1" color="textSecondary">
-          {totalMarks}
+          {totalMarks || "N/A"}
         </Typography>
       </Box>
-
       <Box className={styles.section}>
         <Typography variant="h6">Duration (mins)</Typography>
         <Typography variant="body1" color="textSecondary">
-          {duration}
+          {duration || "N/A"}
         </Typography>
       </Box>
-
       <Box className={styles.section}>
         <Typography variant="h5" gutterBottom>
           Questions
         </Typography>
-        {questions.map((question, index) => (
-          <Paper
-            key={question._id}
-            className={styles.questionCard}
-            elevation={3}
-          >
-            <Box className={styles.header_box}>
-              <Typography className={styles.questionText}>
-                {index + 1}. {question.questionText}
+        {questions.length > 0 ? (
+          questions.map((question, index) => (
+            <Paper
+              key={question._id}
+              className={styles.questionCard}
+              elevation={3}
+            >
+              <Box className={styles.header_box}>
+                <Typography className={styles.questionText}>
+                  {index + 1}. {question.questionText}
+                </Typography>
+                <div>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteClick(question._id)}
+                    className={styles.editButton}
+                  >
+                    <Delete />
+                  </IconButton>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleOpenUpdateModal(question)}
+                    className={styles.editButton}
+                  >
+                    <Edit />
+                  </IconButton>
+                </div>
+              </Box>
+              <List>
+                {question.options.map((option, i) => (
+                  <ListItem key={i}>
+                    <ListItemIcon>
+                      {option.isCorrect ? (
+                        <CheckCircle color="success" />
+                      ) : (
+                        <Cancel color="error" />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${String.fromCharCode(65 + i)}: ${
+                        option.optionText
+                      }`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+              <Typography variant="body2" className={styles.difficultyLevel}>
+                Difficulty: {question.difficultyLevel}
               </Typography>
-              <div>
-                <IconButton
-                  color="error"
-                  onClick={() => handleDeleteClick(question._id)}
-                  className={styles.editButton}
-                >
-                  <Delete />
-                </IconButton>
-                <IconButton
-                  color="primary"
-                  onClick={() => handleOpenUpdateModal(question)}
-                  className={styles.editButton}
-                >
-                  <Edit />
-                </IconButton>
-              </div>
-            </Box>
-
-            <List>
-              {question.options.map((option, i) => (
-                <ListItem key={i}>
-                  <ListItemIcon>
-                    {option.isCorrect ? (
-                      <CheckCircle color="success" />
-                    ) : (
-                      <Cancel color="error" />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${String.fromCharCode(65 + i)}: ${
-                      option.optionText
-                    }`}
-                  />
-                </ListItem>
-              ))}
-            </List>
-
-            <Typography variant="body2" className={styles.difficultyLevel}>
-              Difficulty: {question.difficultyLevel}
-            </Typography>
-
-            <Typography variant="body2" className={styles.correctAnswer}>
-              Correct Answer: {question.correctAnswer}
-            </Typography>
-
-            <Typography variant="body2" className={styles.explanation}>
-              Explanation: {question.explanation}
-            </Typography>
-          </Paper>
-        ))}
+              <Typography variant="body2" className={styles.correctAnswer}>
+                Correct Answer: {question.correctAnswer}
+              </Typography>
+              <Typography variant="body2" className={styles.explanation}>
+                Explanation: {question.explanation}
+              </Typography>
+            </Paper>
+          ))
+        ) : (
+          <Typography variant="body2" color="textSecondary">
+            No questions available. Please create a new question.
+          </Typography>
+        )}
       </Box>
-
       <Button
         variant="contained"
         color="primary"
@@ -235,7 +221,6 @@ const QuestionDetails = () => {
       >
         Upload Docx
       </Button>
-
       <UpdateQuestionModal
         open={updateModalOpen}
         handleClose={() => setUpdateModalOpen(false)}
@@ -249,7 +234,6 @@ const QuestionDetails = () => {
         id={id}
         batchId={batchId}
       />
-
       <UploadDocxModal
         open={uploadDocModalOpen}
         handleClose={() => setUploadDocModalOpen(false)}
@@ -257,8 +241,6 @@ const QuestionDetails = () => {
         id={id}
         batchId={batchId}
       />
-
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
@@ -287,4 +269,4 @@ const QuestionDetails = () => {
   );
 };
 
-export default QuestionDetails;
+export default BatchQuestionDetails;

@@ -131,7 +131,7 @@ const BatchTests = () => {
       renderCell: (params) => (
         <IconButton
           color="secondary"
-          onClick={() => navigate(`/dashboard/tests-list/${params.row.batchId}/${params.row._id}`)}
+          onClick={() => navigate(`/dashboard/batch-test/${params.row.batchId}/${params.row._id}`)}
         >
           <VisibilityIcon />
         </IconButton>

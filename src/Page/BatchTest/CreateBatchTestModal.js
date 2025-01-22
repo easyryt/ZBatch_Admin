@@ -5,46 +5,39 @@ import {
   TextField,
   Button,
   Typography,
-  Checkbox,
-  FormControlLabel,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
 
-const CreateDirectTestModal = ({ open, handleClose, setUpdate }) => {
+const CreateTestModal = ({
+  open,
+  handleClose,
+  setUpdate,
+  batchId,
+  subjectId,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     totalMarks: "",
     duration: "",
     wrongAnswerDeduction: "",
-    numberOfTests: "",
+    unattemptedDeduction: "",
     isFreeTest: false,
-    price: "",
-    file: null,
   });
-
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const token = Cookies.get("token");
-  const { id } = useParams();
 
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
-    if (type === "file") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -52,19 +45,20 @@ const CreateDirectTestModal = ({ open, handleClose, setUpdate }) => {
     setError("");
     setIsSubmitting(true);
 
-    const formDataToSubmit = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataToSubmit.append(key, value);
-    });
-
     try {
       await axios.post(
-        `https://npc-classes.onrender.com/admin/directTest/create/${id}`,
-        formDataToSubmit,
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/create/${batchId}/${subjectId}`,
+        {
+          ...formData,
+          totalMarks: Number(formData.totalMarks),
+          duration: Number(formData.duration),
+          wrongAnswerDeduction: Number(formData.wrongAnswerDeduction),
+          unattemptedDeduction: Number(formData.unattemptedDeduction),
+        },
         {
           headers: {
             "x-admin-token": token,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -108,7 +102,7 @@ const CreateDirectTestModal = ({ open, handleClose, setUpdate }) => {
           mb={2}
           sx={{ fontWeight: "bold" }}
         >
-          Create Direct Test
+          Create Test
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -167,53 +161,27 @@ const CreateDirectTestModal = ({ open, handleClose, setUpdate }) => {
 
           <TextField
             fullWidth
-            label="Number of Tests"
-            name="numberOfTests"
+            label="Unattempted Deduction"
+            name="unattemptedDeduction"
             type="number"
-            value={formData.numberOfTests}
+            value={formData.unattemptedDeduction}
             onChange={handleChange}
             margin="normal"
             required
           />
 
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="isFreeTest"
-                checked={formData.isFreeTest}
-                onChange={handleChange}
-              />
-            }
-            label="Is Free Test"
-          />
-
-          {!formData.isFreeTest && (
-            <TextField
-              fullWidth
-              label="Price"
-              name="price"
-              type="number"
-              value={formData.price}
-              onChange={handleChange}
-              margin="normal"
-              required
-            />
-          )}
-
-          <Typography variant="body2" mb={1}>
-            Upload File (DOCX)
+          <Typography variant="body1" mt={2}>
+            Is this a Free Test?
           </Typography>
-          <TextField
-            fullWidth
-            type="file"
-            name="file"
-            inputProps={{ accept: ".docx" }}
+          <input
+            type="checkbox"
+            name="isFreeTest"
+            checked={formData.isFreeTest}
             onChange={handleChange}
-            margin="normal"
           />
 
           {error && (
-            <Typography variant="body2" color="error" mb={2}>
+            <Typography variant="body2" color="error" mt={2}>
               {error}
             </Typography>
           )}
@@ -234,4 +202,4 @@ const CreateDirectTestModal = ({ open, handleClose, setUpdate }) => {
   );
 };
 
-export default CreateDirectTestModal;
+export default CreateTestModal;

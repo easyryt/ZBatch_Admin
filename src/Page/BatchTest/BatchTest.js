@@ -16,13 +16,13 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import CreateTestModal from "./CreateTestModal";
+import CreateTestModal from "./CreateBatchTestModal";
 import { Delete, Edit } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import UpdateTestModal from "./UpdateTestModal";
 
-const TestsList = () => {
-  const { chapterId } = useParams();
+const BatchTest = () => {
+  const { batchId,subjectId } = useParams();
   const [tests, setTests] = useState([]);
   const [filteredTests, setFilteredTests] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,7 +54,7 @@ const TestsList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/delete/${selectedSelectedId}`,
         {
           headers: {
             "x-admin-token": token,
@@ -71,7 +71,7 @@ const TestsList = () => {
   const fetchTests = async () => {
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
+        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/getAll/${subjectId}`,
         {
           headers: { "x-admin-token": token },
         }
@@ -88,7 +88,7 @@ const TestsList = () => {
 
   useEffect(() => {
     fetchTests();
-  }, [chapterId, update]);
+  }, [batchId, update]);
 
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
@@ -155,7 +155,7 @@ const TestsList = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/question-details/${params.row._id}`)}>
+          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/batch-question-details/${batchId}/${params.row._id}`)}>
             <VisibilityIcon />
           </IconButton>
         </Box>
@@ -230,8 +230,9 @@ const TestsList = () => {
       <CreateTestModal
         open={contentModalOpen}
         handleClose={() => setContentModalOpen(false)}
-        chapterId={chapterId}
         setUpdate={setUpdate}
+        batchId={batchId}
+        subjectId={subjectId}
       />
       <UpdateTestModal
         open={updateModalOpen}
@@ -268,4 +269,4 @@ const TestsList = () => {
   );
 };
 
-export default TestsList;
+export default BatchTest;
