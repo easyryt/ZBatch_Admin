@@ -64,7 +64,7 @@ const Widget1 = () => {
         textAlign: "center",
         cursor: "pointer",
       }}
-      onClick={() => navigate("/dashboard/consumers")} // Navigate on click
+      // onClick={() => navigate("/dashboard/consumers")} // Navigate on click
     >
       {/* Consumer Image */}
       <Box

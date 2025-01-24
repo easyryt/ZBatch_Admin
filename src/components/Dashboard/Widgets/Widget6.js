@@ -89,7 +89,7 @@ const Widget6 = () => {
         textAlign: "center",
         cursor: "pointer",
       }}
-      onClick={() => navigate("/dashboard/batch-revenue")} // Add the click handler to the card
+      // onClick={() => navigate("/dashboard/batch-revenue")} // Add the click handler to the card
     >
       {/* Revenue Image */}
       <Box

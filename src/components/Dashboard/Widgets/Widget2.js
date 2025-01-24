@@ -64,7 +64,7 @@ const Widget2 = () => {
         textAlign: "center",
         cursor: "pointer",
       }}
-      onClick={() => navigate("/dashboard/order-history")} // Navigate on click
+      // onClick={() => navigate("/dashboard/order-history")} // Navigate on click
     >
       {/* Batch Image */}
       <Box
