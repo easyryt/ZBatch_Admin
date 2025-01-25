@@ -22,10 +22,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import styles from "./QuestionDetails.module.css";
-import CreateQuestionModal from "./CreateQuestionModal";
-import UpdateQuestionModal from "./UpdateQuestionModal";
 import { Delete, Edit } from "@mui/icons-material";
-import UploadDocxModal from "./UploadDocxModal";
+import UpdateTestModal from "./UpdateTestModal";
+import CreateTestModal from "./CreateTestModal";
 
 const QuestionDetails = () => {
   const [testDetails, setTestDetails] = useState(null);
@@ -236,25 +235,25 @@ const QuestionDetails = () => {
         Upload Docx
       </Button>
 
-      <UpdateQuestionModal
+      <UpdateTestModal
         open={updateModalOpen}
         handleClose={() => setUpdateModalOpen(false)}
         setUpdate={setUpdate}
         question={selectedQuestion}
       />
-      <CreateQuestionModal
+      <CreateTestModal
         open={createModalOpen}
         handleClose={() => setCreateModalOpen(false)}
         setUpdate={setUpdate}
         id={id}
       />
 
-      <UploadDocxModal
+      {/* <UploadDocxModal
         open={uploadDocModalOpen}
         handleClose={() => setUploadDocModalOpen(false)}
         setUpdate={setUpdate}
         id={id}
-      />
+      /> */}
 
       {/* Delete Confirmation Dialog */}
       <Dialog

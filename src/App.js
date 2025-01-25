@@ -10,7 +10,7 @@ import TeachersList from "./Page/TeachersList/TeachersList";
 import ViewBatchDetails from "./Page/ViewBatchDetails/ViewBatchDetails";
 import ContentDisplay from "./Page/ContentDisplay/ContentDisplay";
 import TestsList from "./Page/TestsList/TestsList";
-import QuestionDetails from "./Page/QuestionDetails.js/BatchQuestionDetails";
+import QuestionDetails from "./Page/TestsList/QuestionDetails"
 import QuestionList from "./Page/TestsList/QuestionList";
 import BookList from "./Page/BookList/BookList";
 import BookContent from "./Page/BookContent/BookContent";
