@@ -10,20 +10,21 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
+import PropTypes from "prop-types";
 
 const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: { xs: 300, sm: 400 },
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
 };
 
-const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
+const UpdateChapterModal = ({ open, onClose, chapter, update }) => {
   const [chapterName, setChapterName] = useState(chapter.chapterName || "");
   const [chapterNo, setChapterNo] = useState(chapter.chapterNo || "");
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,11 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
     const token = Cookies.get("token");
     if (!token) {
       setError("Authentication token not found. Please log in.");
+      return;
+    }
+
+    if (!chapterName || !chapterNo) {
+      setError("Please fill out all fields.");
       return;
     }
 
@@ -51,8 +57,10 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
       );
 
       if (response.data.status) {
-        onClose();
-        refreshChapters();
+        setChapterName("");
+        setChapterNo("");
+        update(true);
+        handleClose();
       } else {
         setError(response.data.message || "Failed to update chapter.");
       }
@@ -63,13 +71,24 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
     }
   };
 
+  const handleClose = () => {
+    setChapterName(chapter.chapterName || "");
+    setChapterNo(chapter.chapterNo || "");
+    setError(null);
+    onClose();
+  };
+
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
         <Typography variant="h6" gutterBottom>
           Update Chapter
         </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && (
+          <Alert severity="error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
         <TextField
           label="Chapter Name"
           value={chapterName}
@@ -86,7 +105,7 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
           margin="normal"
         />
         <Box display="flex" justifyContent="flex-end" mt={2}>
-          <Button onClick={onClose} sx={{ mr: 2 }}>
+          <Button onClick={handleClose} sx={{ mr: 2 }}>
             Cancel
           </Button>
           <Button
@@ -95,12 +114,23 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
             onClick={handleUpdate}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : "Update"}
+            {loading ? <CircularProgress size={24} /> : "Save Changes"}
           </Button>
         </Box>
       </Box>
     </Modal>
   );
+};
+
+UpdateChapterModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  chapter: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    chapterName: PropTypes.string,
+    chapterNo: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }).isRequired,
+  update: PropTypes.func.isRequired,
 };
 
 export default UpdateChapterModal;

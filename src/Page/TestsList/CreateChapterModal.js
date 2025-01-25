@@ -23,7 +23,7 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-const CreateChapterModal = ({ open, onClose, clsId, subjectTest, refreshChapters }) => {
+const CreateChapterModal = ({ open, onClose, clsId, subjectTest, update }) => {
   const [chapterName, setChapterName] = useState("");
   const [chapterNo, setChapterNo] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,8 +51,10 @@ const CreateChapterModal = ({ open, onClose, clsId, subjectTest, refreshChapters
       );
 
       if (response.data.status) {
-        onClose(); // Close modal on success
-        refreshChapters(); // Trigger data refresh
+        setChapterName(""); // Clear chapterName
+        setChapterNo(""); // Clear chapterNo
+        onClose(); // Close modal
+        update((prev) => !prev); // Trigger update
       } else {
         setError(response.data.message || "Failed to create chapter.");
       }
@@ -64,12 +66,21 @@ const CreateChapterModal = ({ open, onClose, clsId, subjectTest, refreshChapters
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="create-chapter-modal-title"
+      aria-describedby="create-chapter-modal-description"
+    >
       <Box sx={modalStyle}>
-        <Typography variant="h6" gutterBottom>
+        <Typography id="create-chapter-modal-title" variant="h6" gutterBottom>
           Create New Chapter
         </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
         <TextField
           label="Chapter Name"
           value={chapterName}

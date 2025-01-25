@@ -13,7 +13,8 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import UpdateChapterModal from "./UpdateChapterModal"; // Import the update modal
-import CreateChapterModal from "./CreateChapterModal ";
+import CreateChapterModal from "./CreateChapterModal"
+
 
 const ChapterDataGrid = () => {
   const [chapters, setChapters] = useState([]);
@@ -23,7 +24,8 @@ const ChapterDataGrid = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState(null); // For update modal
   const { id } = useParams(); // SubjectTest ID
-  const navigate= useNavigate()
+  const navigate = useNavigate();
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     const fetchChapters = async () => {
@@ -43,17 +45,18 @@ const ChapterDataGrid = () => {
             },
           }
         );
-
         setChapters(response.data.data || []);
+        setError(null); // Clear previous errors
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch chapters.");
       } finally {
         setLoading(false);
+        setUpdate(false);
       }
     };
 
     fetchChapters();
-  }, [id]);
+  }, [id, update]);
 
   const handleUpdateClick = (chapter) => {
     setSelectedChapter(chapter);
@@ -89,7 +92,10 @@ const ChapterDataGrid = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton title="Edit" onClick={()=>navigate(`/dashboard/tests-list/${params.row._id}`)}>
+          <IconButton
+            title="View Details"
+            onClick={() => navigate(`/dashboard/tests-list/${params.row._id}`)}
+          >
             <VisibilityIcon />
           </IconButton>
         </Box>
@@ -141,10 +147,7 @@ const ChapterDataGrid = () => {
         onClose={() => setOpenCreateModal(false)}
         clsId={chapters[0]?.clsId || ""}
         subjectTest={id}
-        refreshChapters={() => {
-          setLoading(true);
-          setError(null);
-        }}
+        update={setUpdate}
       />
 
       {/* Update Modal */}
@@ -153,10 +156,7 @@ const ChapterDataGrid = () => {
           open={openUpdateModal}
           onClose={() => setOpenUpdateModal(false)}
           chapter={selectedChapter}
-          refreshChapters={() => {
-            setLoading(true);
-            setError(null);
-          }}
+          update={setUpdate}
         />
       )}
     </Box>
