@@ -46,7 +46,7 @@ const CreateClassModal = ({ open, handleClose ,setUpdate }) => {
     try {
       // Use axios.post to make the API request
       const response = await axios.post(
-        "https://npc-classes.onrender.com/admin/classes/create",
+        "https://zbatch.onrender.com/admin/classes/create",
         formData,
         {
           headers: {

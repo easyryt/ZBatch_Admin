@@ -24,7 +24,7 @@ const UpdateTitleModal = ({ open, handleClose, setUpdate, selectedTitle }) => {
     setLoading(true);
     try {
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/updateTitle/${selectedTitle._id}`,
+        `https://zbatch.onrender.com/admin/materials/title/subjects/content/updateTitle/${selectedTitle._id}`,
         { title },
         {
           headers: { "x-admin-token": token },

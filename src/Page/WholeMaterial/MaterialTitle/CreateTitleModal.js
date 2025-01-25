@@ -19,7 +19,7 @@ const CreateTitleModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/createTitle/${id}`,
+        `https://zbatch.onrender.com/admin/materials/title/subjects/content/createTitle/${id}`,
         { title },
         {
           headers: { "x-admin-token": token },

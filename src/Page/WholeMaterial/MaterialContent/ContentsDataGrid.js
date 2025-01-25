@@ -45,7 +45,7 @@ const ContentsDataGrid = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllContent/${id}`,
+          `https://zbatch.onrender.com/admin/materials/title/subjects/content/getAllContent/${id}`,
           {
             headers: { "x-admin-token": token },
           }

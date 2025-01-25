@@ -28,7 +28,7 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          "https://zbatch.onrender.com/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -63,7 +63,7 @@ const CreateBookModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/book/create/${id}`,
+        `https://zbatch.onrender.com/admin/materials/book/create/${id}`,
         payload,
         {
           headers: {

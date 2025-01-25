@@ -43,7 +43,7 @@ const BatchQuestionDetails = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/get/${id}`,
+          `https://zbatch.onrender.com/admin/batches/test/subjects/tests/get/${id}`,
           {
             headers: {
               "x-admin-token": token,
@@ -71,7 +71,7 @@ const BatchQuestionDetails = () => {
     try {
       const token = Cookies.get("token");
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
         {
           headers: {
             "x-admin-token": token,

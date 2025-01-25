@@ -56,7 +56,7 @@ const UpdateClassModal = ({ open, handleClose, classData ,setUpdate }) => {
     try {
       // Use axios.put to make the API request for updating
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/classes/update/${classData._id}`, // Pass the class ID
+        `https://zbatch.onrender.com/admin/classes/update/${classData._id}`, // Pass the class ID
         formData,
         {
           headers: {

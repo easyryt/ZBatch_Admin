@@ -67,7 +67,7 @@ const UpdateContentModal = ({ open, handleClose, content }) => {
 
     try {
       await axios.put(
-        `https://npc-classes.onrender.com/admin/allClass/contents/update/${content._id}`,
+        `https://zbatch.onrender.com/admin/allClass/contents/update/${content._id}`,
         data,
         {
           headers: { "x-admin-token": token },

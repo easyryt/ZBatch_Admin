@@ -59,7 +59,7 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
 
     try {
       await axios.post(
-        `https://npc-classes.onrender.com/admin/allClass/subjects/contents/create/${batchId}/${subjectId}`,
+        `https://zbatch.onrender.com/admin/allClass/subjects/contents/create/${batchId}/${subjectId}`,
         data,
         {
           headers: { "x-admin-token": token },

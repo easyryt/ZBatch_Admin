@@ -44,7 +44,7 @@ const QuestionDetails = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/directTest/chapter/questions/get/${id}`,
+          `https://zbatch.onrender.com/admin/directTest/chapter/questions/get/${id}`,
           {
             headers: {
               "x-admin-token": token,
@@ -74,7 +74,7 @@ const QuestionDetails = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
         {
           headers: {
             "x-admin-token": token,

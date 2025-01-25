@@ -41,7 +41,7 @@ const UpdateChapterModal = ({ open, onClose, chapter, refreshChapters }) => {
 
     try {
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/directTest/subjects/chapter/update/${chapter._id}`,
+        `https://zbatch.onrender.com/admin/directTest/subjects/chapter/update/${chapter._id}`,
         { chapterName, chapterNo },
         {
           headers: {

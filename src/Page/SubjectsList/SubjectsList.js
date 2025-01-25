@@ -45,7 +45,7 @@ const SubjectsList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          "https://zbatch.onrender.com/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -89,7 +89,7 @@ const SubjectsList = () => {
 
     try {
       const response = await axios.delete(
-        `https://npc-classes.onrender.com/admin/subjects/delete/${deleteSubjectId}`,
+        `https://zbatch.onrender.com/admin/subjects/delete/${deleteSubjectId}`,
         {
           headers: {
             "x-admin-token": token,

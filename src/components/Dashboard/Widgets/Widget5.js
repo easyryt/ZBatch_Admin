@@ -16,7 +16,7 @@ const Widget5 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/dashBoard/totalDirectTestRevenue",
+          "https://zbatch.onrender.com/admin/dashBoard/totalDirectTestRevenue",
           {
             headers: {
               "Content-Type": "application/json",

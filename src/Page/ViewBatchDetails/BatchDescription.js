@@ -46,7 +46,7 @@ const BatchDescription = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/batches/discription/get/${id}`,
+          `https://zbatch.onrender.com/admin/batches/discription/get/${id}`,
           {
             headers: {
               "x-admin-token": token,
@@ -96,7 +96,7 @@ const BatchDescription = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/batches/discription/delete/${batchDetails._id}`,
+        `https://zbatch.onrender.com/admin/batches/discription/delete/${batchDetails._id}`,
         {
           headers: {
             "x-admin-token": token,

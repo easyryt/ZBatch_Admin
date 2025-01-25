@@ -39,7 +39,7 @@ const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.get(
-        "https://npc-classes.onrender.com/admin/subjects/getAll",
+        "https://zbatch.onrender.com/admin/subjects/getAll",
         {
           headers: {
             "x-admin-token": token,
@@ -70,7 +70,7 @@ const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/directTest/subjects/create/${id}`,
+        `https://zbatch.onrender.com/admin/directTest/subjects/create/${id}`,
         {
           subject: selectedSubjectId,
         },

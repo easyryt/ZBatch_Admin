@@ -36,7 +36,7 @@ const ChapterDataGrid = () => {
 
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/directTest/subjects/chapter/getAll/${id}`,
+          `https://zbatch.onrender.com/admin/directTest/subjects/chapter/getAll/${id}`,
           {
             headers: {
               "x-admin-token": token,

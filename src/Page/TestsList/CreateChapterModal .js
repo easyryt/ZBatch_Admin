@@ -41,7 +41,7 @@ const CreateChapterModal = ({ open, onClose, clsId, subjectTest, refreshChapters
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/directTest/subjects/chapter/create/${clsId}/${subjectTest}`,
+        `https://zbatch.onrender.com/admin/directTest/subjects/chapter/create/${clsId}/${subjectTest}`,
         { chapterName, chapterNo },
         {
           headers: {

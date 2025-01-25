@@ -27,7 +27,7 @@ const CreateSubjectTitleModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/title/subjects/content/createSub/${id}`,
+        `https://zbatch.onrender.com/admin/materials/title/subjects/content/createSub/${id}`,
         { subject, medium },
         {
           headers: { "x-admin-token": token },

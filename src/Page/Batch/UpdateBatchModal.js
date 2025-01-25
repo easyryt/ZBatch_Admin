@@ -101,7 +101,7 @@ const UpdateBatchModal = ({ open, handleClose, batch ,setUpdate }) => {
 
     try {
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/course/batches/update/${batch._id}`,
+        `https://zbatch.onrender.com/admin/course/batches/update/${batch._id}`,
         formData,
         {
           headers: {

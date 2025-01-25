@@ -31,7 +31,7 @@ const TestSubjectsDataGrid = () => {
       const token = Cookies.get("token"); // Fetch token from cookies
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/directTest/subjects/getAll/${id}`,
+          `https://zbatch.onrender.com/admin/directTest/subjects/getAll/${id}`,
           {
             headers: {
               "x-admin-token": token,

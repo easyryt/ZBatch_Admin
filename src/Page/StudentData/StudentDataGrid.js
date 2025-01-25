@@ -51,7 +51,7 @@ const StudentDataGrid = () => {
       };
 
       const response = await axios.get(
-        "https://npc-classes.onrender.com/admin/student/analytics/allStudentData",
+        "https://zbatch.onrender.com/admin/student/analytics/allStudentData",
         {
           headers: { "x-admin-token": token },
           params,
@@ -93,7 +93,7 @@ const StudentDataGrid = () => {
     setModalOpen(true);
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/student/analytics/purchased/batch/student/${row._id}`,
+        `https://zbatch.onrender.com/admin/student/analytics/purchased/batch/student/${row._id}`,
         {
           headers: { "x-admin-token": Cookies.get("token") },
         }

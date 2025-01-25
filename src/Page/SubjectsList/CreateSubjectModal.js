@@ -53,7 +53,7 @@ const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        "https://npc-classes.onrender.com/admin/subjects/create", // API endpoint
+        "https://zbatch.onrender.com/admin/subjects/create", // API endpoint
         formData,
         {
             headers: {

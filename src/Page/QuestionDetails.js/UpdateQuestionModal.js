@@ -88,7 +88,7 @@ const UpdateQuestionModal = ({ open, handleClose, setUpdate, question }) => {
       };
 
       await axios.put(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/update/${question._id}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/update/${question._id}`,
         payload,
         {
           headers: {

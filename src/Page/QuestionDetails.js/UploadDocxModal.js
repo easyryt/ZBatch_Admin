@@ -54,7 +54,7 @@ const UploadDocxModal = ({ open, handleClose, setUpdate, id, batchId }) => {
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/createBulk/${batchId}/${id}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/createBulk/${batchId}/${id}`,
         formData,
         {
           headers: {

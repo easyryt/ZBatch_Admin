@@ -32,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true); // Start loading
     try {
-      const response = await axios.post('https://npc-classes.onrender.com/admin/auth/logIn', {
+      const response = await axios.post('https://zbatch.onrender.com/admin/auth/logIn', {
         email: username,
         password,
       });

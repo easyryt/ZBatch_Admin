@@ -52,7 +52,7 @@ const UpdateContentModal = ({ open, onClose, selectedContent, setUpdate }) => {
 
     try {
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/materials/book/content/update/${id}/${selectedContent.id} `,
+        `https://zbatch.onrender.com/admin/materials/book/content/update/${id}/${selectedContent.id} `,
         formData,
         {
           headers: {

@@ -36,7 +36,7 @@ const AddContentModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        `https://npc-classes.onrender.com/admin/materials/book/content/create/${id}`,
+        `https://zbatch.onrender.com/admin/materials/book/content/create/${id}`,
         formData,
         {
           headers: {

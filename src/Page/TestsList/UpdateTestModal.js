@@ -59,7 +59,7 @@ const UpdateTestModal = ({ open, handleClose, selectedTest, setUpdate }) => {
 
     try {
       await axios.put(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/update/${selectedTest._id}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/update/${selectedTest._id}`,
         formData,
         {
           headers: {

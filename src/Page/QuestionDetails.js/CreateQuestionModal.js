@@ -76,7 +76,7 @@ const CreateQuestionModal = ({ open, handleClose, setUpdate, id, batchId }) => {
       };
 
       await axios.post(
-        `https://npc-classes.onrender.com/admin/batches/test/subjects/tests/ques/create/${batchId}/${id}`,
+        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/create/${batchId}/${id}`,
         payload,
         {
           headers: {

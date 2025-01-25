@@ -38,7 +38,7 @@ const BatchClasses = () => {
   const fetchSubjects = async () => {
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/batches/allClass/subjects/getAll/${id}`,
+        `https://zbatch.onrender.com/admin/batches/allClass/subjects/getAll/${id}`,
         {
           headers: { "x-admin-token": token },
         }
@@ -53,7 +53,7 @@ const BatchClasses = () => {
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "https://npc-classes.onrender.com/admin/subjects/getAll",
+        "https://zbatch.onrender.com/admin/subjects/getAll",
         {
           headers: { "x-admin-token": token },
         }
@@ -79,7 +79,7 @@ const BatchClasses = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `https://npc-classes.onrender.com/admin/batches/allClass/subjects/create/${id}`,
+        `https://zbatch.onrender.com/admin/batches/allClass/subjects/create/${id}`,
         formData,
         {
           headers: { "x-admin-token": token },

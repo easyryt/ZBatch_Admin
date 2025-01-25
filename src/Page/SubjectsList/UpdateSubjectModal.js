@@ -55,7 +55,7 @@ const UpdateSubjectModal = ({ open, onClose, setUpdate, subject }) => {
 
     try {
       const response = await axios.put(
-        `https://npc-classes.onrender.com/admin/subjects/update/${subject._id}`,
+        `https://zbatch.onrender.com/admin/subjects/update/${subject._id}`,
         formDataToSend,
         {
           headers: {

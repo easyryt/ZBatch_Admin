@@ -64,7 +64,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
 
     try {
       await axios.post(
-        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/create/${chapterId}`,
+        `https://zbatch.onrender.com/admin/directTest/chapter/questions/create/${chapterId}`,
         formDataToSend,
         {
           headers: {

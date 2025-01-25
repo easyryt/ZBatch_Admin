@@ -73,7 +73,7 @@ const BatchList = () => {
 
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/course/batches/getAll/${id}`,
+        `https://zbatch.onrender.com/admin/course/batches/getAll/${id}`,
         {
           headers: {
             "x-admin-token": token,
@@ -143,7 +143,7 @@ const BatchList = () => {
 
     try {
       const response = await axios.delete(
-        `https://npc-classes.onrender.com/admin/course/batches/delete/${batchToDelete}`,
+        `https://zbatch.onrender.com/admin/course/batches/delete/${batchToDelete}`,
         {
           headers: {
             "x-admin-token": token,

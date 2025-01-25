@@ -92,7 +92,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
     const fetchSubjects = async () => {
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          "https://zbatch.onrender.com/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -109,7 +109,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
     const fetchTeachers = async () => {
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/teachers/getAll",
+          "https://zbatch.onrender.com/admin/teachers/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -126,7 +126,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
   }, []);
   const handleSubmit = async () => {
     const token = Cookies.get("token");
-    const url = `https://npc-classes.onrender.com/admin/batches/discription/update/${batchDetails._id}`;
+    const url = `https://zbatch.onrender.com/admin/batches/discription/update/${batchDetails._id}`;
 
     try {
       // Create a new FormData object

@@ -45,7 +45,7 @@ const TitlesDataGrid = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
+          `https://zbatch.onrender.com/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
           {
             headers: { "x-admin-token": token },
           }

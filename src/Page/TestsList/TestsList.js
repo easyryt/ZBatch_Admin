@@ -54,7 +54,7 @@ const TestsList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
+        `https://zbatch.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
         {
           headers: {
             "x-admin-token": token,
@@ -71,7 +71,7 @@ const TestsList = () => {
   const fetchTests = async () => {
     try {
       const response = await axios.get(
-        `https://npc-classes.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
+        `https://zbatch.onrender.com/admin/directTest/chapter/questions/getAll?chapter=${chapterId}`,
         {
           headers: { "x-admin-token": token },
         }

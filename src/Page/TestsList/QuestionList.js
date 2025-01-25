@@ -27,7 +27,7 @@ const QuestionList = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/directTest/get/${id}`,
+          `https://zbatch.onrender.com/admin/directTest/get/${id}`,
           {
             headers: {
               "x-admin-token": token,

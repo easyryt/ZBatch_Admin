@@ -23,7 +23,7 @@ const Widget6 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/dashBoard/totalDirectTestRevenue",
+          "https://zbatch.onrender.com/admin/dashBoard/totalDirectTestRevenue",
           {
             headers: {
               "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const Widget6 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/dashBoard/totalBatchRevenue",
+          "https://zbatch.onrender.com/admin/dashBoard/totalBatchRevenue",
           {
             headers: {
               "Content-Type": "application/json",

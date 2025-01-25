@@ -58,7 +58,7 @@ const ClassList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/classes/getAll",
+          "https://zbatch.onrender.com/admin/classes/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -136,7 +136,7 @@ const ClassList = () => {
       try {
         // Send DELETE request to the API
         const response = await axios.delete(
-          `https://npc-classes.onrender.com/admin/classes/delete/${id}`,
+          `https://zbatch.onrender.com/admin/classes/delete/${id}`,
           {
             headers: {
               "x-admin-token": token,

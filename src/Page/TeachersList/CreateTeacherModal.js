@@ -32,7 +32,7 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://npc-classes.onrender.com/admin/subjects/getAll",
+          "https://zbatch.onrender.com/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -87,7 +87,7 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        "https://npc-classes.onrender.com/admin/teachers/create", // API endpoint
+        "https://zbatch.onrender.com/admin/teachers/create", // API endpoint
         formData,
         {
           headers: {

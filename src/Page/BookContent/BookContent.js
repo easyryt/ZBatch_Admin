@@ -34,7 +34,7 @@ const BookContent = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          `https://npc-classes.onrender.com/admin/materials/book/content/getAll/${id}`,
+          `https://zbatch.onrender.com/admin/materials/book/content/getAll/${id}`,
           {
             headers: {
               "x-admin-token": token,

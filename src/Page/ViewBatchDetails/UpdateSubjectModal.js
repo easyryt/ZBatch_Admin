@@ -42,7 +42,7 @@ const UpdateSubjectModal = ({
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "https://npc-classes.onrender.com/admin/subjects/getAll",
+        "https://zbatch.onrender.com/admin/subjects/getAll",
         {
           headers: {
             "x-admin-token": token,
@@ -65,7 +65,7 @@ const UpdateSubjectModal = ({
     e.preventDefault();
     try {
       await axios.put(
-        `https://npc-classes.onrender.com/admin/batches/allClass/subjects/update/${selectedSubject._id}`,
+        `https://zbatch.onrender.com/admin/batches/allClass/subjects/update/${selectedSubject._id}`,
         formData,
         {
           headers: {
