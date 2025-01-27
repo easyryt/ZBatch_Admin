@@ -87,7 +87,7 @@ const TestSubjectsDataGrid = () => {
       headerName: "View Chapters",
       width: 200,
       renderCell: (params) => (
-        <IconButton onClick={()=>navigate(`/dashboard/chapter-list/${params.row._id}`)}>
+        <IconButton onClick={()=>navigate(`/dashboard/chapter-list/${params.row.clsId}/${params.row._id}`)}>
           <VisibilityIcon />
         </IconButton>
       ),

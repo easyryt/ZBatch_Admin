@@ -125,34 +125,6 @@ const QuestionDetails = () => {
       <Divider sx={{ marginBottom: 2 }} />
 
       <Box className={styles.section}>
-        <Typography variant="h6">Test Name</Typography>
-        <Typography variant="body1" color="textSecondary">
-          {name}
-        </Typography>
-      </Box>
-
-      <Box className={styles.section}>
-        <Typography variant="h6">Description</Typography>
-        <Typography variant="body1" color="textSecondary">
-          {description}
-        </Typography>
-      </Box>
-
-      <Box className={styles.section}>
-        <Typography variant="h6">Total Marks</Typography>
-        <Typography variant="body1" color="textSecondary">
-          {totalMarks}
-        </Typography>
-      </Box>
-
-      <Box className={styles.section}>
-        <Typography variant="h6">Duration (mins)</Typography>
-        <Typography variant="body1" color="textSecondary">
-          {duration}
-        </Typography>
-      </Box>
-
-      <Box className={styles.section}>
         <Typography variant="h5" gutterBottom>
           Questions
         </Typography>
@@ -226,14 +198,14 @@ const QuestionDetails = () => {
       >
         Add New Question
       </Button>
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => setUploadDocModalOpen(true)}
         className={styles.addButton}
       >
         Upload Docx
-      </Button>
+      </Button> */}
 
       <UpdateTestModal
         open={updateModalOpen}

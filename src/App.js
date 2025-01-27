@@ -10,7 +10,7 @@ import TeachersList from "./Page/TeachersList/TeachersList";
 import ViewBatchDetails from "./Page/ViewBatchDetails/ViewBatchDetails";
 import ContentDisplay from "./Page/ContentDisplay/ContentDisplay";
 import TestsList from "./Page/TestsList/TestsList";
-import QuestionDetails from "./Page/TestsList/QuestionDetails"
+import QuestionDetails from "./Page/TestsList/QuestionDetails";
 import QuestionList from "./Page/TestsList/QuestionList";
 import BookList from "./Page/BookList/BookList";
 import BookContent from "./Page/BookContent/BookContent";
@@ -47,9 +47,9 @@ const App = () => {
             element={<BatchTest />}
           />
           <Route
-          path="batch-question-details/:batchId/:id"
-          element={<BatchQuestionDetails />}
-        />
+            path="batch-question-details/:batchId/:id"
+            element={<BatchQuestionDetails />}
+          />
           <Route path="question-details/:id" element={<QuestionDetails />} />
           <Route path="question-list/:id" element={<QuestionList />} />
           <Route path="book-list/:id" element={<BookList />} />
@@ -62,7 +62,7 @@ const App = () => {
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}
           />
-          <Route path="chapter-list/:id" element={<ChapterDataGrid />} />
+          <Route path="chapter-list/:clsId/:id" element={<ChapterDataGrid />} />
         </Route>
         <Route path="/class-list" element={<ClassList />} />
         <Route path="/batch-list/:id" element={<BatchList />} />
@@ -88,7 +88,7 @@ const App = () => {
           element={<BatchQuestionDetails />}
         />
         <Route path="/batch-test/:batchId/:subjectId" element={<BatchTest />} />
-        <Route path="/chapter-list/:id" element={<ChapterDataGrid />} />
+        <Route path="/chapter-list/:clsId/:id" element={<ChapterDataGrid />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>

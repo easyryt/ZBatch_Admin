@@ -29,6 +29,7 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
     register,
     reset,
     formState: { errors },
+    getValues,
   } = useForm({
     defaultValues: {
       title: "",
@@ -108,6 +109,13 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
     setThumbnailPreview(null);
   };
 
+  const validateDateGap = () => {
+    const { startDate, endDate } = getValues("duration");
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return (end - start) / (1000 * 60 * 60 * 24) >= 1 || "End date must be at least 1 day after the start date";
+  };
+
   return (
     <>
       <Modal open={open} onClose={handleClose} aria-labelledby="create-batch-modal">
@@ -169,21 +177,42 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <TextField
-                {...register("duration.startDate")}
-                label="Start Date"
-                type="date"
-                fullWidth
-                InputLabelProps={{ shrink: true }}
+              <Controller
+                name="duration.startDate"
+                control={control}
+                rules={{ required: "Start Date is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Start Date"
+                    type="date"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.duration?.startDate}
+                    helperText={errors.duration?.startDate?.message}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                {...register("duration.endDate")}
-                label="End Date"
-                type="date"
-                fullWidth
-                InputLabelProps={{ shrink: true }}
+              <Controller
+                name="duration.endDate"
+                control={control}
+                rules={{
+                  required: "End Date is required",
+                  validate: validateDateGap,
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="End Date"
+                    type="date"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.duration?.endDate}
+                    helperText={errors.duration?.endDate?.message}
+                  />
+                )}
               />
             </Grid>
           </Grid>

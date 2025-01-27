@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useParams } from "react-router-dom";
 
 const modalStyle = {
   position: "absolute",
@@ -23,11 +24,12 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-const CreateChapterModal = ({ open, onClose, clsId, subjectTest, update }) => {
+const CreateChapterModal = ({ open, onClose,  update }) => {
   const [chapterName, setChapterName] = useState("");
   const [chapterNo, setChapterNo] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { clsId,id } = useParams(); // SubjectTest ID
 
   const handleSubmit = async () => {
     const token = Cookies.get("token");
@@ -41,7 +43,7 @@ const CreateChapterModal = ({ open, onClose, clsId, subjectTest, update }) => {
 
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/directTest/subjects/chapter/create/${clsId}/${subjectTest}`,
+        `https://zbatch.onrender.com/admin/directTest/subjects/chapter/create/${clsId}/${id}`,
         { chapterName, chapterNo },
         {
           headers: {
