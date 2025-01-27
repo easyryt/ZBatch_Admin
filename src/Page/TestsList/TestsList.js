@@ -132,13 +132,13 @@ const TestsList = () => {
       width: 150,
       renderCell: (params) => (
         <Box>
-          <IconButton
+          {/* <IconButton
             color="primary"
             title="Edit"
             onClick={() => handleEditClick(params.row)}
           >
             <Edit />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             color="error"
             title="Delete"
