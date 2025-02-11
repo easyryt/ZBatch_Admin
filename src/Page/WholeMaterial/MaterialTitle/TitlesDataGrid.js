@@ -25,7 +25,7 @@ const TitlesDataGrid = () => {
   const token = Cookies.get("token");
   const [modalOpen, setModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [update, setUpdate] = useState(false); // Trigger updates
+  const [update, setUpdate] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState(null);
   const navigate = useNavigate();
 
@@ -83,6 +83,21 @@ const TitlesDataGrid = () => {
       headerName: "Title",
       flex: 1,
       minWidth: 200,
+    },
+    {
+      field: "isFree",
+      headerName: "Free",
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) => (params.row.isFree ? "Yes" : "No"),
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) =>
+        params.row.isFree ? "Free" : `₹${params.row.price || ""}`,
     },
     {
       field: "createdAt",
