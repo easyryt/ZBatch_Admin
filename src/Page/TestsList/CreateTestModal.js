@@ -20,6 +20,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
     duration: "",
     wrongAnswerDeduction: "",
     unattemptedDeduction: "",
+    testCount: "",
     numberOfTests: "",
     file: null,
   });
@@ -50,6 +51,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
     setError("");
     setIsSubmitting(true);
 
+    // Validations
     const fileError = validateFile(formData.file);
     if (fileError) {
       setError(fileError);
@@ -57,10 +59,53 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
       return;
     }
 
+    const numericValidations = [
+      { field: "testCount", name: "Test count", min: 1, integer: true },
+      { field: "numberOfTests", name: "Number of tests", min: 1, integer: true },
+      { field: "totalMarks", name: "Total marks", min: 0 },
+      { field: "duration", name: "Duration", min: 1 },
+      { field: "wrongAnswerDeduction", name: "Wrong answer deduction", min: 0, optional: true },
+      { field: "unattemptedDeduction", name: "Unattempted deduction", min: 0, optional: true },
+    ];
+
+    for (const validation of numericValidations) {
+      const value = formData[validation.field];
+      if (!validation.optional && value === "") {
+        setError(`${validation.name} is required`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      const numValue = Number(value);
+      if (isNaN(numValue)) {
+        setError(`${validation.name} must be a valid number`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (validation.integer && !Number.isInteger(numValue)) {
+        setError(`${validation.name} must be an integer`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (numValue < validation.min) {
+        setError(`${validation.name} must be at least ${validation.min}`);
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("totalMarks", formData.totalMarks);
+    formDataToSend.append("duration", formData.duration);
+    formDataToSend.append("wrongAnswerDeduction", formData.wrongAnswerDeduction || 0);
+    formDataToSend.append("unattemptedDeduction", formData.unattemptedDeduction || 0);
+    formDataToSend.append("testCount", formData.testCount);
+    formDataToSend.append("numberOfTests", formData.numberOfTests);
+    formDataToSend.append("file", formData.file);
 
     try {
       await axios.post(
@@ -129,7 +174,6 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             value={formData.description}
             onChange={handleChange}
             margin="normal"
-            required
           />
 
           <TextField
@@ -141,6 +185,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ min: 0 }}
           />
 
           <TextField
@@ -152,6 +197,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ min: 1 }}
           />
 
           <TextField
@@ -162,7 +208,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             value={formData.wrongAnswerDeduction}
             onChange={handleChange}
             margin="normal"
-            required
+            inputProps={{ min: 0 }}
           />
 
           <TextField
@@ -173,7 +219,19 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             value={formData.unattemptedDeduction}
             onChange={handleChange}
             margin="normal"
+            inputProps={{ min: 0 }}
+          />
+
+          <TextField
+            fullWidth
+            label="Test Count"
+            name="testCount"
+            type="number"
+            value={formData.testCount}
+            onChange={handleChange}
+            margin="normal"
             required
+            inputProps={{ min: 1, step: 1 }}
           />
 
           <TextField
@@ -185,6 +243,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
             onChange={handleChange}
             margin="normal"
             required
+            inputProps={{ min: 1, step: 1 }}
           />
 
           <Typography variant="body1" mt={2} mb={1}>
