@@ -15,6 +15,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import PersonIcon from '@mui/icons-material/Person';
 import Face3Icon from '@mui/icons-material/Face3';
 import ApartmentIcon from '@mui/icons-material/Apartment';
+import Person4Icon from '@mui/icons-material/Person4';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -46,6 +47,11 @@ const Sidebar = () => {
       text: "Tuition Dashboard",
       icon: <ApartmentIcon />,
       path: "/dashboard/tuition-dashboard",
+    },
+    {
+      text: "Toppers List",
+      icon: <Person4Icon />,
+      path: "/dashboard/toppers-list",
     },
   ];
 
