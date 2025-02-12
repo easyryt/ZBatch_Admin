@@ -16,30 +16,27 @@ import {
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Edit, Delete } from "@mui/icons-material";
-import styles from "./SubjectsList.module.css"; // Module CSS for styling
+import styles from "./SubjectsList.module.css";
 import CreateSubjectModal from "./CreateSubjectModal";
 import UpdateSubjectModal from "./UpdateSubjectModal";
 
 const SubjectsList = () => {
   const [subjects, setSubjects] = useState([]);
-  const [filteredSubjects, setFilteredSubjects] = useState([]); // For filtering
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // For the search bar
-  const [openModal, setOpenModal] = useState(false); // Modal state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
-
-  const handleEdit = (subject) => {
-    setSelectedSubject(subject);
-    setOpenUpdateModal(true);
-  };
-
-  // State for delete confirmation dialog
+  const [page, setPage] = useState(0);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteSubjectId, setDeleteSubjectId] = useState(null);
+    const [paginationModel, setPaginationModel] = useState({
+      page: 0,
+      pageSize: 5,
+    });
 
-  // Fetch subjects from the API
   useEffect(() => {
     const fetchSubjects = async () => {
       const token = Cookies.get("token");
@@ -54,7 +51,8 @@ const SubjectsList = () => {
         );
         if (response.data.status) {
           setSubjects(response.data.data);
-          setFilteredSubjects(response.data.data); // Initialize filteredSubjects
+          setFilteredSubjects(response.data.data);
+          setPage(0);
         }
       } catch (error) {
         console.error("Error fetching subjects:", error);
@@ -67,7 +65,6 @@ const SubjectsList = () => {
     fetchSubjects();
   }, [update]);
 
-  // Handle search input
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
@@ -75,18 +72,16 @@ const SubjectsList = () => {
       subject.subjectName.toLowerCase().includes(value)
     );
     setFilteredSubjects(filtered);
+    setPage(0); // Reset to first page when searching
   };
 
-  // Open delete confirmation dialog
   const openDeleteConfirmation = (id) => {
     setDeleteSubjectId(id);
     setOpenDeleteDialog(true);
   };
 
-  // Handle Delete Subject
   const handleDelete = async () => {
     const token = Cookies.get("token");
-
     try {
       const response = await axios.delete(
         `https://zbatch.onrender.com/admin/subjects/delete/${deleteSubjectId}`,
@@ -97,16 +92,20 @@ const SubjectsList = () => {
         }
       );
       if (response.data.status) {
-        setUpdate(true); // Trigger a re-fetch of data
+        setUpdate(true);
       }
     } catch (error) {
       console.error("Error deleting subject:", error);
     } finally {
-      setOpenDeleteDialog(false); // Close the dialog
+      setOpenDeleteDialog(false);
     }
   };
 
-  // Columns definition for DataGrid
+  const handleEdit = (subject) => {
+    setSelectedSubject(subject);
+    setOpenUpdateModal(true);
+  };
+
   const columns = [
     {
       field: "icon",
@@ -124,11 +123,6 @@ const SubjectsList = () => {
       field: "subjectName",
       headerName: "Subject Name",
       width: 200,
-    },
-    {
-      field: "_id",
-      headerName: "ID",
-      width: 250,
     },
     {
       field: "actions",
@@ -163,10 +157,7 @@ const SubjectsList = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
-          setSelectedSubject(null); // Reset selected subject
-          setOpenModal(true);
-        }}
+        onClick={() => setOpenModal(true)}
       >
         Create Subject
       </Button>
@@ -192,13 +183,16 @@ const SubjectsList = () => {
               id: subject._id,
             }))}
             columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            autoHeight
+            page={page}
+            rowCount={filteredSubjects.length}
+            disableSelectionOnClick
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[5, 10, 20]}
           />
         </Box>
       )}
-      {/* Create Subject Modal */}
+
       <CreateSubjectModal
         open={openModal}
         onClose={() => setOpenModal(false)}
@@ -207,10 +201,10 @@ const SubjectsList = () => {
       <UpdateSubjectModal
         open={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
-        setUpdate={setUpdate} // Use setUpdate instead of triggerUpdate
-        subject={selectedSubject} // Pass the selected subject for editing
+        setUpdate={setUpdate}
+        subject={selectedSubject}
       />
-      {/* Delete Confirmation Dialog */}
+
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}

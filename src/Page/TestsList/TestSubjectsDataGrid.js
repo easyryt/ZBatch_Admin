@@ -10,37 +10,39 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import styles from "./TestSubjectsDataGrid.module.css"; // Module CSS for styling
-import CreateTestSubjectModal from "./CreateTestSubjectModal";
 import { useNavigate, useParams } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import CreateTestSubjectModal from "./CreateTestSubjectModal";
+import styles from "./TestSubjectsDataGrid.module.css";
 
 const TestSubjectsDataGrid = () => {
   const [subjects, setSubjects] = useState([]);
-  const [filteredSubjects, setFilteredSubjects] = useState([]); // For filtering
+  const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // For the search bar
-  const [openModal, setOpenModal] = useState(false); // Modal state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState(false);
-  const { id } = useParams(); // Fetch id from URL
-  const navigate = useNavigate()
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 5,
+  });
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Fetch subjects from the API
   useEffect(() => {
     const fetchSubjects = async () => {
-      const token = Cookies.get("token"); // Fetch token from cookies
+      const token = Cookies.get("token");
       try {
         const response = await axios.get(
           `https://zbatch.onrender.com/admin/directTest/subjects/getAll/${id}`,
           {
-            headers: {
-              "x-admin-token": token,
-            },
+            headers: { "x-admin-token": token },
           }
         );
+        
         if (response.data.status) {
           setSubjects(response.data.data);
-          setFilteredSubjects(response.data.data); // Initialize filteredSubjects
+          setFilteredSubjects(response.data.data);
         }
       } catch (error) {
         console.error("Error fetching subjects:", error);
@@ -51,9 +53,8 @@ const TestSubjectsDataGrid = () => {
     };
 
     fetchSubjects();
-  }, [id, update]); // Depend on id and update
+  }, [id, update]);
 
-  // Handle search input
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
@@ -63,7 +64,6 @@ const TestSubjectsDataGrid = () => {
     setFilteredSubjects(filtered);
   };
 
-  // Columns definition for DataGrid
   const columns = [
     {
       field: "subjectName",
@@ -83,11 +83,15 @@ const TestSubjectsDataGrid = () => {
     { field: "createdAt", headerName: "Created At", width: 200 },
     { field: "updatedAt", headerName: "Updated At", width: 200 },
     {
-      field: "View Chapters",
+      field: "actions",
       headerName: "View Chapters",
-      width: 200,
+      width: 150,
       renderCell: (params) => (
-        <IconButton onClick={()=>navigate(`/dashboard/chapter-list/${params.row.clsId}/${params.row._id}`)}>
+        <IconButton
+          onClick={() =>
+            navigate(`/dashboard/chapter-list/${id}/${params.row._id}`)
+          }
+        >
           <VisibilityIcon />
         </IconButton>
       ),
@@ -99,48 +103,49 @@ const TestSubjectsDataGrid = () => {
       <Typography variant="h4" className={styles.title} gutterBottom>
         Subjects List
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setOpenModal(true);
-        }}
-      >
-        Create Subject
-      </Button>
-      <TextField
-        label="Search Subjects"
-        variant="outlined"
-        fullWidth
-        className={styles.searchBar}
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Type to search by subject name..."
-        margin="normal"
-      />
+      
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpenModal(true)}
+        >
+          Create Subject
+        </Button>
+        
+        <TextField
+          label="Search Subjects"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Type to search by subject name..."
+        />
+      </Box>
+
       {loading ? (
         <Box className={styles.loaderContainer}>
           <CircularProgress />
         </Box>
       ) : (
-        <Box className={styles.dataGridContainer}>
+        <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
-            rows={filteredSubjects.map((subject) => ({
-              ...subject,
-              id: subject._id,
-            }))}
+            rows={filteredSubjects}
             columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            autoHeight
+            getRowId={(row) => row._id}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[5, 10, 20]}
+            loading={loading}
           />
         </Box>
       )}
-      {/* Create Subject Modal */}
+
       <CreateTestSubjectModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         setUpdate={setUpdate}
+        classId={id}
       />
     </Box>
   );

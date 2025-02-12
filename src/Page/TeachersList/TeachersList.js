@@ -28,6 +28,10 @@ const TeachersList = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false); // State for Create modal
   const [openUpdateModal, setOpenUpdateModal] = useState(false); // State for Update modal
   const [update, setUpdate] = useState(false);
+      const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: 5,
+      });
 
   // Fetch teachers data from API
   const fetchTeachers = async () => {
@@ -199,8 +203,9 @@ const TeachersList = () => {
           createdAt: teacher.createdAt,
         }))}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[5, 10, 20]}
         disableSelectionOnClick
       />
       {/* Delete Confirmation Dialog */}
