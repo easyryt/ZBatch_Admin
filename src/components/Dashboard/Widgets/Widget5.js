@@ -16,7 +16,7 @@ const Widget5 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "https://zbatch.onrender.com/admin/dashBoard/totalDirectTestRevenue",
+          "https://zbatch.onrender.com/admin/dashBoard/totalMaterialRevenue",
           {
             headers: {
               "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const Widget5 = () => {
           variant="h6"
           sx={{
             color: "#333", // Dark text color for contrast
-            fontSize: { xs: "1.2rem", sm: "1.4rem" },
+            fontSize: { xs: "1.2rem", sm: "1.2rem" },
             fontWeight: 500,
             lineHeight: 1.6,
             display: "flex",
@@ -129,7 +129,7 @@ const Widget5 = () => {
           <span style={{ color: "#1A237E", fontWeight: "bold" }}>
             ₹{batchRevenue !== null ? batchRevenue.toLocaleString() : 0}
           </span>{" "}
-          Tests Revenue
+           Material Revenue
         </Typography>
       )}
     </Paper>

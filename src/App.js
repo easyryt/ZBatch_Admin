@@ -22,6 +22,7 @@ import TestSubjectsDataGrid from "./Page/TestsList/TestSubjectsDataGrid";
 import ChapterDataGrid from "./Page/TestsList/ChapterDataGrid";
 import BatchTest from "./Page/BatchTest/BatchTest";
 import BatchQuestionDetails from "./Page/QuestionDetails.js/BatchQuestionDetails";
+import TuitionDashboard from "./Page/TuitionDashboard/TuitionDashboard";
 
 const App = () => {
   return (
@@ -58,6 +59,7 @@ const App = () => {
           <Route path="material-subject/:id" element={<SubjectsDataGrid />} />
           <Route path="material-contents/:id" element={<ContentsDataGrid />} />
           <Route path="student-data" element={<StudentDataGrid />} />
+          <Route path="tuition-dashboard" element={<TuitionDashboard  />} />
           <Route
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}
@@ -89,6 +91,7 @@ const App = () => {
         />
         <Route path="/batch-test/:batchId/:subjectId" element={<BatchTest />} />
         <Route path="/chapter-list/:clsId/:id" element={<ChapterDataGrid />} />
+        <Route path="/tuition-dashboard" element={<TuitionDashboard  />} />
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
       </Routes>
