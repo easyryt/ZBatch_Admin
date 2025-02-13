@@ -112,7 +112,7 @@ const TuitionDashboard = () => {
     return students.filter((student) => {
       const fullName = student.basicInfo.fullName?.toLowerCase() || "";
       const studentClass = student.basicInfo.class?.toString().toLowerCase() || "";
-      const subjects = student.academicDetails.subjectsEnrolled || [];
+      const subjects = student?.academicDetails?.subjectsEnrolled || [];
 
       return (
         fullName.includes(searchLower) ||
@@ -197,18 +197,18 @@ const TeacherTable = ({ data }) => (
       <TableBody>
         {data.map((teacher, index) => (
           <TableRow key={index}>
-            <TableCell>{teacher.basicInfo.fullName}</TableCell>
-            <TableCell>{teacher.basicInfo.qualification}</TableCell>
-            <TableCell>{teacher.basicInfo.subjectExpertise}</TableCell>
+            <TableCell>{teacher?.basicInfo?.fullName}</TableCell>
+            <TableCell>{teacher?.basicInfo?.qualification}</TableCell>
+            <TableCell>{teacher?.basicInfo?.subjectExpertise}</TableCell>
             <TableCell>
-              {teacher.professionalDetails.yearsOfExperience} years
+              {teacher?.professionalDetails?.yearsOfExperience} years
             </TableCell>
             <TableCell>
-              {teacher.professionalDetails.availableTimeSlots}
+              {teacher?.professionalDetails?.availableTimeSlots}
             </TableCell>
-            <TableCell>₹{teacher.feeSalaryDetails.expectedSalary}</TableCell>
+            <TableCell>₹{teacher?.feeSalaryDetails?.expectedSalary}</TableCell>
             <TableCell>
-              <Link href={teacher.resume.url} target="_blank" rel="noopener">
+              <Link href={teacher?.resume?.url} target="_blank" rel="noopener">
                 View Resume
               </Link>
             </TableCell>
@@ -236,23 +236,23 @@ const StudentTable = ({ data }) => (
       <TableBody>
         {data.map((student, index) => (
           <TableRow key={index}>
-            <TableCell>{student.basicInfo.fullName}</TableCell>
-            <TableCell>{student.basicInfo.class}</TableCell>
+            <TableCell>{student?.basicInfo?.fullName}</TableCell>
+            <TableCell>{student?.basicInfo?.class}</TableCell>
             <TableCell>
               <Grid container direction="column">
-                <span>Primary: {student.basicInfo.contactNumber}</span>
-                {student.basicInfo.alternateNumber && (
-                  <span>Alt: {student.basicInfo.alternateNumber}</span>
+                <span>Primary: {student?.basicInfo?.contactNumber}</span>
+                {student?.basicInfo?.alternateNumber && (
+                  <span>Alt: {student?.basicInfo?.alternateNumber}</span>
                 )}
               </Grid>
             </TableCell>
             <TableCell>
-              {student.academicDetails.subjectsEnrolled.join(", ")}
+              {student?.academicDetails?.subjectsEnrolled.split(',').join(', ')}
             </TableCell>
             <TableCell>
-              {student.academicDetails.preferredModeOfStudy}
+              {student?.academicDetails?.preferredModeOfStudy}
             </TableCell>
-            <TableCell>{student.academicDetails.timingPreference}</TableCell>
+            <TableCell>{student?.academicDetails?.timingPreference}</TableCell>
           </TableRow>
         ))}
       </TableBody>
