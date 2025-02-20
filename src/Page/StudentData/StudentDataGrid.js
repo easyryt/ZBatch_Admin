@@ -34,7 +34,7 @@ const StudentDataGrid = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.get(
-        "https://zbatch.onrender.com/admin/student/analytics/allStudentData",
+        "http://www.backend.zbatch.in/admin/student/analytics/allStudentData",
         { 
           headers: { "x-admin-token": token }, 
           params: { 
@@ -82,7 +82,7 @@ const StudentDataGrid = () => {
     setModalOpen(true);
     try {
       const response = await axios.get(
-        `https://zbatch.onrender.com/admin/student/analytics/purchased/batch/student/${row._id}`,
+        `http://www.backend.zbatch.in/admin/student/analytics/purchased/batch/student/${row._id}`,
         { headers: { "x-admin-token": Cookies.get("token") } }
       );
       setBatchData(response.data);

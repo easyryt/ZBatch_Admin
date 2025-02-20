@@ -43,7 +43,7 @@ const CreateChapterModal = ({ open, onClose,  update }) => {
 
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/directTest/subjects/chapter/create/${clsId}/${id}`,
+        `http://www.backend.zbatch.in/admin/directTest/subjects/chapter/create/${clsId}/${id}`,
         { chapterName, chapterNo },
         {
           headers: {

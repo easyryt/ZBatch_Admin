@@ -76,7 +76,7 @@ const CreateBatchModal = ({ open, handleClose, classId }) => {
 
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/course/batches/create/${classId}`,
+        `http://www.backend.zbatch.in/admin/course/batches/create/${classId}`,
         formData,
         {
           headers: {

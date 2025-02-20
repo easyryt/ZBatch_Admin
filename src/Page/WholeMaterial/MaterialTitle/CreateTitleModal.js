@@ -26,7 +26,7 @@ const CreateTitleModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/materials/title/subjects/content/createTitle/${id}`,
+        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/createTitle/${id}`,
         { title, isFree, price: isFree ? 0 : Number(price) },
         {
           headers: { "x-admin-token": token },

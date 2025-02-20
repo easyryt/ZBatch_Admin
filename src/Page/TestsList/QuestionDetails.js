@@ -43,7 +43,7 @@ const QuestionDetails = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          `https://zbatch.onrender.com/admin/directTest/chapter/questions/get/${id}`,
+          `http://www.backend.zbatch.in/admin/directTest/chapter/questions/get/${id}`,
           {
             headers: {
               "x-admin-token": token,
@@ -73,7 +73,7 @@ const QuestionDetails = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
+        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/ques/delete/${questionId}`,
         {
           headers: {
             "x-admin-token": token,

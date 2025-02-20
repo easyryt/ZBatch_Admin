@@ -32,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true); // Start loading
     try {
-      const response = await axios.post('https://zbatch.onrender.com/admin/auth/logIn', {
+      const response = await axios.post('http://www.backend.zbatch.in/admin/auth/logIn', {
         email: username,
         password,
       });

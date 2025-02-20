@@ -35,7 +35,7 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://zbatch.onrender.com/admin/subjects/getAll",
+          "http://www.backend.zbatch.in/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -92,7 +92,7 @@ const UpdateTeacherModal = ({ open, onClose, setUpdate, teacher }) => {
 
     try {
       const response = await axios.put(
-        `https://zbatch.onrender.com/admin/teachers/update/${teacher.id}`,
+        `http://www.backend.zbatch.in/admin/teachers/update/${teacher.id}`,
         formDataToSend,
         {
           headers: {

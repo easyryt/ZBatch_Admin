@@ -59,7 +59,7 @@ const ContentModal = ({ open, handleClose, batchId, subjectId }) => {
 
     try {
       await axios.post(
-        `https://zbatch.onrender.com/admin/allClass/subjects/contents/create/${batchId}/${subjectId}`,
+        `http://www.backend.zbatch.in/admin/allClass/subjects/contents/create/${batchId}/${subjectId}`,
         data,
         {
           headers: { "x-admin-token": token },

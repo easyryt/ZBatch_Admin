@@ -35,7 +35,7 @@ const UpdateBookModal = ({ open, handleClose, book, setUpdate }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://zbatch.onrender.com/admin/subjects/getAll",
+          "http://www.backend.zbatch.in/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -65,7 +65,7 @@ const UpdateBookModal = ({ open, handleClose, book, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.put(
-        `https://zbatch.onrender.com/admin/materials/book/update/${book?._id}`,
+        `http://www.backend.zbatch.in/admin/materials/book/update/${book?._id}`,
         payload,
         {
           headers: {

@@ -37,7 +37,7 @@ const UpdateSubjectModal = ({ open, handleClose, setUpdate, selectedSubject }) =
     setLoading(true);
     try {
       const response = await axios.put(
-        `https://zbatch.onrender.com/admin/materials/title/subjects/content/updateSub/${selectedSubject._id}`,
+        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/updateSub/${selectedSubject._id}`,
         { subject, medium },
         {
           headers: { "x-admin-token": token },

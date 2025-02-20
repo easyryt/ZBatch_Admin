@@ -66,7 +66,7 @@ const ContentDisplay = () => {
     const fetchContent = async () => {
       try {
         const response = await axios.get(
-          `https://zbatch.onrender.com/admin/allClass/subjects/contents/getAll/${id}`,
+          `http://www.backend.zbatch.in/admin/allClass/subjects/contents/getAll/${id}`,
           {
             headers: {
               "x-admin-token": token,
@@ -134,7 +134,7 @@ const ContentDisplay = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://zbatch.onrender.com/admin/allClass/subjects/contents/delete/${selectedContentId}`,
+        `http://www.backend.zbatch.in/admin/allClass/subjects/contents/delete/${selectedContentId}`,
         {
           headers: {
             "x-admin-token": token,

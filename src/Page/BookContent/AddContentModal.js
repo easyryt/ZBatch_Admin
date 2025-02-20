@@ -36,7 +36,7 @@ const AddContentModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/materials/book/content/create/${id}`,
+        `http://www.backend.zbatch.in/admin/materials/book/content/create/${id}`,
         formData,
         {
           headers: {

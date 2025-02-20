@@ -34,7 +34,7 @@ const TestSubjectsDataGrid = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          `https://zbatch.onrender.com/admin/directTest/subjects/getAll/${id}`,
+          `http://www.backend.zbatch.in/admin/directTest/subjects/getAll/${id}`,
           {
             headers: { "x-admin-token": token },
           }

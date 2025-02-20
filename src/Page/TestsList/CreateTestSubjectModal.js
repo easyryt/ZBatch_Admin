@@ -39,7 +39,7 @@ const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.get(
-        "https://zbatch.onrender.com/admin/subjects/getAll",
+        "http://www.backend.zbatch.in/admin/subjects/getAll",
         {
           headers: {
             "x-admin-token": token,
@@ -70,7 +70,7 @@ const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        `https://zbatch.onrender.com/admin/directTest/subjects/create/${id}`,
+        `http://www.backend.zbatch.in/admin/directTest/subjects/create/${id}`,
         {
           subject: selectedSubjectId,
         },

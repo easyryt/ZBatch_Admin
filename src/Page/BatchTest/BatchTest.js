@@ -54,7 +54,7 @@ const BatchTest = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/delete/${selectedSelectedId}`,
+        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/delete/${selectedSelectedId}`,
         {
           headers: {
             "x-admin-token": token,
@@ -71,7 +71,7 @@ const BatchTest = () => {
   const fetchTests = async () => {
     try {
       const response = await axios.get(
-        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/getAll/${subjectId}`,
+        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/getAll/${subjectId}`,
         {
           headers: { "x-admin-token": token },
         }

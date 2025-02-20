@@ -67,7 +67,7 @@ const UpdateContentModal = ({ open, handleClose, content }) => {
 
     try {
       await axios.put(
-        `https://zbatch.onrender.com/admin/allClass/contents/update/${content._id}`,
+        `http://www.backend.zbatch.in/admin/allClass/contents/update/${content._id}`,
         data,
         {
           headers: { "x-admin-token": token },

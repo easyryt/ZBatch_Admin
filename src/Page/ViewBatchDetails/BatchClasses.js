@@ -38,7 +38,7 @@ const BatchClasses = () => {
   const fetchSubjects = async () => {
     try {
       const response = await axios.get(
-        `https://zbatch.onrender.com/admin/batches/allClass/subjects/getAll/${id}`,
+        `http://www.backend.zbatch.in/admin/batches/allClass/subjects/getAll/${id}`,
         {
           headers: { "x-admin-token": token },
         }
@@ -53,7 +53,7 @@ const BatchClasses = () => {
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "https://zbatch.onrender.com/admin/subjects/getAll",
+        "http://www.backend.zbatch.in/admin/subjects/getAll",
         {
           headers: { "x-admin-token": token },
         }
@@ -79,7 +79,7 @@ const BatchClasses = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `https://zbatch.onrender.com/admin/batches/allClass/subjects/create/${id}`,
+        `http://www.backend.zbatch.in/admin/batches/allClass/subjects/create/${id}`,
         formData,
         {
           headers: { "x-admin-token": token },

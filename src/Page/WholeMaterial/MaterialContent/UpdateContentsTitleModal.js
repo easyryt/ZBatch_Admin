@@ -50,7 +50,7 @@ const UpdateContentTitleModal = ({
     try {
       // Make the API request to update the content
       const response = await axios.put(
-        `https://zbatch.onrender.com/admin/materials/title/subjects/content/updateContent/${id}/${selectedContent?._id}`,
+        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/updateContent/${id}/${selectedContent?._id}`,
         formData,
         {
           headers: {

@@ -45,7 +45,7 @@ const ContentsDataGrid = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://zbatch.onrender.com/admin/materials/title/subjects/content/getAllContent/${id}`,
+          `http://www.backend.zbatch.in/admin/materials/title/subjects/content/getAllContent/${id}`,
           {
             headers: { "x-admin-token": token },
           }

@@ -47,7 +47,7 @@ const CreateTestModal = ({
 
     try {
       await axios.post(
-        `https://zbatch.onrender.com/admin/batches/test/subjects/tests/create/${batchId}/${subjectId}`,
+        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/create/${batchId}/${subjectId}`,
         {
           ...formData,
           totalMarks: Number(formData.totalMarks),

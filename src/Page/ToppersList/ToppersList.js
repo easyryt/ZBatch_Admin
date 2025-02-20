@@ -44,7 +44,7 @@ const ToppersList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://zbatch.onrender.com/admin/ourToppers/getAll",
+          "http://www.backend.zbatch.in/admin/ourToppers/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -85,7 +85,7 @@ const ToppersList = () => {
 
     try {
       const response = await axios.post(
-        "https://zbatch.onrender.com/admin/ourToppers/create",
+        "http://www.backend.zbatch.in/admin/ourToppers/create",
         formData,
         {
           headers: {
@@ -120,7 +120,7 @@ const ToppersList = () => {
 
     try {
       const response = await axios.put(
-        `https://zbatch.onrender.com/admin/ourToppers/update/${selectedTopper._id}`,
+        `http://www.backend.zbatch.in/admin/ourToppers/update/${selectedTopper._id}`,
         formData,
         {
           headers: {
@@ -150,7 +150,7 @@ const ToppersList = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.delete(
-        `https://zbatch.onrender.com/admin/ourToppers/delete/${deleteTopperId}`,
+        `http://www.backend.zbatch.in/admin/ourToppers/delete/${deleteTopperId}`,
         {
           headers: {
             "x-admin-token": token,
