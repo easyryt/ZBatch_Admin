@@ -101,7 +101,7 @@ const UpdateBatchModal = ({ open, handleClose, batch ,setUpdate }) => {
 
     try {
       const response = await axios.put(
-        `http://www.backend.zbatch.in/admin/course/batches/update/${batch._id}`,
+        `https://www.backend.zbatch.in/admin/course/batches/update/${batch._id}`,
         formData,
         {
           headers: {

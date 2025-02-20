@@ -46,7 +46,7 @@ const CreateClassModal = ({ open, handleClose ,setUpdate }) => {
     try {
       // Use axios.post to make the API request
       const response = await axios.post(
-        "http://www.backend.zbatch.in/admin/classes/create",
+        "https://www.backend.zbatch.in/admin/classes/create",
         formData,
         {
           headers: {

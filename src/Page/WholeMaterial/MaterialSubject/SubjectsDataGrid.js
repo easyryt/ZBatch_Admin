@@ -49,7 +49,7 @@ const SubjectsDataGrid = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/getAllSub/${id}?medium=${selectedMedium}`,
+        `https://www.backend.zbatch.in/admin/materials/title/subjects/content/getAllSub/${id}?medium=${selectedMedium}`,
         {
           headers: { "x-admin-token": token },
         }

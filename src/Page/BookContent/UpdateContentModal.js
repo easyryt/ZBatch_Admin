@@ -52,7 +52,7 @@ const UpdateContentModal = ({ open, onClose, selectedContent, setUpdate }) => {
 
     try {
       const response = await axios.put(
-        `http://www.backend.zbatch.in/admin/materials/book/content/update/${id}/${selectedContent.id} `,
+        `https://www.backend.zbatch.in/admin/materials/book/content/update/${id}/${selectedContent.id} `,
         formData,
         {
           headers: {

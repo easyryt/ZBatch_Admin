@@ -47,7 +47,7 @@ const UpdateChapterModal = ({ open, onClose, chapter, update }) => {
 
     try {
       const response = await axios.put(
-        `http://www.backend.zbatch.in/admin/directTest/subjects/chapter/update/${chapter._id}`,
+        `https://www.backend.zbatch.in/admin/directTest/subjects/chapter/update/${chapter._id}`,
         { chapterName, chapterNo },
         {
           headers: {

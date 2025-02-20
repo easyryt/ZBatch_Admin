@@ -50,7 +50,7 @@ const BookList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          `http://www.backend.zbatch.in/admin/materials/book/getAll?clsId=${id}&materialType=${materialType}`,
+          `https://www.backend.zbatch.in/admin/materials/book/getAll?clsId=${id}&materialType=${materialType}`,
           {
             headers: {
               "x-admin-token": token,

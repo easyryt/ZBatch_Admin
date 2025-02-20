@@ -22,7 +22,7 @@ const Widget2 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/dashBoard/totalBatch",
+          "https://www.backend.zbatch.in/admin/dashBoard/totalBatch",
           {
             headers: {
               "Content-Type": "application/json",

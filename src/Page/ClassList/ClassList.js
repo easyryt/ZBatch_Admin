@@ -58,7 +58,7 @@ const ClassList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/classes/getAll",
+          "https://www.backend.zbatch.in/admin/classes/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -136,7 +136,7 @@ const ClassList = () => {
       try {
         // Send DELETE request to the API
         const response = await axios.delete(
-          `http://www.backend.zbatch.in/admin/classes/delete/${id}`,
+          `https://www.backend.zbatch.in/admin/classes/delete/${id}`,
           {
             headers: {
               "x-admin-token": token,

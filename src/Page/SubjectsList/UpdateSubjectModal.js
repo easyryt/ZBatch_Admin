@@ -55,7 +55,7 @@ const UpdateSubjectModal = ({ open, onClose, setUpdate, subject }) => {
 
     try {
       const response = await axios.put(
-        `http://www.backend.zbatch.in/admin/subjects/update/${subject._id}`,
+        `https://www.backend.zbatch.in/admin/subjects/update/${subject._id}`,
         formDataToSend,
         {
           headers: {

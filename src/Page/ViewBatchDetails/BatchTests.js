@@ -37,7 +37,7 @@ const BatchTests = () => {
   const fetchSubjects = async () => {
     try {
       const response = await axios.get(
-        `http://www.backend.zbatch.in/admin/batches/test/subjects/getAll/${id}`,
+        `https://www.backend.zbatch.in/admin/batches/test/subjects/getAll/${id}`,
         {
           headers: { "x-admin-token": token },
         }
@@ -52,7 +52,7 @@ const BatchTests = () => {
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "http://www.backend.zbatch.in/admin/subjects/getAll",
+        "https://www.backend.zbatch.in/admin/subjects/getAll",
         {
           headers: { "x-admin-token": token },
         }
@@ -78,7 +78,7 @@ const BatchTests = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `http://www.backend.zbatch.in/admin/batches/test/subjects/create/${id}`,
+        `https://www.backend.zbatch.in/admin/batches/test/subjects/create/${id}`,
         formData,
         {
           headers: { "x-admin-token": token },

@@ -16,7 +16,7 @@ const Widget5 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/dashBoard/totalMaterialRevenue",
+          "https://www.backend.zbatch.in/admin/dashBoard/totalMaterialRevenue",
           {
             headers: {
               "Content-Type": "application/json",

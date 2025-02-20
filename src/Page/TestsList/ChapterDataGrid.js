@@ -38,7 +38,7 @@ const ChapterDataGrid = () => {
 
       try {
         const response = await axios.get(
-          `http://www.backend.zbatch.in/admin/directTest/subjects/chapter/getAll/${id}`,
+          `https://www.backend.zbatch.in/admin/directTest/subjects/chapter/getAll/${id}`,
           {
             headers: {
               "x-admin-token": token,

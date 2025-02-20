@@ -76,7 +76,7 @@ const CreateQuestionModal = ({ open, handleClose, setUpdate, id, batchId }) => {
       };
 
       await axios.post(
-        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/ques/create/${batchId}/${id}`,
+        `https://www.backend.zbatch.in/admin/batches/test/subjects/tests/ques/create/${batchId}/${id}`,
         payload,
         {
           headers: {

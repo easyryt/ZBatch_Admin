@@ -42,7 +42,7 @@ const UpdateSubjectModal = ({
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "http://www.backend.zbatch.in/admin/subjects/getAll",
+        "https://www.backend.zbatch.in/admin/subjects/getAll",
         {
           headers: {
             "x-admin-token": token,
@@ -65,7 +65,7 @@ const UpdateSubjectModal = ({
     e.preventDefault();
     try {
       await axios.put(
-        `http://www.backend.zbatch.in/admin/batches/allClass/subjects/update/${selectedSubject._id}`,
+        `https://www.backend.zbatch.in/admin/batches/allClass/subjects/update/${selectedSubject._id}`,
         formData,
         {
           headers: {

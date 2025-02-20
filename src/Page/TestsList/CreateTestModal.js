@@ -109,7 +109,7 @@ const CreateTestModal = ({ open, handleClose, setUpdate }) => {
 
     try {
       await axios.post(
-        `http://www.backend.zbatch.in/admin/directTest/chapter/questions/create/${chapterId}`,
+        `https://www.backend.zbatch.in/admin/directTest/chapter/questions/create/${chapterId}`,
         formDataToSend,
         {
           headers: {

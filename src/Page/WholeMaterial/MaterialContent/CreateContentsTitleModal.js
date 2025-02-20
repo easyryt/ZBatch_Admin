@@ -36,7 +36,7 @@ const CreateContentsTitleModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/createContent/${id}`,
+        `https://www.backend.zbatch.in/admin/materials/title/subjects/content/createContent/${id}`,
         formData,
         {
           headers: {

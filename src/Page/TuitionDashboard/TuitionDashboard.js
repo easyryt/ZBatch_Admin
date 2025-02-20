@@ -62,11 +62,11 @@ const TuitionDashboard = () => {
       try {
         const [teachersRes, studentsRes] = await Promise.all([
           axios.get(
-            "http://www.backend.zbatch.in/admin/tutionForm/teacher/getAll",
+            "https://www.backend.zbatch.in/admin/tutionForm/teacher/getAll",
             { headers: { "x-admin-token": token } }
           ),
           axios.get(
-            "http://www.backend.zbatch.in/admin/tutionForm/student/getAll",
+            "https://www.backend.zbatch.in/admin/tutionForm/student/getAll",
             { headers: { "x-admin-token": token } }
           ),
         ]);

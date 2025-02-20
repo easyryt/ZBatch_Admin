@@ -45,7 +45,7 @@ const TitlesDataGrid = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://www.backend.zbatch.in/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
+          `https://www.backend.zbatch.in/admin/materials/title/subjects/content/getAllTitle?clsId=${id}`,
           {
             headers: { "x-admin-token": token },
           }

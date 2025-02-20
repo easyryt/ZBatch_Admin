@@ -23,7 +23,7 @@ const Widget6 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/dashBoard/totalDirectTestRevenue",
+          "https://www.backend.zbatch.in/admin/dashBoard/totalDirectTestRevenue",
           {
             headers: {
               "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const Widget6 = () => {
       try {
         const token = Cookies.get("token"); // Get the token from cookies
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/dashBoard/totalBatchRevenue",
+          "https://www.backend.zbatch.in/admin/dashBoard/totalBatchRevenue",
           {
             headers: {
               "Content-Type": "application/json",

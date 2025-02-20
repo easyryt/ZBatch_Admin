@@ -88,7 +88,7 @@ const UpdateQuestionModal = ({ open, handleClose, setUpdate, question }) => {
       };
 
       await axios.put(
-        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/ques/update/${question._id}`,
+        `https://www.backend.zbatch.in/admin/batches/test/subjects/tests/ques/update/${question._id}`,
         payload,
         {
           headers: {

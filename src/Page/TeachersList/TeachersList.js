@@ -38,7 +38,7 @@ const TeachersList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       const response = await axios.get(
-        "http://www.backend.zbatch.in/admin/teachers/getAll",
+        "https://www.backend.zbatch.in/admin/teachers/getAll",
         {
           headers: {
             "x-admin-token": token,
@@ -79,7 +79,7 @@ const TeachersList = () => {
     try {
       const token = Cookies.get("token"); // Replace with your token key
       await axios.delete(
-        `http://www.backend.zbatch.in/admin/teachers/delete/${selectedTeacher}`,
+        `https://www.backend.zbatch.in/admin/teachers/delete/${selectedTeacher}`,
         {
           headers: {
             "x-admin-token": token,

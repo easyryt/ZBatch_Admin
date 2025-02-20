@@ -53,7 +53,7 @@ const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        "http://www.backend.zbatch.in/admin/subjects/create", // API endpoint
+        "https://www.backend.zbatch.in/admin/subjects/create", // API endpoint
         formData,
         {
             headers: {

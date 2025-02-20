@@ -42,7 +42,7 @@ const SubjectsList = () => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/subjects/getAll",
+          "https://www.backend.zbatch.in/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -84,7 +84,7 @@ const SubjectsList = () => {
     const token = Cookies.get("token");
     try {
       const response = await axios.delete(
-        `http://www.backend.zbatch.in/admin/subjects/delete/${deleteSubjectId}`,
+        `https://www.backend.zbatch.in/admin/subjects/delete/${deleteSubjectId}`,
         {
           headers: {
             "x-admin-token": token,

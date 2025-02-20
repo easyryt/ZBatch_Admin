@@ -47,7 +47,7 @@ const UpdateTitleModal = ({ open, handleClose, setUpdate, selectedTitle }) => {
       };
 
       const response = await axios.put(
-        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/updateTitle/${selectedTitle._id}`,
+        `https://www.backend.zbatch.in/admin/materials/title/subjects/content/updateTitle/${selectedTitle._id}`,
         payload,
         {
           headers: { "x-admin-token": token },

@@ -27,7 +27,7 @@ const CreateSubjectTitleModal = ({ open, handleClose, setUpdate }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://www.backend.zbatch.in/admin/materials/title/subjects/content/createSub/${id}`,
+        `https://www.backend.zbatch.in/admin/materials/title/subjects/content/createSub/${id}`,
         { subject, medium },
         {
           headers: { "x-admin-token": token },

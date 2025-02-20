@@ -32,7 +32,7 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/subjects/getAll",
+          "https://www.backend.zbatch.in/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -87,7 +87,7 @@ const CreateTeacherModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.post(
-        "http://www.backend.zbatch.in/admin/teachers/create", // API endpoint
+        "https://www.backend.zbatch.in/admin/teachers/create", // API endpoint
         formData,
         {
           headers: {

@@ -73,7 +73,7 @@ const BatchList = () => {
 
     try {
       const response = await axios.get(
-        `http://www.backend.zbatch.in/admin/course/batches/getAll/${id}`,
+        `https://www.backend.zbatch.in/admin/course/batches/getAll/${id}`,
         {
           headers: {
             "x-admin-token": token,
@@ -143,7 +143,7 @@ const BatchList = () => {
 
     try {
       const response = await axios.delete(
-        `http://www.backend.zbatch.in/admin/course/batches/delete/${batchToDelete}`,
+        `https://www.backend.zbatch.in/admin/course/batches/delete/${batchToDelete}`,
         {
           headers: {
             "x-admin-token": token,

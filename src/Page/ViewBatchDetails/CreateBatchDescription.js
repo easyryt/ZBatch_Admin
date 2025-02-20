@@ -65,7 +65,7 @@ const CreateBatchDescription = ({ open, handleClose, id }) => {
     const fetchSubjects = async () => {
       try {
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/subjects/getAll",
+          "https://www.backend.zbatch.in/admin/subjects/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -82,7 +82,7 @@ const CreateBatchDescription = ({ open, handleClose, id }) => {
     const fetchTeachers = async () => {
       try {
         const response = await axios.get(
-          "http://www.backend.zbatch.in/admin/teachers/getAll",
+          "https://www.backend.zbatch.in/admin/teachers/getAll",
           {
             headers: {
               "x-admin-token": token,
@@ -100,7 +100,7 @@ const CreateBatchDescription = ({ open, handleClose, id }) => {
 
   const handleSubmit = async () => {
     const token = Cookies.get("token");
-    const url = `http://www.backend.zbatch.in/admin/batches/discription/create/${id}`;
+    const url = `https://www.backend.zbatch.in/admin/batches/discription/create/${id}`;
 
     try {
       // Create a new FormData object

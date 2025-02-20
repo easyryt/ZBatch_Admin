@@ -27,7 +27,7 @@ const QuestionList = () => {
       try {
         const token = Cookies.get("token");
         const response = await axios.get(
-          `http://www.backend.zbatch.in/admin/directTest/get/${id}`,
+          `https://www.backend.zbatch.in/admin/directTest/get/${id}`,
           {
             headers: {
               "x-admin-token": token,

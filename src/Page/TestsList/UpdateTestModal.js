@@ -59,7 +59,7 @@ const UpdateTestModal = ({ open, handleClose, selectedTest, setUpdate }) => {
 
     try {
       await axios.put(
-        `http://www.backend.zbatch.in/admin/batches/test/subjects/tests/update/${selectedTest._id}`,
+        `https://www.backend.zbatch.in/admin/batches/test/subjects/tests/update/${selectedTest._id}`,
         formData,
         {
           headers: {
