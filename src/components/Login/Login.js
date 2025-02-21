@@ -17,7 +17,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
-import logo from "../Images/logo512.png";
+import logo from "../Images/logo.png";
 import Cookies from 'js-cookie';
 import axios from 'axios';
 

@@ -18,7 +18,7 @@ import { Outlet, useNavigate } from "react-router-dom"; // Outlet renders child 
 import Cookies from "js-cookie";
 
 // Add your logo image here
-import logo from "../Images/logo512.png"; // Adjust the path
+import logo from "../Images/logo.png"; // Adjust the path
 import Breadcrumbs from "./Breadcrumbs";
 
 const drawerWidth = 260;
