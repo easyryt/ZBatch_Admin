@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ContentModal from "./ContentModal";
 import UpdateSubjectModal from "./UpdateSubjectModal";
 
-const BatchClasses = () => {
+const BatchClasses = ({clsId}) => {
   const [formData, setFormData] = useState({ subject: "", totalChapter: "" });
   const [subjects, setSubjects] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
@@ -53,7 +53,7 @@ const BatchClasses = () => {
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "https://www.backend.zbatch.in/admin/subjects/getAll",
+        `https://www.backend.zbatch.in/admin/subjects/getAll?clsId=${clsId}`,
         {
           headers: { "x-admin-token": token },
         }

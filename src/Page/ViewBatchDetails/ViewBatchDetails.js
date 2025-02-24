@@ -12,7 +12,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import CreateBatchDescription from "./CreateBatchDescription";
 
 function ViewBatchDetails() {
-  const { id } = useParams();
+  const {clsId, id } = useParams();
   const [value, setValue] = useState(0); // State to manage the selected tab
 
   // Handle tab change
@@ -50,9 +50,9 @@ function ViewBatchDetails() {
 
       {/* Tab content based on the selected tab */}
       <Box sx={{ padding: 3 }}>
-        {value === 0 && <BatchDescription id={id} />}
-        {value === 1 && <BatchClasses id={id} />}
-        {value === 2 && <BatchTests id={id} />}
+        {value === 0 && <BatchDescription clsId={clsId} id={id} />}
+        {value === 1 && <BatchClasses clsId={clsId} id={id} />}
+        {value === 2 && <BatchTests clsId={clsId} id={id} />}
       </Box>
     </Box>
   );

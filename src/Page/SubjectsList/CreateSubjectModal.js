@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Backdrop,
@@ -8,64 +8,107 @@ import {
   TextField,
   Button,
   IconButton,
+  Select,
+  MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import Cookies from "js-cookie"; // For managing cookies
-import axios from "axios"; // For API requests
-import styles from "./CreateSubjectModal.module.css"; // Optional module CSS for styling
+import Cookies from "js-cookie";
+import axios from "axios";
+import styles from "./CreateSubjectModal.module.css";
 
 const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
   const [newSubject, setNewSubject] = useState({ subjectName: "" });
-  const [iconFile, setIconFile] = useState(null); // For storing the selected file
-  const [loading, setLoading] = useState(false); // For button loading state
-  const [error, setError] = useState(null); // For displaying errors (optional)
+  const [classes, setClasses] = useState([]);
+  const [selectedClassId, setSelectedClassId] = useState("");
+  const [iconFile, setIconFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [classesLoading, setClassesLoading] = useState(false);
+  const [classesError, setClassesError] = useState(null);
 
-  // Handle input change for text fields
+  // Fetch classes when modal opens
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const token = Cookies.get("token");
+      try {
+        setClassesLoading(true);
+        const response = await axios.get(
+          "https://www.backend.zbatch.in/admin/classes/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data.status) {
+          setClasses(response.data.data);
+          setClassesError(null);
+        } else {
+          setClassesError(response.data.message || "Failed to fetch classes");
+        }
+      } catch (err) {
+        setClassesError(
+          err.response?.data?.message || "Failed to fetch classes"
+        );
+      } finally {
+        setClassesLoading(false);
+      }
+    };
+
+    if (open) {
+      fetchClasses();
+      setSelectedClassId(""); // Reset selection when modal reopens
+    }
+  }, [open]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewSubject({ ...newSubject, [name]: value });
   };
 
-  // Handle file selection
   const handleFileChange = (e) => {
     setIconFile(e.target.files[0]);
   };
 
-  // Handle Create Subject
   const handleCreateSubject = async () => {
-    const token = Cookies.get("token"); // Retrieve token from cookies
+    const token = Cookies.get("token");
+
     if (!token) {
       alert("Authentication token not found. Please log in.");
       return;
     }
 
-    if (!newSubject.subjectName || !iconFile) {
-      alert("Please fill in all fields and upload an icon.");
+    if (!selectedClassId || !newSubject.subjectName || !iconFile) {
+      alert("Please select a class, fill in all fields, and upload an icon.");
       return;
     }
 
     const formData = new FormData();
     formData.append("subjectName", newSubject.subjectName);
-    formData.append("icon", iconFile); // Add the selected file to FormData
+    formData.append("icon", iconFile);
 
     setLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
 
     try {
       const response = await axios.post(
-        "https://www.backend.zbatch.in/admin/subjects/create", // API endpoint
+        `https://www.backend.zbatch.in/admin/subjects/create/${selectedClassId}`,
         formData,
         {
-            headers: {
-              "x-admin-token": token,
-              "Content-Type": "multipart/form-data", // Set content type for file upload
-            },
-          }
+          headers: {
+            "x-admin-token": token,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      setNewSubject({ subjectName: "" }); // Reset form
-      setIconFile(null); // Clear the file input
-      setUpdate(true)
-      onClose(); // Close the modal
+
+      setNewSubject({ subjectName: "" });
+      setIconFile(null);
+      setUpdate(true);
+      onClose();
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
     } finally {
@@ -85,7 +128,11 @@ const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
     >
       <Fade in={open}>
         <Box className={styles.modal}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h5" gutterBottom>
               Create New Subject
             </Typography>
@@ -93,6 +140,37 @@ const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
               <Close />
             </IconButton>
           </Box>
+
+          {/* Class Selection */}
+          {classesLoading ? (
+            <Box display="flex" justifyContent="center" my={2}>
+              <CircularProgress size={24} />
+            </Box>
+          ) : classesError ? (
+            <Typography color="error" variant="body2" gutterBottom>
+              {classesError}
+            </Typography>
+          ) : (
+            <Select
+              fullWidth
+              value={selectedClassId}
+              onChange={(e) => setSelectedClassId(e.target.value)}
+              displayEmpty
+              required
+              margin="dense"
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="" disabled>
+                Select Class
+              </MenuItem>
+              {classes.map((cls) => (
+                <MenuItem key={cls._id} value={cls._id}>
+                  {cls.clsName}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+
           <TextField
             fullWidth
             margin="normal"
@@ -101,26 +179,29 @@ const CreateSubjectModal = ({ open, onClose, setUpdate }) => {
             value={newSubject.subjectName}
             onChange={handleInputChange}
           />
+
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
             style={{ margin: "16px 0" }}
           />
+
           {error && (
             <Typography color="error" variant="body2">
               {error}
             </Typography>
           )}
+
           <Button
             variant="contained"
             color="primary"
             onClick={handleCreateSubject}
             fullWidth
-            disabled={loading}
+            disabled={loading || classesLoading}
             className={styles.createButton}
           >
-            {loading ? "Creating..." : "Create Subject"}
+            {loading ? <CircularProgress size={24} /> : "Create Subject"}
           </Button>
         </Box>
       </Fade>

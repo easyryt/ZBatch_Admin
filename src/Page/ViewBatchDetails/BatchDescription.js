@@ -25,7 +25,7 @@ import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import CreateBatchDescription from "./CreateBatchDescription";
 
-const BatchDescription = () => {
+const BatchDescription = ({clsId}) => {
   const [batchDetails, setBatchDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -174,6 +174,7 @@ const BatchDescription = () => {
         open={isModalOpen}
         handleClose={handleModalClose}
         batchDetails={batchDetails}
+        clsId={clsId}
       />
 
       {/* Batch Info Section */}

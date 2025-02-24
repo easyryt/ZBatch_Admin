@@ -22,7 +22,7 @@ import UpdateSubjectModal from "./UpdateSubjectModal";
 import UpdateTestSubjectModal from "./UpdateTestSubjectModal";
 import CreateTestModal from "../TestsList/CreateTestModal";
 
-const BatchTests = () => {
+const BatchTests = ({clsId}) => {
   const [formData, setFormData] = useState({ subject: "" });
   const [subjects, setSubjects] = useState([]);
   const [subjectList, setSubjectList] = useState([]);
@@ -52,7 +52,7 @@ const BatchTests = () => {
   const fetchAllSubjects = async () => {
     try {
       const response = await axios.get(
-        "https://www.backend.zbatch.in/admin/subjects/getAll",
+        `https://www.backend.zbatch.in/admin/subjects/getAll?clsId=${clsId}`,
         {
           headers: { "x-admin-token": token },
         }

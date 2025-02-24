@@ -9,6 +9,8 @@ import {
   CircularProgress,
   Box,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -18,40 +20,77 @@ const UpdateSubjectModal = ({ open, onClose, setUpdate, subject }) => {
     subjectName: "",
     icon: null,
   });
+  const [classes, setClasses] = useState([]);
+  const [selectedClassId, setSelectedClassId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [classesLoading, setClassesLoading] = useState(false);
+  const [classesError, setClassesError] = useState(null);
 
-  // Pre-fill the form when the selected subject changes
   useEffect(() => {
-    if (subject) {
-      setFormData({
-        subjectName: subject.subjectName || "",
-        icon: null, // Icon is not pre-filled
-      });
-    }
-  }, [subject]);
+    const fetchClassesAndPrefill = async () => {
+      const token = Cookies.get("token");
+      try {
+        setClassesLoading(true);
+        
+        // Fetch classes
+        const response = await axios.get(
+          "https://www.backend.zbatch.in/admin/classes/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-  // Handle input change
+        if (response.data.status) {
+          setClasses(response.data.data);
+          setClassesError(null);
+          
+          // Pre-fill form when subject exists
+          if (subject) {
+            setFormData({
+              subjectName: subject.subjectName || "",
+              icon: null,
+            });
+            setSelectedClassId(subject.clsId?._id || "");
+          }
+        }
+      } catch (err) {
+        setClassesError(err.response?.data?.message || "Failed to fetch classes");
+      } finally {
+        setClassesLoading(false);
+      }
+    };
+
+    if (open) fetchClassesAndPrefill();
+  }, [open, subject]);
+
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [event.target.name]: event.target.value
+    }));
   };
 
-  // Handle file input change
   const handleFileChange = (event) => {
-    setFormData({ ...formData, icon: event.target.files[0] });
+    setFormData(prev => ({
+      ...prev,
+      icon: event.target.files[0]
+    }));
   };
 
-  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    if (!subject?._id) return;
 
+    setLoading(true);
     const token = Cookies.get("token");
     const formDataToSend = new FormData();
+    
     formDataToSend.append("subjectName", formData.subjectName);
-    if (formData.icon) {
-      formDataToSend.append("icon", formData.icon);
-    }
+    formDataToSend.append("clsId", selectedClassId);
+    if (formData.icon) formDataToSend.append("icon", formData.icon);
 
     try {
       const response = await axios.put(
@@ -66,11 +105,11 @@ const UpdateSubjectModal = ({ open, onClose, setUpdate, subject }) => {
       );
 
       if (response.data.status) {
-        setUpdate(true); // Trigger re-fetching of the subjects list
-        onClose(); // Close the modal
+        setUpdate(true);
+        onClose();
       }
     } catch (error) {
-      console.error("Error updating subject:", error);
+      console.error("Update error:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -80,51 +119,85 @@ const UpdateSubjectModal = ({ open, onClose, setUpdate, subject }) => {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Update Subject</DialogTitle>
       <DialogContent>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
+        <Box component="form" sx={{ mt: 2 }}>
+          {/* Class Selection */}
+          <Box mb={3}>
+            <Typography variant="subtitle1" gutterBottom>
+              Select Class
+            </Typography>
+            {classesLoading ? (
+              <CircularProgress size={24} />
+            ) : classesError ? (
+              <Typography color="error">{classesError}</Typography>
+            ) : (
+              <Select
+                value={selectedClassId}
+                onChange={(e) => setSelectedClassId(e.target.value)}
+                fullWidth
+                variant="outlined"
+                required
+              >
+                <MenuItem value="" disabled>
+                  Select a Class
+                </MenuItem>
+                {classes.map((cls) => (
+                  <MenuItem key={cls._id} value={cls._id}>
+                    {cls.clsName} 
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </Box>
+
           {/* Subject Name */}
           <TextField
             label="Subject Name"
             name="subjectName"
             value={formData.subjectName}
             onChange={handleInputChange}
-            variant="outlined"
             fullWidth
             required
+            variant="outlined"
+            margin="normal"
           />
+
           {/* Icon Upload */}
-          <Button variant="outlined" component="label">
-            Upload Icon
+          <Box mt={2}>
             <input
-              type="file"
               accept="image/*"
-              hidden
+              style={{ display: 'none' }}
+              id="icon-upload"
+              type="file"
               onChange={handleFileChange}
             />
-          </Button>
-          {formData.icon && (
-            <Box>
-              <Typography variant="body2">
+            <label htmlFor="icon-upload">
+              <Button 
+                variant="outlined" 
+                component="span"
+                fullWidth
+              >
+                {formData.icon?.name || "Upload New Icon"}
+              </Button>
+            </label>
+            {formData.icon && (
+              <Typography variant="caption" color="textSecondary">
                 Selected file: {formData.icon.name}
               </Typography>
-            </Box>
-          )}
+            )}
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" variant="outlined">
+        <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
           color="primary"
           variant="contained"
-          disabled={loading}
+          disabled={loading || classesLoading}
         >
-          {loading ? <CircularProgress size={24} /> : "Update"}
+          {loading ? <CircularProgress size={24} /> : "Update Subject"}
         </Button>
       </DialogActions>
     </Dialog>

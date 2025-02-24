@@ -19,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
+const UpdateBatchDescription = ({ open, handleClose, batchDetails,clsId }) => {
   const [formData, setFormData] = useState({
     batchIncludes: [],
     courseDuration: { startDate: "", endDate: "" },
@@ -92,7 +92,7 @@ const UpdateBatchDescription = ({ open, handleClose, batchDetails }) => {
     const fetchSubjects = async () => {
       try {
         const response = await axios.get(
-          "https://www.backend.zbatch.in/admin/subjects/getAll",
+          `https://www.backend.zbatch.in/admin/subjects/getAll?clsId=${clsId}`,
           {
             headers: {
               "x-admin-token": token,

@@ -12,6 +12,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -22,20 +26,21 @@ import UpdateSubjectModal from "./UpdateSubjectModal";
 
 const SubjectsList = () => {
   const [subjects, setSubjects] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [update, setUpdate] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [page, setPage] = useState(0);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteSubjectId, setDeleteSubjectId] = useState(null);
-    const [paginationModel, setPaginationModel] = useState({
-      page: 0,
-      pageSize: 5,
-    });
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 5,
+  });
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -52,7 +57,6 @@ const SubjectsList = () => {
         if (response.data.status) {
           setSubjects(response.data.data);
           setFilteredSubjects(response.data.data);
-          setPage(0);
         }
       } catch (error) {
         console.error("Error fetching subjects:", error);
@@ -62,17 +66,48 @@ const SubjectsList = () => {
       }
     };
 
+    const fetchClasses = async () => {
+      const token = Cookies.get("token");
+      try {
+        const response = await axios.get(
+          "https://www.backend.zbatch.in/admin/classes/getAll",
+          {
+            headers: {
+              "x-admin-token": token,
+            },
+          }
+        );
+        if (response.data.status) {
+          setClasses(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
     fetchSubjects();
+    fetchClasses();
   }, [update]);
 
-  const handleSearch = (event) => {
-    const value = event.target.value.toLowerCase();
-    setSearchTerm(value);
-    const filtered = subjects.filter((subject) =>
-      subject.subjectName.toLowerCase().includes(value)
-    );
+  useEffect(() => {
+    const filtered = subjects.filter((subject) => {
+      const matchesSearch = subject.subjectName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesClass = selectedClass
+        ? subject.clsId?.clsName?.trim().toLowerCase() === selectedClass.trim().toLowerCase()
+        : true;
+      return matchesSearch && matchesClass;
+    });
     setFilteredSubjects(filtered);
-    setPage(0); // Reset to first page when searching
+  }, [subjects, searchTerm, selectedClass]);
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleClassFilterChange = (event) => {
+    setSelectedClass(event.target.value);
   };
 
   const openDeleteConfirmation = (id) => {
@@ -125,6 +160,12 @@ const SubjectsList = () => {
       width: 200,
     },
     {
+      field: "clsName",
+      headerName: "Class",
+      width: 150,
+      renderCell: (params) => params?.row?.clsId?.clsName || '',
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 150,
@@ -158,19 +199,38 @@ const SubjectsList = () => {
         variant="contained"
         color="primary"
         onClick={() => setOpenModal(true)}
+        sx={{ mb: 2 }}
       >
         Create Subject
       </Button>
-      <TextField
-        label="Search Subjects"
-        variant="outlined"
-        fullWidth
-        className={styles.searchBar}
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Type to search by subject name..."
-        margin="normal"
-      />
+      
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <TextField
+          label="Search Subjects"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Type to search by subject name..."
+        />
+        
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>Filter by Class</InputLabel>
+          <Select
+            value={selectedClass}
+            onChange={handleClassFilterChange}
+            label="Filter by Class"
+          >
+            <MenuItem value="">All Classes</MenuItem>
+            {classes.map((cls) => (
+              <MenuItem key={cls._id} value={cls.clsName}>
+                {cls.clsName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
       {loading ? (
         <Box className={styles.loaderContainer}>
           <CircularProgress />
@@ -183,7 +243,6 @@ const SubjectsList = () => {
               id: subject._id,
             }))}
             columns={columns}
-            page={page}
             rowCount={filteredSubjects.length}
             disableSelectionOnClick
             paginationModel={paginationModel}
@@ -197,12 +256,14 @@ const SubjectsList = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         setUpdate={setUpdate}
+        classes={classes}
       />
       <UpdateSubjectModal
         open={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
         setUpdate={setUpdate}
         subject={selectedSubject}
+        classes={classes}
       />
 
       <Dialog

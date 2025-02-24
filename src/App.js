@@ -41,7 +41,7 @@ const App = () => {
           <Route path="batch-list/:id" element={<BatchList />} />
           <Route path="subjects-list" element={<SubjectsList />} />
           <Route path="teachers-list" element={<TeachersList />} />
-          <Route path="batch-details/:id" element={<ViewBatchDetails />} />
+          <Route path="batch-details/:clsId/:id" element={<ViewBatchDetails />} />
           <Route path="content-display/:id" element={<ContentDisplay />} />
           <Route path="tests-list/:chapterId" element={<TestsList />} />
           <Route
