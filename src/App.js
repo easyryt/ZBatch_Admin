@@ -24,6 +24,11 @@ import BatchTest from "./Page/BatchTest/BatchTest";
 import BatchQuestionDetails from "./Page/QuestionDetails.js/BatchQuestionDetails";
 import TuitionDashboard from "./Page/TuitionDashboard/TuitionDashboard";
 import ToppersList from "./Page/ToppersList/ToppersList";
+import BlogEditor from "./Page/Blog/BlogEditor";
+import CategoryManagement from "./Page/CategoryManagement/CategoryManagement";
+import BlogPage from "./Page/Blog/BlogList";
+import BlogList from "./Page/Blog/BlogList";
+import BlogDetail from "./Page/Blog/BlogDetail";
 
 const App = () => {
   return (
@@ -62,6 +67,10 @@ const App = () => {
           <Route path="student-data" element={<StudentDataGrid />} />
           <Route path="tuition-dashboard" element={<TuitionDashboard  />} />
           <Route path="toppers-list" element={<ToppersList />} />
+          <Route path="category-management" element={<CategoryManagement />} />
+        <Route path="blogs/:categoryId" element={<BlogEditor />} />
+        <Route path="blog-list/:categoryId" element={<BlogList />} />
+        <Route path="blog/:id" element={<BlogDetail />} />
           <Route
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}
@@ -95,8 +104,10 @@ const App = () => {
         <Route path="/chapter-list/:clsId/:id" element={<ChapterDataGrid />} />
         <Route path="/tuition-dashboard" element={<TuitionDashboard  />} />
         <Route path="/toppers-list" element={<ToppersList />} />
+     
         {/* Fallback for Not Found Pages */}
         <Route path="*" element={<NotFound />} />
+        
       </Routes>
     </Router>
   );
