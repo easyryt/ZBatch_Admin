@@ -29,6 +29,7 @@ import CategoryManagement from "./Page/CategoryManagement/CategoryManagement";
 import BlogPage from "./Page/Blog/BlogList";
 import BlogList from "./Page/Blog/BlogList";
 import BlogDetail from "./Page/Blog/BlogDetail";
+import UpdateBlog from "./Page/Blog/UpdateBlog";
 
 const App = () => {
   return (
@@ -70,7 +71,8 @@ const App = () => {
           <Route path="category-management" element={<CategoryManagement />} />
         <Route path="blogs/:categoryId" element={<BlogEditor />} />
         <Route path="blog-list/:categoryId" element={<BlogList />} />
-        <Route path="blog/:id" element={<BlogDetail />} />
+        <Route path="blog/:link" element={<BlogDetail />} />
+        <Route path="update-blog/:link" element={<UpdateBlog />} />
           <Route
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}

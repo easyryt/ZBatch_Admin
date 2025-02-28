@@ -174,15 +174,6 @@ const BlogList = () => {
                     >
                       <VisibilityIcon color="primary" />
                     </IconButton>
-                    <IconButton
-                      edge="end"
-                      onClick={() => {
-                        setSelectedBlog(blog);
-                        setOpenDeleteDialog(true);
-                      }}
-                    >
-                      <DeleteOutlineOutlined color="error" />
-                    </IconButton>
                   </>
                 }
               >
