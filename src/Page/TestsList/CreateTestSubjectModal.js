@@ -16,7 +16,7 @@ import axios from "axios";
 import styles from "./CreateTestSubjectModal.module.css";
 import { useParams } from "react-router-dom";
 
-const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
+const CreateTestSubjectModal = ({ open, onClose, setUpdate ,clsId}) => {
   const [subjects, setSubjects] = useState([]); // To store fetched subjects
   const [selectedSubjectId, setSelectedSubjectId] = useState(""); // For selected subject ID
   const [loading, setLoading] = useState(false); // For button loading state
@@ -39,7 +39,7 @@ const CreateTestSubjectModal = ({ open, onClose, setUpdate }) => {
 
     try {
       const response = await axios.get(
-        "https://www.backend.zbatch.in/admin/subjects/getAll",
+        `https://www.backend.zbatch.in/admin/subjects/getAll?clsId=${clsId}`,
         {
           headers: {
             "x-admin-token": token,

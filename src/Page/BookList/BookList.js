@@ -195,12 +195,14 @@ const BookList = () => {
         open={open}
         handleClose={handleClose}
         setUpdate={setUpdate}
+        clsId={id}
       />
       <UpdateBookModal
         open={openUpdate}
         handleClose={handleClose}
         book={selectedBook}
         setUpdate={setUpdate}
+        clsId={id}
       />
 
       <Box

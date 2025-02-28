@@ -145,7 +145,7 @@ const TestSubjectsDataGrid = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         setUpdate={setUpdate}
-        classId={id}
+        clsId={id}
       />
     </Box>
   );

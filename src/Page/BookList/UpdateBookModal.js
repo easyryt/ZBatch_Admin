@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 
-const UpdateBookModal = ({ open, handleClose, book, setUpdate }) => {
+const UpdateBookModal = ({ open, handleClose, book, setUpdate ,clsId }) => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [title, setTitle] = useState("");
@@ -35,7 +35,7 @@ const UpdateBookModal = ({ open, handleClose, book, setUpdate }) => {
       const token = Cookies.get("token");
       try {
         const response = await axios.get(
-          "https://www.backend.zbatch.in/admin/subjects/getAll",
+          `https://www.backend.zbatch.in/admin/subjects/getAll?clsId=${clsId}`,
           {
             headers: {
               "x-admin-token": token,
