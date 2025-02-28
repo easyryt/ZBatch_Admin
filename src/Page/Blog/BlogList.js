@@ -169,7 +169,7 @@ const BlogList = () => {
                   <>
                     <IconButton
                       edge="end"
-                      onClick={() => navigate(`/dashboard/blog/${blog._id}`)}
+                      onClick={() => navigate(`/dashboard/blog/${blog.customLink}`)}
                       sx={{ mr: 1 }}
                     >
                       <VisibilityIcon color="primary" />

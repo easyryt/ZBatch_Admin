@@ -7,7 +7,6 @@ const API_BASE = 'https://zbatch.onrender.com/admin/blog';
 const ADMIN_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A';
 
 const CategoryManagement = () => {
-  // State management
   const [categories, setCategories] = useState([]);
   const [categoryName, setCategoryName] = useState('');
   const [editId, setEditId] = useState(null);
@@ -26,6 +25,20 @@ const CategoryManagement = () => {
     } catch (error) {
       setError('Failed to fetch categories');
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const handleToggleStatus = async (categoryId, currentStatus) => {
+    try {
+      await axios.put(
+        `${API_BASE}/category/update/${categoryId}`,
+        { isDeleted: !currentStatus },
+        { headers: { 'x-admin-token': ADMIN_TOKEN } }
+      );
+      await fetchCategories();
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to update status');
+      console.error('Error updating status:', error);
     }
   };
 
@@ -58,7 +71,6 @@ const CategoryManagement = () => {
     setEditId(category._id);
   };
 
-
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Category Management</h2>
@@ -86,15 +98,25 @@ const CategoryManagement = () => {
         ) : (
           <ul className={styles.list}>
             {categories.map(category => (
-              <li key={category._id} className={styles.listItem}>
+              <li key={category._id} className={`${styles.listItem} ${category.isDeleted ? styles.deletedItem : ''}`}>
                 <div className={styles.itemContent}>
-                  <span className={styles.categoryName}>{category.categoryName}</span>
+                  <span className={styles.categoryName}>
+                    {category.categoryName}
+                    {category.isDeleted && <span className={styles.statusIndicator}> (Deleted)</span>}
+                  </span>
                   <div className={styles.actions}>
                     <button 
                       onClick={() => handleEdit(category)}
                       className={styles.editButton}
+                      disabled={category.isDeleted}
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() => handleToggleStatus(category._id, category.isDeleted)}
+                      className={`${styles.statusButton} ${category.isDeleted ? styles.activateButton : styles.deleteButton}`}
+                    >
+                      {category.isDeleted ? 'Mark Active' : 'Mark Deleted'}
                     </button>
                     <div className={styles.linkGroup}>
                       <Link 

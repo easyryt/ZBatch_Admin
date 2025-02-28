@@ -12,10 +12,11 @@ function BlogEditor() {
   const [author, setAuthor] = useState("");
   const [featuredImage, setFeaturedImage] = useState(null);
   const [pdfLink, setPdfLink] = useState("");
+  const [customLink, setCustomLink] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const editor = useRef(null);
   const fileInputRef = useRef(null);
-  const {categoryId} = useParams()
+  const { categoryId } = useParams();
 
   const config = {
     readonly: false,
@@ -80,29 +81,35 @@ function BlogEditor() {
     formData.append("subtitle", subtitle);
     formData.append("mixContent", content);
     formData.append("pdfLink", pdfLink);
+    formData.append("customLink", customLink);
 
     if (featuredImage) {
       formData.append("featureImage", featuredImage, featuredImage.name);
     }
 
     axios
-      .post(`https://zbatch.onrender.com/admin/blog/create/${categoryId}`, formData, {
-        headers: {
-          "x-admin-token": token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .post(
+        `https://zbatch.onrender.com/admin/blog/create/${categoryId}`,
+        formData,
+        {
+          headers: {
+            "x-admin-token": token,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((response) => {
         console.log("Blog published successfully:", response.data);
         alert("Blog published successfully!");
         // Reset form
-        setBlogName("")
+        setBlogName("");
         setTitle("");
         setSubtitle("");
         setAuthor("");
         setFeaturedImage(null);
         setContent("");
         setPdfLink("");
+        setCustomLink("");
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -177,6 +184,16 @@ function BlogEditor() {
             value={pdfLink}
             onChange={(e) => setPdfLink(e.target.value)}
             placeholder="PDF Link"
+            className={styles.subtitleInput}
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <input
+            type="text"
+            value={customLink}
+            onChange={(e) => setCustomLink(e.target.value)}
+            placeholder="Custom Link (e.g., concepts-ncert-solutions-for-class-6)"
             className={styles.subtitleInput}
           />
         </div>

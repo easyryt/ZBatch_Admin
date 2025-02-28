@@ -22,7 +22,7 @@ const BlogDetail = () => {
     const fetchBlogDetails = async () => {
       try {
         const response = await fetch(
-          `https://zbatch.onrender.com/admin/blog/get/${id}`
+          `https://zbatch.onrender.com/admin/blog/get/concepts-ncert-solutions-for-class-6`
         );
         
         if (!response.ok) {
