@@ -17,6 +17,7 @@ import Face3Icon from '@mui/icons-material/Face3';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import Person4Icon from '@mui/icons-material/Person4';
 import PagesIcon from '@mui/icons-material/Pages';
+import Groups2Icon from '@mui/icons-material/Groups2';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -58,6 +59,16 @@ const Sidebar = () => {
       text: "Blog",
       icon: <PagesIcon />,
       path: "/dashboard/category-management",
+    },
+    {
+      text: "Offline Class",
+      icon: <SchoolIcon />,
+      path: "/dashboard/class-admin",
+    },
+    {
+      text: "Teacher Management",
+      icon: <Groups2Icon />,
+      path: "/dashboard/teacher-management",
     },
   ];
 

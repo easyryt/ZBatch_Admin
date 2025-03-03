@@ -1,0 +1,187 @@
+/* ClassAdmin.module.css */
+.container {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .title {
+    font-weight: 700 !important;
+    color: #2d3436;
+    margin: 0 !important;
+    letter-spacing: -0.5px;
+  }
+  
+  .totalChip {
+    font-size: 1rem !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #4a90e2 !important;
+    color: #4a90e2 !important;
+    font-weight: 500 !important;
+  }
+  
+  .gridContainer {
+    padding: 1rem 0;
+  }
+  
+  .classCard {
+    padding: 1.5rem;
+    height: 100%;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #ffffff;
+    border-radius: 12px !important;
+    border-left: 4px solid #4a90e2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .classCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  }
+  .addButton{
+    position: absolute !important;
+    top: 12px !important;
+    right: 50px !important;
+    color: #6c757d !important;
+    background-color: #f8f9fa !important;
+    padding: 6px !important;
+  }
+  .addButton:hover {
+    background-color: #e9ecef !important;
+  }
+  
+  
+  .editButton {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    color: #6c757d !important;
+    background-color: #f8f9fa !important;
+    padding: 6px !important;
+  }
+
+  .editButton:hover {
+    background-color: #e9ecef !important;
+  }
+
+  .className {
+    font-weight: 600 !important;
+    color: #2d3436 !important;
+    margin-bottom: 1rem !important;
+    padding-right: 40px;
+    font-size: 1.1rem !important;
+  }
+  
+  .metricsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .metricItem {
+    text-align: center;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .metricItem:hover {
+    background: #e9ecef;
+  }
+  
+  .metricLabel {
+    color: #6c757d !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px !important;
+  }
+  
+  .metricValue {
+    color: #4a90e2 !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+  }
+  
+  /* Loading and Error States */
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+  }
+  
+  .loadingSpinner {
+    color: #4a90e2 !important;
+  }
+  
+  .errorMessage {
+    text-align: center;
+    padding: 2rem !important;
+    background-color: #fff5f5;
+    border-radius: 8px;
+    margin-top: 2rem !important;
+  }
+  
+  /* Dialog Styles */
+  .editDialog {
+    border-radius: 16px !important;
+  }
+  
+  .dialogTitle {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem !important;
+    border-bottom: 1px solid #e9ecef !important;
+  }
+  
+  .closeButton {
+    color: #6c757d !important;
+    padding: 4px !important;
+  }
+  
+  .editField {
+    margin-top: 1rem !important;
+  }
+  
+  .dialogActions {
+    padding: 1.5rem !important;
+    border-top: 1px solid #e9ecef !important;
+  }
+  
+  .cancelButton {
+    color: #6c757d !important;
+    text-transform: none !important;
+  }
+  
+  .saveButton {
+    background-color: #4a90e2 !important;
+    color: white !important;
+    text-transform: none !important;
+    padding: 8px 24px !important;
+    border-radius: 8px !important;
+  }
+  
+  .saveButton:hover {
+    background-color: #357abd !important;
+  }
+  
+  .notificationAlert {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  }

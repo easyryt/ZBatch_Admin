@@ -30,6 +30,12 @@ import BlogPage from "./Page/Blog/BlogList";
 import BlogList from "./Page/Blog/BlogList";
 import BlogDetail from "./Page/Blog/BlogDetail";
 import UpdateBlog from "./Page/Blog/UpdateBlog";
+import ClassAdmin from "./Page/Offline/ClassAdmin";
+import SubjectManagement from "./Page/Offline/SubjectManagement";
+import BatchYearManagement from "./Page/Offline/BatchYearManagement";
+import StudentEnrollment from "./Page/Offline/StudentEnrollment";
+import TeacherManagement from "./Page/Offline/TeacherManagement/TeacherManagement";
+import TeacherAccessManagement from "./Page/Offline/TeacherAccessManagement/TeacherAccessManagement";
 
 const App = () => {
   return (
@@ -73,6 +79,12 @@ const App = () => {
         <Route path="blog-list/:categoryId" element={<BlogList />} />
         <Route path="blog/:link" element={<BlogDetail />} />
         <Route path="update-blog/:link" element={<UpdateBlog />} />
+        <Route path="class-admin" element={<ClassAdmin />} />
+        <Route path="subject-management/:id" element={<SubjectManagement />} />
+        <Route path="batch-year-management/:id" element={<BatchYearManagement/>} />
+        <Route path="student-enrollment/:id" element={<StudentEnrollment/>} />
+        <Route path="teacher-management" element={<TeacherManagement/>} />
+        <Route path="teacher-access-management/:id" element={<TeacherAccessManagement/>} />
           <Route
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}
