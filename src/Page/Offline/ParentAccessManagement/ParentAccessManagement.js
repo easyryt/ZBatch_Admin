@@ -32,8 +32,16 @@ import {
   Skeleton,
   Box,
 } from "@mui/material";
-import { ExpandMore, Close, Add, Class, Subject, Schedule } from "@mui/icons-material";
+import {
+  ExpandMore,
+  Close,
+  Add,
+  Class,
+  Subject,
+  Schedule,
+} from "@mui/icons-material";
 import { useParams } from "react-router-dom";
+import UpdateParentAccessModal from "./UpdateParentAccessModal";
 
 const ParentAccessManagement = () => {
   const { id } = useParams();
@@ -47,6 +55,8 @@ const ParentAccessManagement = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [parentAccess, setParentAccess] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedParent, setSelectedParent] = useState(null);
   const [loading, setLoading] = useState({
     classes: true,
     parents: false,
@@ -60,8 +70,9 @@ const ParentAccessManagement = () => {
     message: "",
     severity: "success",
   });
-  
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
 
   useEffect(() => {
     fetchClasses();
@@ -208,8 +219,18 @@ const ParentAccessManagement = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary" }}>
+      <Box
+        sx={{
+          mb: 4,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 600, color: "text.primary" }}
+        >
           Parent Access Management
         </Typography>
 
@@ -252,7 +273,6 @@ const ParentAccessManagement = () => {
           </Button>
         </Box>
       </Box>
-
       {loading.parents ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
           <CircularProgress />
@@ -265,64 +285,97 @@ const ParentAccessManagement = () => {
                 <TableRow>
                   <TableCell sx={{ fontWeight: 600 }}>Parent Name</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Update</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Access Details</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {parentAccess.map(({ _id, parentId, studentBatchEnrollment }) => (
-                  <TableRow key={_id} hover>
-                    <TableCell>{parentId.parentName}</TableCell>
-                    <TableCell>{parentId.email}</TableCell>
-                    <TableCell>
-                      {studentBatchEnrollment.map((enrollment) => (
-                        <Accordion key={enrollment._id} elevation={0} sx={{ bgcolor: "background.default" }}>
-                          <AccordionSummary expandIcon={<ExpandMore />}>
-                            <Chip
-                              label={`${enrollment.clsId.className} - ${enrollment.subjectId.subjectName}`}
-                              color="primary"
-                              variant="outlined"
-                              icon={<Subject sx={{ fontSize: 16 }} />}
-                            />
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <Stack spacing={2}>
-                              <Box>
-                                <Typography variant="subtitle2" color="textSecondary">
-                                  Class
-                                </Typography>
-                                <Typography>{enrollment.clsId.className}</Typography>
-                              </Box>
-                              <Box>
-                                <Typography variant="subtitle2" color="textSecondary">
-                                  Subject
-                                </Typography>
-                                <Typography>{enrollment.subjectId.subjectName}</Typography>
-                              </Box>
-                              <Box>
-                                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                                  Batch
-                                </Typography>
-                                <Chip
-                                  label={enrollment.batchYearId.batchYear}
-                                  variant="outlined"
-                                  color="secondary"
-                                  size="small"
-                                  icon={<Schedule sx={{ fontSize: 16 }} />}
-                                />
-                              </Box>
-                            </Stack>
-                          </AccordionDetails>
-                        </Accordion>
-                      ))}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {parentAccess.map(
+                  ({ _id, parentId, studentBatchEnrollment }) => (
+                    <TableRow key={_id} hover>
+                      <TableCell>{parentId.parentName}</TableCell>
+                      <TableCell>{parentId.email}</TableCell>
+                      <TableCell>
+                        {" "}
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          onClick={() => {
+                            setSelectedParent(parentId._id);
+                            setUpdateModalOpen(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        {studentBatchEnrollment.map((enrollment) => (
+                          <Accordion
+                            key={enrollment._id}
+                            elevation={0}
+                            sx={{ bgcolor: "background.default" }}
+                          >
+                            <AccordionSummary expandIcon={<ExpandMore />}>
+                              <Chip
+                                label={`${enrollment.clsId.className} - ${enrollment.subjectId.subjectName}`}
+                                color="primary"
+                                variant="outlined"
+                                icon={<Subject sx={{ fontSize: 16 }} />}
+                              />
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Stack spacing={2}>
+                                <Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="textSecondary"
+                                  >
+                                    Class
+                                  </Typography>
+                                  <Typography>
+                                    {enrollment.clsId.className}
+                                  </Typography>
+                                </Box>
+                                <Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="textSecondary"
+                                  >
+                                    Subject
+                                  </Typography>
+                                  <Typography>
+                                    {enrollment.subjectId.subjectName}
+                                  </Typography>
+                                </Box>
+                                <Box>
+                                  <Typography
+                                    variant="subtitle2"
+                                    color="textSecondary"
+                                    gutterBottom
+                                  >
+                                    Batch
+                                  </Typography>
+                                  <Chip
+                                    label={enrollment.batchYearId.batchYear}
+                                    variant="outlined"
+                                    color="secondary"
+                                    size="small"
+                                    icon={<Schedule sx={{ fontSize: 16 }} />}
+                                  />
+                                </Box>
+                              </Stack>
+                            </AccordionDetails>
+                          </Accordion>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </TableContainer>
         </Paper>
       )}
-
       <Dialog
         open={openCreateDialog}
         onClose={() => {
@@ -348,7 +401,9 @@ const ParentAccessManagement = () => {
               }}
               label="Subject"
               disabled={loading.subjects}
-              startAdornment={<Subject sx={{ color: "action.active", mr: 1 }} />}
+              startAdornment={
+                <Subject sx={{ color: "action.active", mr: 1 }} />
+              }
             >
               {loading.subjects ? (
                 <MenuItem disabled>Loading subjects...</MenuItem>
@@ -371,12 +426,16 @@ const ParentAccessManagement = () => {
               onChange={(e) => setSelectedBatch(e.target.value)}
               label="Batch"
               disabled={loading.batches || !selectedSubject}
-              startAdornment={<Schedule sx={{ color: "action.active", mr: 1 }} />}
+              startAdornment={
+                <Schedule sx={{ color: "action.active", mr: 1 }} />
+              }
             >
               {loading.batches ? (
                 <MenuItem disabled>Loading batches...</MenuItem>
               ) : batches.length === 0 ? (
-                <MenuItem disabled>No batches available for this subject</MenuItem>
+                <MenuItem disabled>
+                  No batches available for this subject
+                </MenuItem>
               ) : (
                 batches.map((batch) => (
                   <MenuItem key={batch._id} value={batch._id}>
@@ -398,7 +457,7 @@ const ParentAccessManagement = () => {
               renderValue={(selected) => (
                 <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
                   {selected.map((studentId) => {
-                    const student = students.find(s => s._id === studentId);
+                    const student = students.find((s) => s._id === studentId);
                     return (
                       <Chip
                         key={studentId}
@@ -414,11 +473,15 @@ const ParentAccessManagement = () => {
               {loading.students ? (
                 <MenuItem disabled>Loading students...</MenuItem>
               ) : students.length === 0 ? (
-                <MenuItem disabled>No students found in selected batch</MenuItem>
+                <MenuItem disabled>
+                  No students found in selected batch
+                </MenuItem>
               ) : (
                 students.map((student) => (
                   <MenuItem key={student._id} value={student._id}>
-                    <Checkbox checked={selectedStudents.includes(student._id)} />
+                    <Checkbox
+                      checked={selectedStudents.includes(student._id)}
+                    />
                     <ListItemText primary={student.studentName} />
                   </MenuItem>
                 ))
@@ -446,7 +509,6 @@ const ParentAccessManagement = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -455,7 +517,8 @@ const ParentAccessManagement = () => {
       >
         <Box
           sx={{
-            bgcolor: snackbar.severity === "error" ? "error.main" : "success.main",
+            bgcolor:
+              snackbar.severity === "error" ? "error.main" : "success.main",
             color: "white",
             px: 3,
             py: 2,
@@ -475,6 +538,17 @@ const ParentAccessManagement = () => {
           </IconButton>
         </Box>
       </Snackbar>
+      {selectedParent && (
+        <UpdateParentAccessModal
+          open={updateModalOpen}
+          onClose={(refresh) => {
+            setUpdateModalOpen(false);
+            if (refresh) fetchParentAccess();
+          }}
+          classId={selectedClass}
+          parentId={selectedParent}
+        />
+      )}
     </Container>
   );
 };

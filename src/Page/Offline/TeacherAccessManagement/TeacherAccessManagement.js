@@ -303,6 +303,11 @@ const TeacherAccessManagement = () => {
                   <TableCell
                     sx={{ bgcolor: "background.paper", fontWeight: 600 }}
                   >
+                    update
+                  </TableCell>
+                  <TableCell
+                    sx={{ bgcolor: "background.paper", fontWeight: 600 }}
+                  >
                     Access Details
                   </TableCell>
                 </TableRow>
