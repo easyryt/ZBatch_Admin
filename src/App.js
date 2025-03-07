@@ -38,6 +38,7 @@ import TeacherManagement from "./Page/Offline/TeacherManagement/TeacherManagemen
 import TeacherAccessManagement from "./Page/Offline/TeacherAccessManagement/TeacherAccessManagement";
 import ParentsTable from "./Page/Offline/ParentsTable/ParentsTable";
 import ParentAccessManagement from "./Page/Offline/ParentAccessManagement/ParentAccessManagement";
+import StudentHierarchy from "./Page/Offline/StudentHierarchy/StudentHierarchy";
 
 const App = () => {
   return (
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="batch-details/:clsId/:id" element={<ViewBatchDetails />} />
           <Route path="content-display/:id" element={<ContentDisplay />} />
           <Route path="tests-list/:chapterId" element={<TestsList />} />
+          <Route path="student-hierarchy" element={<StudentHierarchy />} />
           <Route
             path="batch-test/:batchId/:subjectId"
             element={<BatchTest />}
