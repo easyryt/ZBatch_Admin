@@ -10,27 +10,27 @@ import {
   GridActionsCellItem,
 } from "@mui/x-data-grid";
 import {
-  Container,
+  LinearProgress,
   Typography,
-  TextField,
+  Paper,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  LinearProgress,
-  Paper,
+  TextField,
   Snackbar,
   Alert,
   InputAdornment,
+  Container,
   IconButton,
-  useTheme,
   Skeleton,
+  useTheme,
 } from "@mui/material";
-import { Search, Add, Edit, Delete, Close, Key } from "@mui/icons-material";
+import { Edit, Add, Search, Close, Key } from "@mui/icons-material";
 import { alpha, styled } from "@mui/material/styles";
+import styles from "./ParentsTable.module.css";
 import { useNavigate } from "react-router-dom";
-import styles from "./TeacherManagement.module.css";
 
 const API_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
@@ -65,11 +65,11 @@ function CustomToolbar({ handleOpen, searchTerm, handleSearch }) {
           "&:hover": { boxShadow: "none" },
         }}
       >
-        Add Teacher
+        Add Parent
       </Button>
       <TextField
         variant="outlined"
-        placeholder="Search teachers..."
+        placeholder="Search parents..."
         value={searchTerm}
         onChange={handleSearch}
         fullWidth
@@ -94,31 +94,31 @@ function CustomToolbar({ handleOpen, searchTerm, handleSearch }) {
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
         <GridToolbarExport
-          sx={{ color: theme.palette.text.secondary, "&:hover": { bgcolor: "transparent" } }}
+          sx={{
+            color: theme.palette.text.secondary,
+            "&:hover": { bgcolor: "transparent" },
+          }}
         />
       </div>
     </GridToolbarContainer>
   );
 }
 
-const TeacherManagement = () => {
+const ParentsTable = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [teachers, setTeachers] = useState([]);
-  const [filteredTeachers, setFilteredTeachers] = useState([]);
+  const [parents, setParents] = useState([]);
+  const [filteredParents, setFilteredParents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [editData, setEditData] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
-    name: "",
-    expertise: "",
+    parentName: "",
     email: "",
     accessCode: "",
   });
-  const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -127,17 +127,10 @@ const TeacherManagement = () => {
 
   const columns = [
     {
-      field: "name",
-      headerName: "Name",
+      field: "parentName",
+      headerName: "Parent Name",
       flex: 1,
       minWidth: 180,
-      headerClassName: styles.header,
-    },
-    {
-      field: "expertise",
-      headerName: "Expertise",
-      flex: 1,
-      minWidth: 150,
       headerClassName: styles.header,
     },
     {
@@ -155,6 +148,29 @@ const TeacherManagement = () => {
       headerClassName: styles.header,
     },
     {
+      field: "role",
+      headerName: "Role",
+      flex: 1,
+      minWidth: 120,
+      headerClassName: styles.header,
+    },
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      flex: 1.2,
+      minWidth: 180,
+      headerClassName: styles.header,
+      renderCell: (params) => new Date(params.value).toLocaleDateString(),
+    },
+    {
+      field: "updatedAt",
+      headerName: "Updated At",
+      flex: 1.2,
+      minWidth: 180,
+      headerClassName: styles.header,
+      renderCell: (params) => new Date(params.value).toLocaleDateString(),
+    },
+    {
       field: "actions",
       type: "actions",
       headerName: "Actions",
@@ -169,7 +185,9 @@ const TeacherManagement = () => {
         <GridActionsCellItem
           icon={<Key />}
           label="Access"
-          onClick={() => navigate(`/dashboard/teacher-access-management/${params.id}`)}
+          onClick={() =>
+            navigate(`/dashboard/parent-access-management/${params.id}`)
+          }
           sx={{ color: theme.palette.secondary.main }}
         />,
       ],
@@ -177,15 +195,15 @@ const TeacherManagement = () => {
   ];
 
   useEffect(() => {
-    const fetchTeachers = async () => {
+    const fetchParents = async () => {
       try {
         const { data } = await axios.get(
-          "https://zbatch.onrender.com/admin/offline/teacher/getAll",
+          "https://zbatch.onrender.com/admin/offline/parent/getAll",
           { headers: { "x-admin-token": API_TOKEN } }
         );
-        if (data.data) {
-          setTeachers(data.data);
-          setFilteredTeachers(data.data);
+        if (data.status) {
+          setParents(data.data);
+          setFilteredParents(data.data);
         }
       } catch (err) {
         setError(err.message);
@@ -193,106 +211,73 @@ const TeacherManagement = () => {
         setLoading(false);
       }
     };
-    fetchTeachers();
+    fetchParents();
   }, []);
 
   useEffect(() => {
-    const filtered = teachers.filter(teacher =>
-      Object.values(teacher).some(value =>
+    const filtered = parents.filter((parent) =>
+      Object.values(parent).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    ));
-    setFilteredTeachers(filtered);
-  }, [searchTerm, teachers]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.expertise.trim()) newErrors.expertise = "Expertise is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-    if (!formData.accessCode.trim()) newErrors.accessCode = "Access code is required";
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+      )
+    );
+    setFilteredParents(filtered);
+  }, [searchTerm, parents]);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
-    setSelectedTeacher(null);
-    setFormData({ name: "", expertise: "", email: "", accessCode: "" });
+    setEditData(null);
+    setFormData({ parentName: "", email: "", accessCode: "" });
   };
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setSelectedTeacher(null);
-    setErrors({});
+    setEditData(null);
   };
 
-  const handleEdit = (teacher) => {
-    setSelectedTeacher(teacher);
+  const handleEdit = (row) => {
+    setEditData(row);
     setFormData({
-      name: teacher.name,
-      expertise: teacher.expertise,
-      email: teacher.email,
-      accessCode: teacher.accessCode,
+      parentName: row.parentName,
+      email: row.email,
+      accessCode: row.accessCode,
     });
     setDialogOpen(true);
   };
 
-  const handleDeleteClick = (teacher) => {
-    setSelectedTeacher(teacher);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(
-        `https://zbatch.onrender.com/admin/offline/teacher/delete/${selectedTeacher._id}`,
-        { headers: { "x-admin-token": API_TOKEN } }
-      );
+  const handleSubmit = async () => {
+    if (!formData.parentName || !formData.email || !formData.accessCode) {
       setSnackbar({
         open: true,
-        message: "Teacher deleted successfully",
-        severity: "success",
-      });
-      setTeachers(prev => prev.filter(t => t._id !== selectedTeacher._id));
-      setDeleteDialogOpen(false);
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        message: err.response?.data?.message || "Delete failed",
+        message: "Please fill all required fields",
         severity: "error",
       });
+      return;
     }
-  };
-
-  const handleSubmit = async () => {
-    if (!validateForm()) return;
 
     try {
-      const url = selectedTeacher
-        ? `https://zbatch.onrender.com/admin/offline/teacher/update/${selectedTeacher._id}`
-        : "https://zbatch.onrender.com/admin/offline/teacher/create";
+      const url = editData
+        ? `https://zbatch.onrender.com/admin/offline/parent/update/${editData._id}`
+        : "https://zbatch.onrender.com/admin/offline/parent/create";
 
-      const method = selectedTeacher ? "put" : "post";
+      const method = editData ? "put" : "post";
 
       const { data } = await axios[method](url, formData, {
-        headers: { "x-admin-token": API_TOKEN }
+        headers: { "x-admin-token": API_TOKEN },
       });
 
-      setSnackbar({
-        open: true,
-        message: selectedTeacher ? "Teacher updated!" : "Teacher created!",
-        severity: "success",
-      });
-      setTeachers(prev => selectedTeacher
-        ? prev.map(t => t._id === selectedTeacher._id ? data.data : t)
-        : [...prev, data.data]
-      );
-      handleDialogClose();
+      if (data.status) {
+        setSnackbar({
+          open: true,
+          message: editData ? "Parent updated!" : "Parent created!",
+          severity: "success",
+        });
+        setParents((prev) =>
+          editData
+            ? prev.map((p) => (p._id === editData._id ? data.data : p))
+            : [...prev, data.data]
+        );
+        handleDialogClose();
+      }
     } catch (err) {
       setSnackbar({
         open: true,
@@ -303,7 +288,7 @@ const TeacherManagement = () => {
   };
 
   const handleSnackbarClose = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   if (loading) {
@@ -322,7 +307,11 @@ const TeacherManagement = () => {
         <Typography variant="h6" color="error">
           Error Loading Data: {error}
         </Typography>
-        <Button variant="contained" onClick={() => window.location.reload()} sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          onClick={() => window.location.reload()}
+          sx={{ mt: 2 }}
+        >
           Retry
         </Button>
       </Paper>
@@ -333,13 +322,13 @@ const TeacherManagement = () => {
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <div className={styles.header}>
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 3 }}>
-          Teacher Management
+          Parent Management
         </Typography>
       </div>
 
       <Paper sx={{ p: 2, borderRadius: 4, boxShadow: theme.shadows[3] }}>
         <StyledDataGrid
-          rows={filteredTeachers}
+          rows={filteredParents}
           columns={columns}
           autoHeight
           density="comfortable"
@@ -371,7 +360,7 @@ const TeacherManagement = () => {
         PaperProps={{ sx: { borderRadius: 3, p: 1 } }}
       >
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
-          {selectedTeacher ? "Edit Teacher" : "New Teacher"}
+          {editData ? "Edit Parent" : "New Parent"}
           <IconButton onClick={handleDialogClose}>
             <Close />
           </IconButton>
@@ -380,24 +369,12 @@ const TeacherManagement = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-            error={!!errors.name}
-            helperText={errors.name}
-            required
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Expertise"
-            name="expertise"
-            value={formData.expertise}
-            onChange={(e) => setFormData(prev => ({ ...prev, expertise: e.target.value }))}
-            error={!!errors.expertise}
-            helperText={errors.expertise}
+            label="Parent Name"
+            name="parentName"
+            value={formData.parentName}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, parentName: e.target.value }))
+            }
             required
             sx={{ mb: 2 }}
           />
@@ -408,9 +385,9 @@ const TeacherManagement = () => {
             type="email"
             name="email"
             value={formData.email}
-            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-            error={!!errors.email}
-            helperText={errors.email}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, email: e.target.value }))
+            }
             required
             sx={{ mb: 2 }}
           />
@@ -420,9 +397,9 @@ const TeacherManagement = () => {
             label="Access Code"
             name="accessCode"
             value={formData.accessCode}
-            onChange={(e) => setFormData(prev => ({ ...prev, accessCode: e.target.value }))}
-            error={!!errors.accessCode}
-            helperText={errors.accessCode}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, accessCode: e.target.value }))
+            }
             required
           />
         </DialogContent>
@@ -435,29 +412,7 @@ const TeacherManagement = () => {
             variant="contained"
             sx={{ borderRadius: 2, px: 3 }}
           >
-            {selectedTeacher ? "Save Changes" : "Create Teacher"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        PaperProps={{ sx: { borderRadius: 3 } }}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete {selectedTeacher?.name}?
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button
-            onClick={handleDelete}
-            variant="contained"
-            color="error"
-            sx={{ borderRadius: 2 }}
-          >
-            Confirm Delete
+            {editData ? "Save Changes" : "Create Parent"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -484,4 +439,4 @@ const TeacherManagement = () => {
   );
 };
 
-export default TeacherManagement;
+export default ParentsTable;

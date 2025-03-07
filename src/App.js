@@ -36,6 +36,8 @@ import BatchYearManagement from "./Page/Offline/BatchYearManagement";
 import StudentEnrollment from "./Page/Offline/StudentEnrollment";
 import TeacherManagement from "./Page/Offline/TeacherManagement/TeacherManagement";
 import TeacherAccessManagement from "./Page/Offline/TeacherAccessManagement/TeacherAccessManagement";
+import ParentsTable from "./Page/Offline/ParentsTable/ParentsTable";
+import ParentAccessManagement from "./Page/Offline/ParentAccessManagement/ParentAccessManagement";
 
 const App = () => {
   return (
@@ -47,6 +49,7 @@ const App = () => {
 
         {/* Dashboard Layout Route */}
         <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="parents-table" element={<ParentsTable />} />
           {/* Main Dashboard page */}
           <Route index element={<DashboardHome />} />
           <Route path="class-list" element={<ClassList />} />
@@ -85,6 +88,7 @@ const App = () => {
         <Route path="student-enrollment/:id" element={<StudentEnrollment/>} />
         <Route path="teacher-management" element={<TeacherManagement/>} />
         <Route path="teacher-access-management/:id" element={<TeacherAccessManagement/>} />
+        <Route path="parent-access-management/:id" element={<ParentAccessManagement />} />
           <Route
             path="test-subjects-list/:id"
             element={<TestSubjectsDataGrid />}

@@ -70,6 +70,11 @@ const Sidebar = () => {
       icon: <Groups2Icon />,
       path: "/dashboard/teacher-management",
     },
+    {
+      text: "Parents Management",
+      icon: <Groups2Icon />,
+      path: "/dashboard/parents-table",
+    },
   ];
 
   // Inline styles for sidebar

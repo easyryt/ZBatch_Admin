@@ -32,44 +32,36 @@ import {
   Skeleton,
   Box,
 } from "@mui/material";
-import {
-  ExpandMore,
-  Close,
-  Add,
-  Class,
-  Subject,
-  Schedule,
-} from "@mui/icons-material";
+import { ExpandMore, Close, Add, Class, Subject, Schedule } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import UpdateAccessModal from "./UpdateAccessModal";
 
-const TeacherAccessManagement = () => {
+const ParentAccessManagement = () => {
   const { id } = useParams();
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [batches, setBatches] = useState([]);
+  const [students, setStudents] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedBatches, setSelectedBatches] = useState([]);
-  const [teacherAccess, setTeacherAccess] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState("");
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [parentAccess, setParentAccess] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-  const [selectedAccessData, setSelectedAccessData] = useState(null);
   const [loading, setLoading] = useState({
     classes: true,
-    teachers: false,
+    parents: false,
     creating: false,
     subjects: false,
     batches: false,
+    students: false,
   });
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
-
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
+  
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
 
   useEffect(() => {
     fetchClasses();
@@ -78,7 +70,7 @@ const TeacherAccessManagement = () => {
   useEffect(() => {
     if (selectedClass) {
       fetchSubjects(selectedClass);
-      fetchTeacherAccess();
+      fetchParentAccess();
     }
   }, [selectedClass]);
 
@@ -87,6 +79,15 @@ const TeacherAccessManagement = () => {
       fetchBatches(selectedClass, selectedSubject);
     }
   }, [selectedSubject, openCreateDialog, selectedClass]);
+
+  useEffect(() => {
+    if (selectedBatch) {
+      fetchStudents(selectedBatch);
+    } else {
+      setStudents([]);
+      setSelectedStudents([]);
+    }
+  }, [selectedBatch]);
 
   const fetchClasses = async () => {
     try {
@@ -132,51 +133,68 @@ const TeacherAccessManagement = () => {
     }
   };
 
-  const fetchTeacherAccess = async () => {
-    setLoading((prev) => ({ ...prev, teachers: true }));
+  const fetchStudents = async (batchId) => {
+    setLoading((prev) => ({ ...prev, students: true }));
+    try {
+      const response = await axios.get(
+        `https://zbatch.onrender.com/admin/offline/class-subject-year-student/enrollStudent/getAll/${batchId}`,
+        { headers: { "x-admin-token": token } }
+      );
+      setStudents(response.data.data || []);
+    } catch (error) {
+      showSnackbar("Failed to fetch students", "error");
+    } finally {
+      setLoading((prev) => ({ ...prev, students: false }));
+    }
+  };
+
+  const fetchParentAccess = async () => {
+    setLoading((prev) => ({ ...prev, parents: true }));
     try {
       const cls = classes.find((c) => c._id === selectedClass);
       if (!cls) return;
 
       const response = await axios.get(
-        "https://zbatch.onrender.com/admin/offline/teacher/access/getAll",
+        "https://zbatch.onrender.com/admin/offline/parent/access/getAll",
         {
           params: { className: cls.className },
           headers: { "x-admin-token": token },
         }
       );
-      setTeacherAccess(response.data.data || []);
+      setParentAccess(response.data.data || []);
     } catch (error) {
-      showSnackbar("Failed to fetch teacher access", "error");
+      showSnackbar("Failed to fetch parent access", "error");
     } finally {
-      setLoading((prev) => ({ ...prev, teachers: false }));
+      setLoading((prev) => ({ ...prev, parents: false }));
     }
   };
 
   const createAccess = async () => {
-    if (!selectedSubject || selectedBatches.length === 0) {
-      showSnackbar("Please select subject and at least one batch", "error");
+    if (!selectedSubject || !selectedBatch) {
+      showSnackbar("Please select subject and batch", "error");
+      return;
+    }
+
+    if (selectedStudents.length === 0) {
+      showSnackbar("Please select at least one student", "error");
       return;
     }
 
     setLoading((prev) => ({ ...prev, creating: true }));
     try {
       await axios.post(
-        `https://zbatch.onrender.com/admin/offline/teacher/access/create/${id}`,
+        `https://zbatch.onrender.com/admin/offline/parent/access/create/${id}`,
         {
-          access: {
-            classId: selectedClass,
-            subjectId: selectedSubject,
-            batchYear: selectedBatches,
-          },
+          studentBatchEnrollment: selectedStudents,
         },
         { headers: { "x-admin-token": token } }
       );
       showSnackbar("Access created successfully", "success");
       setOpenCreateDialog(false);
-      setSelectedBatches([]);
+      setSelectedBatch("");
       setSelectedSubject("");
-      fetchTeacherAccess();
+      setSelectedStudents([]);
+      fetchParentAccess();
     } catch (error) {
       showSnackbar("Failed to create access", "error");
     } finally {
@@ -188,51 +206,11 @@ const TeacherAccessManagement = () => {
     setSnackbar({ open: true, message, severity });
   };
 
-  const handleEditAccess = (accessId) => {
-    setSelectedAccessData({
-      accessId,
-      selectedBatches: [],
-    });
-    setOpenUpdateDialog(true);
-  };
-
-  const updateAccess = async (accessId, newSubjectId, newBatches) => {
-    setLoading((prev) => ({ ...prev, updating: true }));
-    try {
-      await axios.put(
-        `https://zbatch.onrender.com/admin/offline/teacher/access/update/${accessId}`,
-        {
-          access: {
-            subjectId: newSubjectId,
-            batchYear: newBatches,
-          },
-        },
-        { headers: { "x-admin-token": token } }
-      );
-      showSnackbar("Access updated successfully", "success");
-      fetchTeacherAccess();
-    } catch (error) {
-      showSnackbar("Failed to update access", "error");
-    } finally {
-      setLoading((prev) => ({ ...prev, updating: false }));
-    }
-  };
-
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box
-        sx={{
-          mb: 4,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 600, color: "text.primary" }}
-        >
-          Teacher Access Management
+      <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h4" sx={{ fontWeight: 600, color: "text.primary" }}>
+          Parent Access Management
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
@@ -243,7 +221,7 @@ const TeacherAccessManagement = () => {
               onChange={(e) => {
                 setSelectedClass(e.target.value);
                 setSelectedSubject("");
-                setSelectedBatches([]);
+                setSelectedBatch("");
               }}
               label="Class"
               disabled={loading.classes}
@@ -275,7 +253,7 @@ const TeacherAccessManagement = () => {
         </Box>
       </Box>
 
-      {loading.teachers ? (
+      {loading.parents ? (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
           <CircularProgress />
         </Box>
@@ -285,55 +263,22 @@ const TeacherAccessManagement = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell
-                    sx={{ bgcolor: "background.paper", fontWeight: 600 }}
-                  >
-                    Teacher
-                  </TableCell>
-                  <TableCell
-                    sx={{ bgcolor: "background.paper", fontWeight: 600 }}
-                  >
-                    Expertise
-                  </TableCell>
-                  <TableCell
-                    sx={{ bgcolor: "background.paper", fontWeight: 600 }}
-                  >
-                    Email
-                  </TableCell>
-                  <TableCell
-                    sx={{ bgcolor: "background.paper", fontWeight: 600 }}
-                  >
-                    Access Details
-                  </TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Parent Name</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Access Details</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {teacherAccess.map(({ accessId, teacher, access }) => (
-                  <TableRow key={accessId} hover>
-                    <TableCell>{teacher.name}</TableCell>
-                    <TableCell>{teacher.expertise}</TableCell>
-                    <TableCell>{teacher.email}</TableCell>
+                {parentAccess.map(({ _id, parentId, studentBatchEnrollment }) => (
+                  <TableRow key={_id} hover>
+                    <TableCell>{parentId.parentName}</TableCell>
+                    <TableCell>{parentId.email}</TableCell>
                     <TableCell>
-                      {" "}
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => handleEditAccess(teacher.id)}
-                        sx={{ mt: 2 }}
-                      >
-                        Edit
-                      </Button>
-                    </TableCell>
-                    <TableCell>
-                      {access.map((entry, index) => (
-                        <Accordion
-                          key={index}
-                          elevation={0}
-                          sx={{ bgcolor: "background.default" }}
-                        >
+                      {studentBatchEnrollment.map((enrollment) => (
+                        <Accordion key={enrollment._id} elevation={0} sx={{ bgcolor: "background.default" }}>
                           <AccordionSummary expandIcon={<ExpandMore />}>
                             <Chip
-                              label={`${entry.class.className} - ${entry.subject.subjectName}`}
+                              label={`${enrollment.clsId.className} - ${enrollment.subjectId.subjectName}`}
                               color="primary"
                               variant="outlined"
                               icon={<Subject sx={{ fontSize: 16 }} />}
@@ -342,59 +287,28 @@ const TeacherAccessManagement = () => {
                           <AccordionDetails>
                             <Stack spacing={2}>
                               <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="textSecondary"
-                                >
+                                <Typography variant="subtitle2" color="textSecondary">
                                   Class
                                 </Typography>
-                                <Typography>{entry.class.className}</Typography>
+                                <Typography>{enrollment.clsId.className}</Typography>
                               </Box>
                               <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="textSecondary"
-                                >
+                                <Typography variant="subtitle2" color="textSecondary">
                                   Subject
                                 </Typography>
-                                <Typography>
-                                  {entry.subject.subjectName}
-                                </Typography>
+                                <Typography>{enrollment.subjectId.subjectName}</Typography>
                               </Box>
                               <Box>
-                                <Typography
-                                  variant="subtitle2"
-                                  color="textSecondary"
-                                  gutterBottom
-                                >
-                                  Batches
+                                <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                                  Batch
                                 </Typography>
-                                <Stack
-                                  direction="row"
-                                  spacing={1}
-                                  flexWrap="wrap"
-                                  gap={1}
-                                >
-                                  {(entry.batchYear || []).map((batchId, i) => {
-                                    const batch = batches.find(
-                                      (b) => b._id === batchId
-                                    );
-                                    return (
-                                      <Chip
-                                        key={i}
-                                        label={
-                                          batch?.batchYear || "Unknown Batch"
-                                        }
-                                        variant="outlined"
-                                        color="secondary"
-                                        size="small"
-                                        icon={
-                                          <Schedule sx={{ fontSize: 16 }} />
-                                        }
-                                      />
-                                    );
-                                  })}
-                                </Stack>
+                                <Chip
+                                  label={enrollment.batchYearId.batchYear}
+                                  variant="outlined"
+                                  color="secondary"
+                                  size="small"
+                                  icon={<Schedule sx={{ fontSize: 16 }} />}
+                                />
                               </Box>
                             </Stack>
                           </AccordionDetails>
@@ -414,18 +328,13 @@ const TeacherAccessManagement = () => {
         onClose={() => {
           setOpenCreateDialog(false);
           setSelectedSubject("");
-          setSelectedBatches([]);
+          setSelectedBatch("");
+          setSelectedStudents([]);
         }}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle
-          sx={{
-            bgcolor: "background.paper",
-            borderBottom: 1,
-            borderColor: "divider",
-          }}
-        >
+        <DialogTitle sx={{ borderBottom: 1, borderColor: "divider" }}>
           Create New Access
         </DialogTitle>
         <DialogContent sx={{ py: 3 }}>
@@ -435,13 +344,11 @@ const TeacherAccessManagement = () => {
               value={selectedSubject}
               onChange={(e) => {
                 setSelectedSubject(e.target.value);
-                setSelectedBatches([]);
+                setSelectedBatch("");
               }}
               label="Subject"
               disabled={loading.subjects}
-              startAdornment={
-                <Subject sx={{ color: "action.active", mr: 1 }} />
-              }
+              startAdornment={<Subject sx={{ color: "action.active", mr: 1 }} />}
             >
               {loading.subjects ? (
                 <MenuItem disabled>Loading subjects...</MenuItem>
@@ -458,52 +365,74 @@ const TeacherAccessManagement = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <InputLabel>Batches</InputLabel>
+            <InputLabel>Batch</InputLabel>
+            <Select
+              value={selectedBatch}
+              onChange={(e) => setSelectedBatch(e.target.value)}
+              label="Batch"
+              disabled={loading.batches || !selectedSubject}
+              startAdornment={<Schedule sx={{ color: "action.active", mr: 1 }} />}
+            >
+              {loading.batches ? (
+                <MenuItem disabled>Loading batches...</MenuItem>
+              ) : batches.length === 0 ? (
+                <MenuItem disabled>No batches available for this subject</MenuItem>
+              ) : (
+                batches.map((batch) => (
+                  <MenuItem key={batch._id} value={batch._id}>
+                    {batch.batchYear}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ mt: 3 }}>
+            <InputLabel>Students</InputLabel>
             <Select
               multiple
-              value={selectedBatches}
-              onChange={(e) => setSelectedBatches(e.target.value)}
-              label="Batches"
-              disabled={loading.batches || !selectedSubject}
+              value={selectedStudents}
+              onChange={(e) => setSelectedStudents(e.target.value)}
+              label="Students"
+              disabled={loading.students || !selectedBatch}
               renderValue={(selected) => (
                 <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
-                  {selected.map((batchId) => {
-                    const batch = batches.find((b) => b._id === batchId);
+                  {selected.map((studentId) => {
+                    const student = students.find(s => s._id === studentId);
                     return (
                       <Chip
-                        key={batchId}
-                        label={batch?.batchYear || "Unknown Batch"}
+                        key={studentId}
+                        label={student?.studentName || "Unknown Student"}
                         size="small"
-                        color="secondary"
+                        color="primary"
                       />
                     );
                   })}
                 </Stack>
               )}
             >
-              {loading.batches ? (
-                <MenuItem disabled>Loading batches...</MenuItem>
-              ) : batches.length === 0 ? (
-                <MenuItem disabled>
-                  No batches available for this subject
-                </MenuItem>
+              {loading.students ? (
+                <MenuItem disabled>Loading students...</MenuItem>
+              ) : students.length === 0 ? (
+                <MenuItem disabled>No students found in selected batch</MenuItem>
               ) : (
-                batches.map((batch) => (
-                  <MenuItem key={batch._id} value={batch._id}>
-                    <Checkbox checked={selectedBatches.includes(batch._id)} />
-                    <ListItemText primary={batch.batchYear} />
+                students.map((student) => (
+                  <MenuItem key={student._id} value={student._id}>
+                    <Checkbox checked={selectedStudents.includes(student._id)} />
+                    <ListItemText primary={student.studentName} />
                   </MenuItem>
                 ))
               )}
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions sx={{ px: 3, py: 2, bgcolor: "background.default" }}>
+        <DialogActions>
           <Button
             onClick={() => {
               setOpenCreateDialog(false);
               setSelectedSubject("");
-              setSelectedBatches([]);
+              setSelectedBatch("");
+              setSelectedStudents([]);
             }}
           >
             Cancel
@@ -512,7 +441,6 @@ const TeacherAccessManagement = () => {
             onClick={createAccess}
             variant="contained"
             disabled={loading.creating}
-            sx={{ minWidth: 100 }}
           >
             {loading.creating ? <CircularProgress size={24} /> : "Create"}
           </Button>
@@ -527,8 +455,7 @@ const TeacherAccessManagement = () => {
       >
         <Box
           sx={{
-            bgcolor:
-              snackbar.severity === "error" ? "error.main" : "success.main",
+            bgcolor: snackbar.severity === "error" ? "error.main" : "success.main",
             color: "white",
             px: 3,
             py: 2,
@@ -548,19 +475,8 @@ const TeacherAccessManagement = () => {
           </IconButton>
         </Box>
       </Snackbar>
-      <UpdateAccessModal
-        open={openUpdateDialog}
-        onClose={() => {
-          setOpenUpdateDialog(false);
-          setSelectedAccessData(null);
-        }}
-        accessData={selectedAccessData}
-        onUpdate={updateAccess}
-        token={token}
-        classId={selectedClass}
-      />
     </Container>
   );
 };
 
-export default TeacherAccessManagement;
+export default ParentAccessManagement;
