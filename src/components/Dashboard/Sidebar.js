@@ -75,11 +75,11 @@ const Sidebar = () => {
       icon: <Groups2Icon />,
       path: "/dashboard/parents-table",
     },
-    {
-      text: "Student Hierarchy",
-      icon: <Groups2Icon />,
-      path: "/dashboard/student-hierarchy",
-    },
+    // {
+    //   text: "Student Analytics",
+    //   icon: <Groups2Icon />,
+    //   path: "/dashboard/student-hierarchy",
+    // },
   ];
 
   // Inline styles for sidebar
