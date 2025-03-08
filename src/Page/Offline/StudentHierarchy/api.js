@@ -27,3 +27,7 @@ export const getAnalytics = (batchId, studentId, token) =>
   axios.get(`${API_BASE}/student/attendance/anlytics/${batchId}/${studentId}`, {
     headers: { "x-admin-token": token }
   });
+export const getAttendenceAnalytics = (batchId, studentId, token) => 
+  axios.get(`${API_BASE}/student/attendance/list/${batchId}/${studentId}`, {
+    headers: { "x-admin-token": token }
+  });

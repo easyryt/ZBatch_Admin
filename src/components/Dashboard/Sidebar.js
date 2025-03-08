@@ -60,26 +60,26 @@ const Sidebar = () => {
       icon: <PagesIcon />,
       path: "/dashboard/category-management",
     },
-    {
-      text: "Offline Class",
-      icon: <SchoolIcon />,
-      path: "/dashboard/class-admin",
-    },
-    {
-      text: "Teacher Management",
-      icon: <Groups2Icon />,
-      path: "/dashboard/teacher-management",
-    },
-    {
-      text: "Parents Management",
-      icon: <Groups2Icon />,
-      path: "/dashboard/parents-table",
-    },
     // {
-    //   text: "Student Analytics",
-    //   icon: <Groups2Icon />,
-    //   path: "/dashboard/student-hierarchy",
+    //   text: "Offline Class",
+    //   icon: <SchoolIcon />,
+    //   path: "/dashboard/class-admin",
     // },
+    // {
+    //   text: "Teacher Management",
+    //   icon: <Groups2Icon />,
+    //   path: "/dashboard/teacher-management",
+    // },
+    // {
+    //   text: "Parents Management",
+    //   icon: <Groups2Icon />,
+    //   path: "/dashboard/parents-table",
+    // },
+    {
+      text: "Student Analytics",
+      icon: <Groups2Icon />,
+      path: "/dashboard/student-hierarchy",
+    },
   ];
 
   // Inline styles for sidebar

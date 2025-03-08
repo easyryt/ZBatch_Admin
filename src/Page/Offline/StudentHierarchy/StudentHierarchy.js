@@ -22,6 +22,8 @@ import {
   Search,
   Close,
   Person,
+  CheckCircle,
+  Cancel,
 } from "@mui/icons-material";
 import styles from "./StudentHierarchy.module.css";
 import {
@@ -30,6 +32,7 @@ import {
   getBatches,
   getStudents,
   getAnalytics,
+  getAttendenceAnalytics,
 } from "./api";
 
 const StudentHierarchy = () => {
@@ -40,11 +43,12 @@ const StudentHierarchy = () => {
   const [batches, setBatches] = useState([]);
   const [students, setStudents] = useState([]);
   const [analytics, setAnalytics] = useState(null);
+  const [attendanceList, setAttendanceList] = useState(null);
   const [selected, setSelected] = useState({});
   const [loading, setLoading] = useState(false);
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Njk4M2VhODQ5OTRlMDllNTJjMWIxYyIsImlhdCI6MTczNDk2ODQxNX0.0mxzxb4WBh_GAWHfyfMudWl5cPn6thbigI8VH_AFV8A";
-
+ console.log(attendanceList,"list")
   const levelTitles = {
     class: "Classes",
     subject: "Subjects",
@@ -118,7 +122,13 @@ const StudentHierarchy = () => {
             item._id,
             token
           );
+          const analyticsList = await getAttendenceAnalytics(
+            selected.batch._id,
+            item._id,
+            token
+          );
           setAnalytics(analyticsRes.data.data);
+          setAttendanceList(analyticsList.data.data)
           setCurrentLevel("analytics");
           setSelected((prev) => ({ ...prev, student: item }));
           break;
@@ -234,6 +244,53 @@ const StudentHierarchy = () => {
               </Grid>
             </Grid>
           </CardContent>
+            {/* Attendance List Section */}
+            <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                  Attendance History
+                </Typography>
+                {attendanceList?.length > 0 ? (
+                  attendanceList?.map((record, index) => (
+                    <Card
+                      key={index}
+                      className={styles.attendanceCard}
+                      sx={{ mb: 1 }}
+                    >
+                      <CardContent className={styles.attendanceContent}>
+                        <div className={styles.attendanceDetails}>
+                          <Typography
+                            variant="body1"
+                            className={styles.attendanceDate}
+                          >
+                            {new Date(record.date).toLocaleDateString()}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            className={styles.attendanceSlot}
+                          >
+                            {record.slot}
+                          </Typography>
+                        </div>
+                        {record.present ? (
+                          <CheckCircle
+                            color="success"
+                            className={styles.statusIcon}
+                          />
+                        ) : (
+                          <Cancel
+                            color="error"
+                            className={styles.statusIcon}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : (
+                  <Typography variant="body1">
+                    No attendance records found.
+                  </Typography>
+                )}
+              </Grid>
         </Card>
       ) : (
         <Grid container spacing={3} className={styles.cardGrid}>
